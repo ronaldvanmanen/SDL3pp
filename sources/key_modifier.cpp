@@ -1,4 +1,4 @@
-// SDL2++
+// SDL3++
 //
 // Copyright (C) 2025 Ronald van Manen <rvanmanen@gmail.com>
 //
@@ -18,112 +18,112 @@
 //    misrepresented as being the original software.
 // 3. This notice may not be removed or altered from any source distribution.
 
-#include "SDL2pp/key_modifier.h"
+#include "SDL3pp/key_modifier.h"
 
-sdl2::key_modifier_set::key_modifier_set(std::uint16_t values)
+sdl3::key_modifier_set::key_modifier_set(std::uint16_t values)
 : _values(values)
 { }
 
-sdl2::key_modifier_set::key_modifier_set()
-: sdl2::key_modifier_set(static_cast<std::uint16_t>(sdl2::key_modifier::none))
+sdl3::key_modifier_set::key_modifier_set()
+: sdl3::key_modifier_set(static_cast<std::uint16_t>(sdl3::key_modifier::none))
 { }
 
-sdl2::key_modifier_set::key_modifier_set(sdl2::key_modifier value)
+sdl3::key_modifier_set::key_modifier_set(sdl3::key_modifier value)
 : _values(static_cast<std::uint16_t>(value))
 { }
 
-sdl2::key_modifier_set&
-sdl2::key_modifier_set::operator|=(sdl2::key_modifier_set const& other)
+sdl3::key_modifier_set&
+sdl3::key_modifier_set::operator|=(sdl3::key_modifier_set const& other)
 {
     _values |= other._values;
     return *this;
 }
 
-sdl2::key_modifier_set&
-sdl2::key_modifier_set::operator&=(sdl2::key_modifier_set const& other)
+sdl3::key_modifier_set&
+sdl3::key_modifier_set::operator&=(sdl3::key_modifier_set const& other)
 {
     _values &= other._values;
     return *this;
 }
 
-sdl2::key_modifier_set&
-sdl2::key_modifier_set::operator^=(sdl2::key_modifier_set const& other)
+sdl3::key_modifier_set&
+sdl3::key_modifier_set::operator^=(sdl3::key_modifier_set const& other)
 {
     _values ^= other._values;
     return *this;
 }
 
-sdl2::key_modifier_set&
-sdl2::key_modifier_set::operator|=(sdl2::key_modifier const& value)
+sdl3::key_modifier_set&
+sdl3::key_modifier_set::operator|=(sdl3::key_modifier const& value)
 {
     _values |= static_cast<std::uint16_t>(value);
     return *this;
 }
 
-sdl2::key_modifier_set&
-sdl2::key_modifier_set::operator&=(sdl2::key_modifier const& value)
+sdl3::key_modifier_set&
+sdl3::key_modifier_set::operator&=(sdl3::key_modifier const& value)
 {
     _values &= static_cast<std::uint16_t>(value);
     return *this;
 }
 
-sdl2::key_modifier_set&
-sdl2::key_modifier_set::operator^=(sdl2::key_modifier const& value)
+sdl3::key_modifier_set&
+sdl3::key_modifier_set::operator^=(sdl3::key_modifier const& value)
 {
     _values ^= static_cast<std::uint16_t>(value);
     return *this;
 }
 
-sdl2::key_modifier_set
-sdl2::key_modifier_set::operator~() const
+sdl3::key_modifier_set
+sdl3::key_modifier_set::operator~() const
 {
-    return sdl2::key_modifier_set(~_values);
+    return sdl3::key_modifier_set(~_values);
 }
 
 bool
-sdl2::key_modifier_set::operator==(sdl2::key_modifier_set const& other) const
+sdl3::key_modifier_set::operator==(sdl3::key_modifier_set const& other) const
 {
     return _values == other._values;
 }
 
 bool
-sdl2::key_modifier_set::operator==(sdl2::key_modifier const& value) const
+sdl3::key_modifier_set::operator==(sdl3::key_modifier const& value) const
 {
     return _values == static_cast<std::uint16_t>(value);
 }
 
 bool
-sdl2::key_modifier_set::test(sdl2::key_modifier value) const
+sdl3::key_modifier_set::test(sdl3::key_modifier value) const
 {
     return _values & static_cast<std::uint16_t>(value);
 }
 
-sdl2::key_modifier_set
-sdl2::operator|(sdl2::key_modifier left, sdl2::key_modifier right)
+sdl3::key_modifier_set
+sdl3::operator|(sdl3::key_modifier left, sdl3::key_modifier right)
 {
-    return sdl2::key_modifier_set(
+    return sdl3::key_modifier_set(
         static_cast<std::uint16_t>(left) | static_cast<std::uint16_t>(right)
     );
 }
 
-sdl2::key_modifier_set
-sdl2::operator&(sdl2::key_modifier left, sdl2::key_modifier right)
+sdl3::key_modifier_set
+sdl3::operator&(sdl3::key_modifier left, sdl3::key_modifier right)
 {
-    return sdl2::key_modifier_set(
+    return sdl3::key_modifier_set(
         static_cast<std::uint16_t>(left) & static_cast<std::uint16_t>(right)
     );
 }
 
-sdl2::key_modifier_set
-sdl2::operator^(sdl2::key_modifier left, sdl2::key_modifier right)
+sdl3::key_modifier_set
+sdl3::operator^(sdl3::key_modifier left, sdl3::key_modifier right)
 {
-    return sdl2::key_modifier_set(
+    return sdl3::key_modifier_set(
         static_cast<std::uint16_t>(left) ^ static_cast<std::uint16_t>(right)
     );
 }
 
-sdl2::key_modifier_set
-sdl2::operator~(sdl2::key_modifier value)
+sdl3::key_modifier_set
+sdl3::operator~(sdl3::key_modifier value)
 {
-    return sdl2::key_modifier_set(~static_cast<uint16_t>(value));
+    return sdl3::key_modifier_set(~static_cast<uint16_t>(value));
 }

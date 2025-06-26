@@ -1,4 +1,4 @@
-// SDL2++
+// SDL3++
 //
 // Copyright (C) 2025 Ronald van Manen <rvanmanen@gmail.com>
 //
@@ -21,9 +21,9 @@
 #include <chrono>
 #include <cstdint>
 
-#include "SDL2pp/time.h"
+#include "SDL3pp/time.h"
 
-namespace sdl2
+namespace sdl3
 {
     class stopwatch
     {

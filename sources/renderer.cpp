@@ -1,4 +1,4 @@
-// SDL2++
+// SDL3++
 //
 // Copyright (C) 2025 Ronald van Manen <rvanmanen@gmail.com>
 //
@@ -18,37 +18,45 @@
 //    misrepresented as being the original software.
 // 3. This notice may not be removed or altered from any source distribution.
 
-#include "SDL2pp/error.h"
-#include "SDL2pp/renderer.h"
-#include "SDL2pp/texture.h"
+#include "SDL3pp/error.h"
+#include "SDL3pp/renderer.h"
+#include "SDL3pp/texture.h"
 
-namespace sdl2
+namespace sdl3
 {
-    SDL_Renderer* create_renderer(sdl2::window const& owner, std::int32_t index, sdl2::renderer_flags flags)
+    SDL_Renderer* create_renderer(sdl3::window & owner)
     {
         SDL_Renderer* native_handle = SDL_CreateRenderer(
-            const_cast<sdl2::window&>(owner).native_handle(),
-            index,
-            static_cast<std::uint32_t>(flags)
+            owner.native_handle(), nullptr
         );
-        throw_last_error(native_handle == nullptr);
+        throw_last_error(native_handle != nullptr);
+        return native_handle;
+    }
+
+    SDL_Renderer* create_renderer(sdl3::window & owner, std::string const& name)
+    {
+        SDL_Renderer* native_handle = SDL_CreateRenderer(
+            owner.native_handle(), name.c_str()
+        );
+        throw_last_error(native_handle != nullptr);
         return native_handle;
     }
 }
 
-sdl2::renderer::renderer(sdl2::window const& owner)
-: _native_handle(sdl2::create_renderer(owner, -1, sdl2::renderer_flags::none))
+sdl3::renderer::renderer(sdl3::window & owner)
+: _native_handle(sdl3::create_renderer(owner))
 { }
 
-sdl2::renderer::renderer(sdl2::window const& owner, sdl2::renderer_flags flags)
-: _native_handle(sdl2::create_renderer(owner, -1, flags))
+sdl3::renderer::renderer(sdl3::window & owner, std::string const& name)
+: _native_handle(sdl3::create_renderer(owner, name))
 { }
 
-sdl2::renderer::renderer(renderer&& other)
+
+sdl3::renderer::renderer(renderer&& other)
 : _native_handle(std::exchange(other._native_handle, nullptr))
 {}
 
-sdl2::renderer::~renderer()
+sdl3::renderer::~renderer()
 {
     if (_native_handle != nullptr)
     {
@@ -56,81 +64,89 @@ sdl2::renderer::~renderer()
     }
 }
 
-sdl2::size_2d<std::int32_t>
-sdl2::renderer::output_size() const
+std::string
+sdl3::renderer::name() const
 {
-    int width, height;
-    sdl2::throw_last_error(
-        SDL_GetRendererOutputSize(_native_handle, &width, &height) < 0
-    );
-    return sdl2::size_2d<std::int32_t>(width * px, height * px);
+    char const *retval = SDL_GetRendererName(_native_handle);
+    sdl3::throw_last_error(retval != nullptr);
+    return std::string(retval);
 }
 
-sdl2::color
-sdl2::renderer::draw_color() const
+sdl3::size_2d<std::int32_t>
+sdl3::renderer::output_size() const
+{
+    int width, height;
+    sdl3::throw_last_error(
+        SDL_GetCurrentRenderOutputSize(_native_handle, &width, &height)
+    );
+    return sdl3::size_2d<std::int32_t>(width * px, height * px);
+}
+
+sdl3::color
+sdl3::renderer::draw_color() const
 {
     std::uint8_t r, g, b, a;
     throw_last_error(
-        SDL_GetRenderDrawColor(_native_handle, &r, &g, &b, &a) < 0
+        SDL_GetRenderDrawColor(_native_handle, &r, &g, &b, &a)
     );
-    return sdl2::color(r, g, b, a);
+    return sdl3::color(r, g, b, a);
 }
 
 void
-sdl2::renderer::draw_color(sdl2::color const& draw_color)
+sdl3::renderer::draw_color(sdl3::color const& draw_color)
 {
     throw_last_error(
         SDL_SetRenderDrawColor(
             _native_handle, draw_color.r, draw_color.g, draw_color.b, draw_color.a
-        ) < 0
+        )
     );
 }
 
-sdl2::blend_mode
-sdl2::renderer::draw_blend_mode() const
+sdl3::blend_mode
+sdl3::renderer::draw_blend_mode() const
 {
     SDL_BlendMode mode;
     throw_last_error(
-        SDL_GetRenderDrawBlendMode(_native_handle, &mode) < 0
+        SDL_GetRenderDrawBlendMode(_native_handle, &mode)
     );
-    return static_cast<sdl2::blend_mode>(mode);
+    return static_cast<sdl3::blend_mode>(mode);
 }
 
 void
-sdl2::renderer::draw_blend_mode(sdl2::blend_mode mode)
+sdl3::renderer::draw_blend_mode(sdl3::blend_mode mode)
 {
     throw_last_error(
-        SDL_SetRenderDrawBlendMode(_native_handle, static_cast<SDL_BlendMode>(mode)) < 0
+        SDL_SetRenderDrawBlendMode(_native_handle, static_cast<SDL_BlendMode>(mode))
     );
 }
 
 void
-sdl2::renderer::clear()
+sdl3::renderer::clear()
 {
-    sdl2::throw_last_error(
-        SDL_RenderClear(_native_handle) < 0
+    sdl3::throw_last_error(
+        SDL_RenderClear(_native_handle)
     );
 }
 
 void
-sdl2::renderer::present()
+sdl3::renderer::present()
 {
     SDL_RenderPresent(_native_handle);
 }
 
 void
-sdl2::renderer::copy(sdl2::texture_base const& texture)
+sdl3::renderer::copy(sdl3::texture_base const& texture)
 {
-    sdl2::throw_last_error(
-        SDL_RenderCopy(
+    sdl3::throw_last_error(
+        SDL_RenderTexture(
             _native_handle,
-            const_cast<sdl2::texture_base&>(texture).native_handle(),
+            const_cast<sdl3::texture_base&>(texture).native_handle(),
             nullptr,
-            nullptr) < 0
+            nullptr)
     );
 }
 
-SDL_Renderer* sdl2::renderer::native_handle()
+SDL_Renderer* sdl3::renderer::native_handle()
 {
     return _native_handle;
 }

@@ -1,8 +1,8 @@
 {
-  "name": "sdl2pp",
+  "name": "sdl3pp",
   "version": "0.1.0",
-  "description": "A C++ wrapper for SDL2.",
-  "homepage": "https://github.com/ronaldvanmanen/sdl2pp",
+  "description": "A C++ wrapper for SDL3.",
+  "homepage": "https://github.com/ronaldvanmanen/sdl3pp",
   "license": "zlib",
   "dependencies": [
     "boost-optional",
@@ -11,6 +11,6 @@
     "boost-test",
     "boost-units",
     "boost-utility",
-    "sdl2"
+    "sdl3"
   ]
 }

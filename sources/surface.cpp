@@ -1,4 +1,4 @@
-// SDL2++
+// SDL3++
 //
 // Copyright (C) 2025 Ronald van Manen <rvanmanen@gmail.com>
 //
@@ -18,97 +18,87 @@
 //    misrepresented as being the original software.
 // 3. This notice may not be removed or altered from any source distribution.
 
-#include "SDL2pp/error.h"
-#include "SDL2pp/surface.h"
+#include "SDL3pp/error.h"
+#include "SDL3pp/surface.h"
 
-namespace sdl2
+namespace sdl3
 {
-    SDL_Surface* create_surface(sdl2::length<std::int32_t> width, sdl2::length<std::int32_t> height, sdl2::pixel_bit_depth depth)
+    SDL_Surface* create_surface(sdl3::length<std::int32_t> width, sdl3::length<std::int32_t> height, sdl3::pixel_format format)
     {
-        SDL_Surface* native_handle = SDL_CreateRGBSurface(
-            0,
+        SDL_Surface* native_handle = SDL_CreateSurface(
             boost::units::quantity_cast<std::int32_t>(width),
             boost::units::quantity_cast<std::int32_t>(height),
-            depth,
-            0,
-            0,
-            0,
-            0
+            static_cast<SDL_PixelFormat>(format)
         );
-        throw_last_error(native_handle == nullptr);
+        throw_last_error(native_handle != nullptr);
         return native_handle;
     }
 }
 
 
-sdl2::surface_base::surface_base(sdl2::length<std::int32_t> width, sdl2::length<std::int32_t> height, sdl2::pixel_bit_depth depth)
-: _native_handle(sdl2::create_surface(width, height, depth))
+sdl3::surface_base::surface_base(sdl3::length<std::int32_t> width, sdl3::length<std::int32_t> height, sdl3::pixel_format format)
+: _native_handle(sdl3::create_surface(width, height, format))
 , _free_handle(true)
 {
-    throw_last_error(_native_handle == nullptr);
+    throw_last_error(_native_handle != nullptr);
 }
 
-sdl2::surface_base::surface_base(sdl2::size_2d<std::int32_t> const& size, sdl2::pixel_bit_depth depth)
-: _native_handle(sdl2::create_surface(size.width, size.height, depth))
+sdl3::surface_base::surface_base(sdl3::size_2d<std::int32_t> const& size, sdl3::pixel_format format)
+: _native_handle(sdl3::create_surface(size.width, size.height, format))
 , _free_handle(true)
 {
-    throw_last_error(_native_handle == nullptr);
+    throw_last_error(_native_handle != nullptr);
 }
 
-sdl2::surface_base::surface_base(sdl2::window & window)
+sdl3::surface_base::surface_base(sdl3::window & window)
 : _native_handle(SDL_GetWindowSurface(window.native_handle()))
 , _free_handle(false)
 { }
 
-sdl2::surface_base::surface_base(SDL_Surface * native_handle, bool free_handle)
+sdl3::surface_base::surface_base(SDL_Surface * native_handle, bool free_handle)
 : _native_handle(native_handle)
 , _free_handle(free_handle)
 {
-    throw_last_error(_native_handle == nullptr);
+    throw_last_error(_native_handle != nullptr);
 }
 
-sdl2::surface_base::surface_base(sdl2::surface_base const& other)
+sdl3::surface_base::surface_base(sdl3::surface_base const& other)
 : _native_handle(
-    SDL_CreateRGBSurface(
-        0,
+    SDL_CreateSurface(
         other._native_handle->w,
         other._native_handle->h,
-        other._native_handle->pitch,
-        other._native_handle->format->Rmask,
-        other._native_handle->format->Gmask,
-        other._native_handle->format->Bmask,
-        other._native_handle->format->Amask
+        other._native_handle->format
     )
 )
 , _free_handle(true)
 {
     throw_last_error(
-        SDL_BlitSurface(other._native_handle, nullptr, _native_handle, nullptr) < 0
+        SDL_BlitSurface(other._native_handle, nullptr, _native_handle, nullptr)
     );
 }
 
-sdl2::surface_base::~surface_base()
+sdl3::surface_base::~surface_base()
 {
     if (_free_handle && _native_handle != nullptr)
     {
-        SDL_FreeSurface(_native_handle);
+        SDL_DestroySurface(_native_handle);
     }
 }
 
 SDL_Surface*
-sdl2::surface_base::native_handle()
+sdl3::surface_base::native_handle()
 {
     return _native_handle;
 }
 
 void
-sdl2::surface_base::blit(sdl2::surface_base & source)
+sdl3::surface_base::blit(sdl3::surface_base & source)
 {
     auto source_handle = source.native_handle();
     auto source_rect = SDL_Rect { 0, 0, source_handle->w, source_handle->h };
     auto target_handle = this->native_handle();
     auto target_rect = SDL_Rect { 0, 0, target_handle->w, target_handle->h };
     throw_last_error(
-        SDL_BlitSurface(source_handle, &source_rect, target_handle, &target_rect) < 0
+        SDL_BlitSurface(source_handle, &source_rect, target_handle, &target_rect)
     );
 }

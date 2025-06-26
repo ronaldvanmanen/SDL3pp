@@ -1,4 +1,4 @@
-// SDL2++
+// SDL3++
 //
 // Copyright (C) 2025 Ronald van Manen <rvanmanen@gmail.com>
 //
@@ -30,25 +30,25 @@
 #include <boost/poly_collection/base_collection.hpp>
 #include <boost/qvm/all.hpp>
 
-#include "SDL2pp/argb8888.h"
-#include "SDL2pp/color.h"
-#include "SDL2pp/event_queue.h"
-#include "SDL2pp/event.h"
-#include "SDL2pp/image.h"
-#include "SDL2pp/keyboard_event.h"
-#include "SDL2pp/keyboard.h"
-#include "SDL2pp/mouse_wheel_event.h"
-#include "SDL2pp/mouse.h"
-#include "SDL2pp/renderer.h"
-#include "SDL2pp/texture.h"
-#include "SDL2pp/window.h"
+#include "SDL3pp/argb8888.h"
+#include "SDL3pp/color.h"
+#include "SDL3pp/event_queue.h"
+#include "SDL3pp/event.h"
+#include "SDL3pp/image.h"
+#include "SDL3pp/keyboard_event.h"
+#include "SDL3pp/keyboard.h"
+#include "SDL3pp/mouse_wheel_event.h"
+#include "SDL3pp/mouse.h"
+#include "SDL3pp/renderer.h"
+#include "SDL3pp/texture.h"
+#include "SDL3pp/window.h"
 
 #include "shared/math.h"
 #include "shared/rgb96f.h"
 #include "shared/stopwatch.h"
 
 using namespace std;
-using namespace sdl2;
+using namespace sdl3;
 
 static int const max_level = 5;
 static float const min_weight = 0.01f;
@@ -780,8 +780,8 @@ argb8888 to_argb8888(rgb96f const& color)
 
 int main()
 {
-    auto window = ::window("Software Ray Tracer", 640*px, 480*px, window_flags::shown | window_flags::resizable);
-    auto renderer = ::renderer(window, renderer_flags::accelerated | renderer_flags::present_vsync);
+    auto window = ::window("Software Ray Tracer", 640*px, 480*px, window_flags::resizable);
+    auto renderer = ::renderer(window);
     auto texture = ::texture<argb8888>(renderer, texture_access::streaming_access, renderer.output_size());
     auto event_queue = ::event_queue();
 
@@ -965,7 +965,9 @@ int main()
                     auto const modifiers = key_event.key_modifiers();
                     if (symbol == scan_code::m && modifiers == (key_modifier::left_ctrl | key_modifier::left_alt))
                     {
-                        mouse::relative_mode(!mouse::relative_mode());
+                        window.relative_mouse_mode(
+                            !window.relative_mouse_mode()
+                        );
                     }
                 }
                 break;
@@ -1052,7 +1054,7 @@ int main()
                 camera.zoom_out(left_shift ? 2.0f : 1.0f);
             }
 
-            if (mouse::relative_mode())
+            if (window.relative_mouse_mode())
             {
                 auto const mouse_state = mouse::relative_state();
                 camera.yaw(mouse_state.x * 0.1f);

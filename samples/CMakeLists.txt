@@ -6,7 +6,7 @@ if (POLICY CMP0141)
   set(CMAKE_MSVC_DEBUG_INFORMATION_FORMAT "$<IF:$<AND:$<C_COMPILER_ID:MSVC>,$<CXX_COMPILER_ID:MSVC>>,$<$<CONFIG:Debug,RelWithDebInfo>:EditAndContinue>,$<$<CONFIG:Debug,RelWithDebInfo>:ProgramDatabase>>")
 endif()
 
-project ("SDL2pp-samples")
+project ("SDL3pp-samples")
 
 macro("add_sample" TARGET)
   cmake_parse_arguments(arg "" "" "SOURCES" ${ARGN})
@@ -17,7 +17,7 @@ macro("add_sample" TARGET)
     set_property(TARGET ${TARGET} PROPERTY CXX_STANDARD 20)
   endif()
 
-  target_link_libraries(${TARGET} PRIVATE SDL2pp)
+  target_link_libraries(${TARGET} PRIVATE SDL3pp)
 endmacro()
 
 find_package(boost_poly_collection REQUIRED CONFIG)

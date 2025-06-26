@@ -1,4 +1,4 @@
-// SDL2++
+// SDL3++
 //
 // Copyright (C) 2025 Ronald van Manen <rvanmanen@gmail.com>
 //
@@ -18,26 +18,26 @@
 //    misrepresented as being the original software.
 // 3. This notice may not be removed or altered from any source distribution.
 
-#include "SDL2pp/argb8888.h"
+#include "SDL3pp/argb8888.h"
 
-const sdl2::argb8888 sdl2::argb8888::black(255_a8, 0_r8, 0_g8, 0_b8);
+const sdl3::argb8888 sdl3::argb8888::black(255_a8, 0_r8, 0_g8, 0_b8);
 
-const sdl2::argb8888 sdl2::argb8888::white(255_a8, 255_r8, 255_g8, 255_b8);
+const sdl3::argb8888 sdl3::argb8888::white(255_a8, 255_r8, 255_g8, 255_b8);
 
-sdl2::argb8888::argb8888()
+sdl3::argb8888::argb8888()
 : argb8888(0_a8, 0_r8, 0_g8, 0_b8)
 { }
 
-sdl2::argb8888::argb8888(sdl2::a8 a, sdl2::r8 r, sdl2::g8 g, sdl2::b8 b)
+sdl3::argb8888::argb8888(sdl3::a8 a, sdl3::r8 r, sdl3::g8 g, sdl3::b8 b)
 : b(b), r(r), g(g), a(a)
 { }
 
-sdl2::argb8888::argb8888(argb8888 const& other)
+sdl3::argb8888::argb8888(argb8888 const& other)
 : b(other.b), r(other.r), g(other.g), a(other.a)
 { }
 
-sdl2::argb8888&
-sdl2::argb8888::operator=(argb8888 const& other)
+sdl3::argb8888&
+sdl3::argb8888::operator=(argb8888 const& other)
 {
     if (this != &other)
     {
@@ -50,13 +50,13 @@ sdl2::argb8888::operator=(argb8888 const& other)
 }
 
 bool
-sdl2::argb8888::operator==(argb8888 const& other) const
+sdl3::argb8888::operator==(argb8888 const& other) const
 {
     return b == other.b && r == other.r && g == other.g && a == other.a;
 }
 
 std::ostream&
-sdl2::operator<<(std::ostream& stream, argb8888 const& value)
+sdl3::operator<<(std::ostream& stream, argb8888 const& value)
 {
     return stream
         << static_cast<unsigned int>(value.a)

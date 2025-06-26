@@ -1,4 +1,4 @@
-// SDL2++
+// SDL3++
 //
 // Copyright (C) 2025 Ronald van Manen <rvanmanen@gmail.com>
 //
@@ -20,10 +20,10 @@
 
 #include <boost/test/unit_test.hpp>
 
-#include "SDL2pp/index8.h"
-#include "SDL2pp/surface.h"
+#include "SDL3pp/index8.h"
+#include "SDL3pp/surface.h"
 
-using namespace sdl2;
+using namespace sdl3;
 
 BOOST_AUTO_TEST_CASE(test_surface_constructors)
 {

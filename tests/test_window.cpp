@@ -1,4 +1,4 @@
-// SDL2++
+// SDL3++
 //
 // Copyright (C) 2025 Ronald van Manen <rvanmanen@gmail.com>
 //
@@ -20,9 +20,9 @@
 
 #include <boost/test/unit_test.hpp>
 
-#include "SDL2pp/window.h"
+#include "SDL3pp/window.h"
 
-using namespace sdl2;
+using namespace sdl3;
 
 
 BOOST_AUTO_TEST_CASE(test_window_constructors)

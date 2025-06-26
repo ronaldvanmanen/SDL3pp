@@ -6,7 +6,7 @@ if (POLICY CMP0141)
   set(CMAKE_MSVC_DEBUG_INFORMATION_FORMAT "$<IF:$<AND:$<C_COMPILER_ID:MSVC>,$<CXX_COMPILER_ID:MSVC>>,$<$<CONFIG:Debug,RelWithDebInfo>:EditAndContinue>,$<$<CONFIG:Debug,RelWithDebInfo>:ProgramDatabase>>")
 endif()
 
-project ("SDL2pp")
+project ("SDL3pp")
 
 # if (MSVC)
 #   set(ENV{esp.extensions} cppcorecheck.dll)
@@ -40,7 +40,6 @@ add_library("${PROJECT_NAME}"
   "sources/palette.cpp"
   "sources/pixel_format_details.cpp"
   "sources/pixel_format.cpp"
-  "sources/renderer_flags.cpp"
   "sources/renderer.cpp"
   "sources/surface.cpp"
   "sources/texture.cpp"
@@ -64,11 +63,11 @@ target_link_libraries("${PROJECT_NAME}"
   Boost::utility
 )
 
-find_package(SDL2 CONFIG REQUIRED)
+find_package(SDL3 CONFIG REQUIRED)
 target_link_libraries("${PROJECT_NAME}"
     PUBLIC
-    $<TARGET_NAME_IF_EXISTS:SDL2::SDL2main>
-    $<IF:$<TARGET_EXISTS:SDL2::SDL2>,SDL2::SDL2,SDL2::SDL2-static>
+    $<TARGET_NAME_IF_EXISTS:SDL3::SDL3main>
+    $<IF:$<TARGET_EXISTS:SDL3::SDL3>,SDL3::SDL3,SDL3::SDL3-static>
 )
 
 target_include_directories("${PROJECT_NAME}" PUBLIC "${PROJECT_BINARY_DIR}" "${PROJECT_SOURCE_DIR}/include")

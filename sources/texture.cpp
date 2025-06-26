@@ -1,4 +1,4 @@
-// SDL2++
+// SDL3++
 //
 // Copyright (C) 2025 Ronald van Manen <rvanmanen@gmail.com>
 //
@@ -18,41 +18,41 @@
 //    misrepresented as being the original software.
 // 3. This notice may not be removed or altered from any source distribution.
 
-#include "SDL2pp/texture.h"
+#include "SDL3pp/texture.h"
 
-namespace sdl2
+namespace sdl3
 {
     SDL_Texture* create_texture(
-        sdl2::renderer const& owner,
-        sdl2::pixel_format format,
-        sdl2::texture_access access,
-        sdl2::length<std::int32_t> width,
-        sdl2::length<std::int32_t> height
+        sdl3::renderer const& owner,
+        sdl3::pixel_format format,
+        sdl3::texture_access access,
+        sdl3::length<std::int32_t> width,
+        sdl3::length<std::int32_t> height
     )
     {
         SDL_Texture* native_handle = SDL_CreateTexture(
-            const_cast<sdl2::renderer&>(owner).native_handle(),
-            static_cast<std::uint32_t>(format),
-            static_cast<std::int32_t>(access),
+            const_cast<sdl3::renderer&>(owner).native_handle(),
+            static_cast<SDL_PixelFormat>(format),
+            static_cast<SDL_TextureAccess>(access),
             quantity_cast<std::int32_t>(width),
             quantity_cast<std::int32_t>(height)
         );
-        throw_last_error(native_handle == nullptr);
+        throw_last_error(native_handle != nullptr);
         return native_handle;
     }
 }
 
-sdl2::texture_base::texture_base(
-    sdl2::renderer const& owner,
-    sdl2::pixel_format format,
-    sdl2::texture_access access,
-    sdl2::length<std::int32_t> width,
-    sdl2::length<std::int32_t> height
+sdl3::texture_base::texture_base(
+    sdl3::renderer const& owner,
+    sdl3::pixel_format format,
+    sdl3::texture_access access,
+    sdl3::length<std::int32_t> width,
+    sdl3::length<std::int32_t> height
 )
-: _native_handle(sdl2::create_texture(owner, format, access, width, height))
+: _native_handle(sdl3::create_texture(owner, format, access, width, height))
 { }
 
-sdl2::texture_base::~texture_base()
+sdl3::texture_base::~texture_base()
 {
     if (_native_handle != nullptr)
     {
@@ -61,7 +61,7 @@ sdl2::texture_base::~texture_base()
 }
 
 SDL_Texture*
-sdl2::texture_base::native_handle()
+sdl3::texture_base::native_handle()
 {
     return _native_handle;
 }

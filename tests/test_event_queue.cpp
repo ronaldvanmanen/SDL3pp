@@ -1,4 +1,4 @@
-// SDL2++
+// SDL3++
 //
 // Copyright (C) 2025 Ronald van Manen <rvanmanen@gmail.com>
 //
@@ -20,11 +20,11 @@
 
 #include <boost/test/unit_test.hpp>
 
-#include "SDL2pp/event_queue.h"
+#include "SDL3pp/event_queue.h"
 
 BOOST_AUTO_TEST_CASE(test_event_queue_constructor)
 {
     BOOST_REQUIRE_NO_THROW(
-        sdl2::event_queue event_queue;
+        sdl3::event_queue event_queue;
     );
 }

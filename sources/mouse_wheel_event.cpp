@@ -1,4 +1,4 @@
-// SDL2++
+// SDL3++
 //
 // Copyright (C) 2025 Ronald van Manen <rvanmanen@gmail.com>
 //
@@ -18,74 +18,62 @@
 //    misrepresented as being the original software.
 // 3. This notice may not be removed or altered from any source distribution.
 
-#include "SDL2pp/mouse_wheel_event.h"
+#include "SDL3pp/mouse_wheel_event.h"
 
-sdl2::mouse_wheel_event::mouse_wheel_event(SDL_Event const& native_handle)
+sdl3::mouse_wheel_event::mouse_wheel_event(SDL_Event const& native_handle)
 : _native_handle(native_handle)
 { }
 
-sdl2::event_type
-sdl2::mouse_wheel_event::type() const
+sdl3::event_type
+sdl3::mouse_wheel_event::type() const
 {
-    return static_cast<sdl2::event_type>(_native_handle.wheel.type);
+    return static_cast<sdl3::event_type>(_native_handle.wheel.type);
 }
 
-std::uint32_t
-sdl2::mouse_wheel_event::timestamp() const
+std::uint64_t
+sdl3::mouse_wheel_event::timestamp() const
 {
     return _native_handle.wheel.timestamp;
 }
 
 std::uint32_t
-sdl2::mouse_wheel_event::window_id() const
+sdl3::mouse_wheel_event::window_id() const
 {
     return _native_handle.wheel.windowID;
 }
 
 std::uint32_t
-sdl2::mouse_wheel_event::which() const
+sdl3::mouse_wheel_event::which() const
 {
     return _native_handle.wheel.which;
 }
 
-std::int32_t
-sdl2::mouse_wheel_event::x() const
+float
+sdl3::mouse_wheel_event::x() const
 {
     return _native_handle.wheel.x;
 }
 
-std::int32_t
-sdl2::mouse_wheel_event::y() const
+float
+sdl3::mouse_wheel_event::y() const
 {
     return _native_handle.wheel.y;
 }
 
 std::uint32_t
-sdl2::mouse_wheel_event::direction() const
+sdl3::mouse_wheel_event::direction() const
 {
     return _native_handle.wheel.direction;
 }
 
 float
-sdl2::mouse_wheel_event::precise_x() const
+sdl3::mouse_wheel_event::mouse_x() const
 {
-    return _native_handle.wheel.preciseX;
+    return _native_handle.wheel.mouse_x;
 }
 
 float
-sdl2::mouse_wheel_event::precise_y() const
+sdl3::mouse_wheel_event::mouse_y() const
 {
-    return _native_handle.wheel.preciseY;
-}
-
-std::int32_t
-sdl2::mouse_wheel_event::mouse_x() const
-{
-    return _native_handle.wheel.mouseX;
-}
-
-std::int32_t
-sdl2::mouse_wheel_event::mouse_y() const
-{
-    return _native_handle.wheel.mouseY;
+    return _native_handle.wheel.mouse_y;
 }
