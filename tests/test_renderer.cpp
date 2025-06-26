@@ -1,4 +1,4 @@
-// SDL2++
+// SDL3++
 //
 // Copyright (C) 2025 Ronald van Manen <rvanmanen@gmail.com>
 //
@@ -21,9 +21,9 @@
 #include <boost/test/unit_test.hpp>
 #include <boost/units/io.hpp>
 
-#include "SDL2pp/renderer.h"
+#include "SDL3pp/renderer.h"
 
-using namespace sdl2;
+using namespace sdl3;
 
 BOOST_AUTO_TEST_CASE(test_renderer_constructors)
 {
@@ -31,10 +31,6 @@ BOOST_AUTO_TEST_CASE(test_renderer_constructors)
 
     BOOST_REQUIRE_NO_THROW(
         renderer test_renderer(test_window);
-    );
-
-    BOOST_REQUIRE_NO_THROW(
-        renderer test_renderer(test_window, renderer_flags::accelerated | renderer_flags::present_vsync)
     );
 }
 

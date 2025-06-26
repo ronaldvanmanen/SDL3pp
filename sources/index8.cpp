@@ -1,4 +1,4 @@
-// SDL2++
+// SDL3++
 //
 // Copyright (C) 2025 Ronald van Manen <rvanmanen@gmail.com>
 //
@@ -20,20 +20,20 @@
 
 #pragma once
 
-#include "SDL2pp/index8.h"
+#include "SDL3pp/index8.h"
 
-sdl2::index8::index8() { }
+sdl3::index8::index8() { }
 
-sdl2::index8::index8(std::uint8_t value)
+sdl3::index8::index8(std::uint8_t value)
 : _value(value)
 { }
 
-sdl2::index8::index8(sdl2::index8 const& other)
+sdl3::index8::index8(sdl3::index8 const& other)
 : _value(other._value)
 { }
 
-sdl2::index8&
-sdl2::index8::operator=(sdl2::index8 const& other)
+sdl3::index8&
+sdl3::index8::operator=(sdl3::index8 const& other)
 {
     if (this != &other)
     {
@@ -42,47 +42,47 @@ sdl2::index8::operator=(sdl2::index8 const& other)
     return *this;    
 }
 
-sdl2::index8&
-sdl2::index8::operator+=(sdl2::index8 const& other)
+sdl3::index8&
+sdl3::index8::operator+=(sdl3::index8 const& other)
 {
     _value += other._value;
     return *this;    
 }
 
-sdl2::index8&
-sdl2::index8::operator-=(sdl2::index8 const& other)
+sdl3::index8&
+sdl3::index8::operator-=(sdl3::index8 const& other)
 {
     _value += other._value;
     return *this;    
 }
 
-sdl2::index8&
-sdl2::index8::operator++()
+sdl3::index8&
+sdl3::index8::operator++()
 {
     ++_value;
     return *this;
 }
 
-sdl2::index8&
-sdl2::index8::operator--()
+sdl3::index8&
+sdl3::index8::operator--()
 {
     --_value;
     return *this;
 }
 
 bool
-sdl2::index8::operator==(sdl2::index8 const& other) const
+sdl3::index8::operator==(sdl3::index8 const& other) const
 {
     return _value == other._value;
 }
 
 bool
-sdl2::index8::operator<(sdl2::index8 const& other) const
+sdl3::index8::operator<(sdl3::index8 const& other) const
 {
     return _value < other._value;
 }
 
-sdl2::index8::operator std::uint8_t() const
+sdl3::index8::operator std::uint8_t() const
 {
     return _value;
 }

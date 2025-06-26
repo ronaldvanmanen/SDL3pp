@@ -1,4 +1,4 @@
-// SDL2++
+// SDL3++
 //
 // Copyright (C) 2025 Ronald van Manen <rvanmanen@gmail.com>
 //
@@ -20,20 +20,20 @@
 
 #pragma once
 
-#include <SDL2/SDL_keyboard.h>
+#include <SDL3/SDL_keyboard.h>
 
-#include "SDL2pp/keyboard.h"
+#include "SDL3pp/keyboard.h"
 
-sdl2::keyboard_state
-sdl2::keyboard::state()
+sdl3::keyboard_state
+sdl3::keyboard::state()
 {
     int key_count;
     auto key_states = SDL_GetKeyboardState(&key_count);
-    return sdl2::keyboard_state(key_states, key_count);
+    return sdl3::keyboard_state(key_states, key_count);
 }
 
-sdl2::key_modifier_set
-sdl2::keyboard::modifier_state()
+sdl3::key_modifier_set
+sdl3::keyboard::modifier_state()
 {
-    return key_modifier_set(static_cast<sdl2::key_modifier>(SDL_GetModState()));
+    return key_modifier_set(static_cast<sdl3::key_modifier>(SDL_GetModState()));
 }

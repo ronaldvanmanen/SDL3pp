@@ -1,4 +1,4 @@
-// SDL2++
+// SDL3++
 //
 // Copyright (C) 2025 Ronald van Manen <rvanmanen@gmail.com>
 //
@@ -25,20 +25,20 @@
 
 #include <boost/units/cmath.hpp>
 
-#include "SDL2pp/argb8888.h"
-#include "SDL2pp/color.h"
-#include "SDL2pp/event_queue.h"
-#include "SDL2pp/event.h"
-#include "SDL2pp/image.h"
-#include "SDL2pp/renderer.h"
-#include "SDL2pp/texture.h"
-#include "SDL2pp/window.h"
+#include "SDL3pp/argb8888.h"
+#include "SDL3pp/color.h"
+#include "SDL3pp/event_queue.h"
+#include "SDL3pp/event.h"
+#include "SDL3pp/image.h"
+#include "SDL3pp/renderer.h"
+#include "SDL3pp/texture.h"
+#include "SDL3pp/window.h"
 
 #include "shared/math.h"
 #include "shared/stopwatch.h"
 
 using namespace std;
-using namespace sdl2;
+using namespace sdl3;
 
 struct displacement
 {
@@ -86,9 +86,9 @@ image<displacement> generate_displacement_image(length<int32_t> square_size)
 
     image<displacement> displacement_image(actual_size, actual_size);
 
-    for (offset<int32_t> y = 0; y < actual_size; y += 1.0*px)
+    for (offset<int32_t> y = 0; y < actual_size; y += 1*px)
     {
-        for (offset<int32_t> x = 0; x < actual_size; x += 1.0*px)
+        for (offset<int32_t> x = 0; x < actual_size; x += 1*px)
         {
             auto displace_x = length<int32_t>(calc_distance(actual_size, actual_size, x, y));
             auto displace_y = length<int32_t>(calc_angle(actual_size, actual_size, x, y));
@@ -152,8 +152,8 @@ length<int32_t> power_of_two_mod(length<int32_t> x, length<int32_t> y)
 
 int main()
 {
-    auto main_window = window("Tunnel Effect", 800*px, 600*px, window_flags::shown | window_flags::resizable);
-    auto screen_renderer = renderer(main_window, renderer_flags::accelerated | renderer_flags::present_vsync);
+    auto main_window = window("Tunnel Effect", 800*px, 600*px, window_flags::resizable);
+    auto screen_renderer = renderer(main_window);
     auto screen_texture = texture<argb8888>(screen_renderer, texture_access::streaming_access, screen_renderer.output_size());
     auto main_event_queue = event_queue();
 

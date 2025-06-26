@@ -1,4 +1,4 @@
-// SDL2++
+// SDL3++
 //
 // Copyright (C) 2025 Ronald van Manen <rvanmanen@gmail.com>
 //
@@ -20,35 +20,21 @@
 
 #pragma once
 
-#include <SDL2/SDL_mouse.h>
+#include <SDL3/SDL_mouse.h>
 
-#include "SDL2pp/error.h"
-#include "SDL2pp/mouse.h"
+#include "SDL3pp/error.h"
+#include "SDL3pp/mouse.h"
 
-bool
-sdl2::mouse::relative_mode()
+sdl3::mouse_state
+sdl3::mouse::relative_state()
 {
-    return SDL_TRUE == SDL_GetRelativeMouseMode();
-}
-
-void
-sdl2::mouse::relative_mode(bool enabled)
-{
-    sdl2::throw_last_error(
-        SDL_SetRelativeMouseMode(enabled ? SDL_TRUE : SDL_FALSE) < 0
-    );
-}
-
-sdl2::mouse_state
-sdl2::mouse::relative_state()
-{
-    std::int32_t x, y;
+    float x, y;
     std::uint32_t buttons = SDL_GetRelativeMouseState(&x, &y);
     return mouse_state { x, y, buttons };
 }
 
 bool
-sdl2::mouse_state::pressed(std::uint32_t which) const
+sdl3::mouse_state::pressed(std::uint32_t which) const
 {
     return ((this->buttons & which) == which);
 }

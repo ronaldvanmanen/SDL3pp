@@ -1,4 +1,4 @@
-// SDL2++
+// SDL3++
 //
 // Copyright (C) 2025 Ronald van Manen <rvanmanen@gmail.com>
 //
@@ -21,13 +21,13 @@
 #include "math.h"
 
 bool
-sdl2::is_power_of_two(std::int32_t value)
+sdl3::is_power_of_two(std::int32_t value)
 {
     return (value > 0) && ((value & (value - 1)) == 0);
 }
 
 std::int32_t
-sdl2::next_power_of_two(std::int32_t value)
+sdl3::next_power_of_two(std::int32_t value)
 {
     --value;
     value |= value >> 1;

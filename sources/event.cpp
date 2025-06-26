@@ -1,4 +1,4 @@
-// SDL2++
+// SDL3++
 //
 // Copyright (C) 2025 Ronald van Manen <rvanmanen@gmail.com>
 //
@@ -18,22 +18,22 @@
 //    misrepresented as being the original software.
 // 3. This notice may not be removed or altered from any source distribution.
 
-#include "SDL2pp/event.h"
+#include "SDL3pp/event.h"
 
-sdl2::event::event()
+sdl3::event::event()
 : _native_handle(SDL_Event())
 {
     SDL_zero(_native_handle);
 }
 
-sdl2::event_type
-sdl2::event::type() const
+sdl3::event_type
+sdl3::event::type() const
 {
-    return static_cast<sdl2::event_type>(_native_handle.type);
+    return static_cast<sdl3::event_type>(_native_handle.type);
 }
 
 SDL_Event*
-sdl2::event::native_handle()
+sdl3::event::native_handle()
 {
     return &_native_handle;
 }

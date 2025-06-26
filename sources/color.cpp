@@ -1,4 +1,4 @@
-// SDL2++
+// SDL3++
 //
 // Copyright (C) 2025 Ronald van Manen <rvanmanen@gmail.com>
 //
@@ -20,32 +20,32 @@
 
 #pragma once
 
-#include "SDL2pp/color.h"
+#include "SDL3pp/color.h"
 
-const sdl2::color sdl2::color::black(0, 0, 0, 255);
+const sdl3::color sdl3::color::black(0, 0, 0, 255);
 
-const sdl2::color sdl2::color::white(255, 255, 255, 255);
+const sdl3::color sdl3::color::white(255, 255, 255, 255);
 
-const sdl2::color sdl2::color::red(255, 0, 0, 255);
+const sdl3::color sdl3::color::red(255, 0, 0, 255);
 
-const sdl2::color sdl2::color::green(0, 255, 0, 255);
+const sdl3::color sdl3::color::green(0, 255, 0, 255);
 
-const sdl2::color sdl2::color::blue(0, 0, 255, 255);
+const sdl3::color sdl3::color::blue(0, 0, 255, 255);
 
-sdl2::color::color()
+sdl3::color::color()
 : r(0), g(0), b(0), a(0)
 { }
 
-sdl2::color::color(std::uint8_t r, std::uint8_t g, std::uint8_t b, std::uint8_t a)
+sdl3::color::color(std::uint8_t r, std::uint8_t g, std::uint8_t b, std::uint8_t a)
 : r(r), g(g), b(b), a(a)
 { }
 
-sdl2::color::color(sdl2::color const& other)
+sdl3::color::color(sdl3::color const& other)
 : r(other.r), g(other.g), b(other.b), a(other.a)
 { }
 
-sdl2::color&
-sdl2::color::operator=(color const& other)
+sdl3::color&
+sdl3::color::operator=(color const& other)
 {
     if (*this != other)
     {
@@ -58,13 +58,13 @@ sdl2::color::operator=(color const& other)
 }
 
 bool
-sdl2::color::operator==(color const& other) const
+sdl3::color::operator==(color const& other) const
 {
     return r == other.r && g == other.g && b == other.b && a == other.a;
 }
 
 std::ostream&
-sdl2::operator<<(std::ostream& stream, color const& value)
+sdl3::operator<<(std::ostream& stream, color const& value)
 {
     return stream
         << static_cast<unsigned int>(value.r)

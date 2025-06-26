@@ -1,4 +1,4 @@
-// SDL2++
+// SDL3++
 //
 // Copyright (C) 2025 Ronald van Manen <rvanmanen@gmail.com>
 //
@@ -23,7 +23,7 @@
 
 #include <boost/units/quantity.hpp>
 
-namespace sdl2
+namespace sdl3
 {
     bool is_power_of_two(std::int32_t value);
 

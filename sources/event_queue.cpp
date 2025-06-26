@@ -1,4 +1,4 @@
-// SDL2++
+// SDL3++
 //
 // Copyright (C) 2025 Ronald van Manen <rvanmanen@gmail.com>
 //
@@ -20,29 +20,29 @@
 
 #include <memory>
 
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_events.h>
+#include <SDL3/SDL.h>
+#include <SDL3/SDL_events.h>
 
-#include "SDL2pp/event_queue.h"
+#include "SDL3pp/event_queue.h"
 
-sdl2::event_queue::event_queue()
+sdl3::event_queue::event_queue()
 {
     SDL_InitSubSystem(SDL_INIT_EVENTS);
 }
 
-sdl2::event_queue::~event_queue()
+sdl3::event_queue::~event_queue()
 {
     SDL_QuitSubSystem(SDL_INIT_EVENTS);
 }
 
 bool
-sdl2::event_queue::poll(sdl2::event& event)
+sdl3::event_queue::poll(sdl3::event& event)
 {
     return 1 == SDL_PollEvent(event.native_handle());
 }
 
 bool
-sdl2::event_queue::pending() const
+sdl3::event_queue::pending() const
 {
     return 1 == SDL_PollEvent(nullptr);
 }

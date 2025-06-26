@@ -1,4 +1,4 @@
-// SDL2++
+// SDL3++
 //
 // Copyright (C) 2025 Ronald van Manen <rvanmanen@gmail.com>
 //
@@ -18,9 +18,9 @@
 //    misrepresented as being the original software.
 // 3. This notice may not be removed or altered from any source distribution.
 
-#include "SDL2pp/window_flags.h"
+#include "SDL3pp/window_flags.h"
 
-sdl2::window_flags sdl2::operator|(sdl2::window_flags left, sdl2::window_flags right)
+sdl3::window_flags sdl3::operator|(sdl3::window_flags left, sdl3::window_flags right)
 {
-    return static_cast<sdl2::window_flags>(static_cast<std::uint32_t>(left) | static_cast<std::uint32_t>(right));
+    return static_cast<sdl3::window_flags>(static_cast<std::uint32_t>(left) | static_cast<std::uint32_t>(right));
 }

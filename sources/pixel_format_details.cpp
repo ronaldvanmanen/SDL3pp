@@ -1,4 +1,4 @@
-// SDL2++
+// SDL3++
 //
 // Copyright (C) 2025 Ronald van Manen <rvanmanen@gmail.com>
 //
@@ -18,14 +18,14 @@
 //    misrepresented as being the original software.
 // 3. This notice may not be removed or altered from any source distribution.
 
-#include "SDL2pp/pixel_format_details.h"
+#include "SDL3pp/pixel_format_details.h"
 
-sdl2::pixel_format_details::pixel_format_details(sdl2::surface_base & owner)
-: _native_handle(owner.native_handle()->format)
+sdl3::pixel_format_details::pixel_format_details(sdl3::surface_base & owner)
+: _native_handle(SDL_GetPixelFormatDetails(owner.native_handle()->format))
 { }
 
-SDL_PixelFormat*
-sdl2::pixel_format_details::native_handle()
+SDL_PixelFormatDetails const*
+sdl3::pixel_format_details::native_handle()
 {
     return _native_handle;
 }

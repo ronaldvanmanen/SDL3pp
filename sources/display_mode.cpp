@@ -1,4 +1,4 @@
-// SDL2++
+// SDL3++
 //
 // Copyright (C) 2025 Ronald van Manen <rvanmanen@gmail.com>
 //
@@ -18,42 +18,40 @@
 //    misrepresented as being the original software.
 // 3. This notice may not be removed or altered from any source distribution.
 
-#include "SDL2pp/display_mode.h"
+#include "SDL3pp/display_mode.h"
 
-namespace sdl2
+namespace sdl3
 {
-    SDL_DisplayMode get_window_display_mode(window & window)
+    SDL_DisplayMode const* get_window_display_mode(window & window)
     { 
-        SDL_DisplayMode display_mode;
-        SDL_GetWindowDisplayMode(window.native_handle(), &display_mode);
-        return display_mode;
+        return SDL_GetWindowFullscreenMode(window.native_handle());
     }
 }
 
-sdl2::display_mode::display_mode(sdl2::window & window)
+sdl3::display_mode::display_mode(sdl3::window & window)
 : _native_handle(get_window_display_mode(window))
 {}
 
-sdl2::pixel_format
-sdl2::display_mode::format() const
+sdl3::pixel_format
+sdl3::display_mode::format() const
 {
-    return static_cast<sdl2::pixel_format>(_native_handle.format);
+    return static_cast<sdl3::pixel_format>(_native_handle->format);
 }
         
-sdl2::length<std::int32_t>
-sdl2::display_mode::width() const
+sdl3::length<std::int32_t>
+sdl3::display_mode::width() const
 {
-    return _native_handle.w * px;
+    return _native_handle->w * px;
 }
 
-sdl2::length<std::int32_t>
-sdl2::display_mode::height() const
+sdl3::length<std::int32_t>
+sdl3::display_mode::height() const
 {
-    return _native_handle.h * px;
+    return _native_handle->h * px;
 }
 
-sdl2::display_rate
-sdl2::display_mode::refresh_rate() const
+sdl3::display_rate
+sdl3::display_mode::refresh_rate() const
 {
-    return _native_handle.refresh_rate * boost::units::si::hertz;
+    return _native_handle->refresh_rate * boost::units::si::hertz;
 }

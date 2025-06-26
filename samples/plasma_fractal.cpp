@@ -1,4 +1,4 @@
-// SDL2++
+// SDL3++
 //
 // Copyright (C) 2025 Ronald van Manen <rvanmanen@gmail.com>
 //
@@ -26,25 +26,25 @@
 
 #include <boost/units/cmath.hpp>
 
-#include "SDL2pp/argb8888.h"
-#include "SDL2pp/color.h"
-#include "SDL2pp/event_queue.h"
-#include "SDL2pp/event.h"
-#include "SDL2pp/image.h"
-#include "SDL2pp/index8.h"
-#include "SDL2pp/keyboard_event.h"
-#include "SDL2pp/palette.h"
-#include "SDL2pp/pixel_format_details.h"
-#include "SDL2pp/renderer.h"
-#include "SDL2pp/size.h"
-#include "SDL2pp/surface.h"
-#include "SDL2pp/window.h"
+#include "SDL3pp/argb8888.h"
+#include "SDL3pp/color.h"
+#include "SDL3pp/event_queue.h"
+#include "SDL3pp/event.h"
+#include "SDL3pp/image.h"
+#include "SDL3pp/index8.h"
+#include "SDL3pp/keyboard_event.h"
+#include "SDL3pp/palette.h"
+#include "SDL3pp/pixel_format_details.h"
+#include "SDL3pp/renderer.h"
+#include "SDL3pp/size.h"
+#include "SDL3pp/surface.h"
+#include "SDL3pp/window.h"
 
 #include "shared/math.h"
 #include "shared/stopwatch.h"
 
 using namespace std;
-using namespace sdl2;
+using namespace sdl3;
 
 void
 diamond_step(
@@ -221,13 +221,12 @@ void rotate_right(vector<color> & palette)
 
 int main()
 {
-    auto main_window = window("Plasma Fractal", 640*px, 480*px, window_flags::shown);
+    auto main_window = window("Plasma Fractal", 640*px, 480*px);
     auto main_event_queue = event_queue();
 
     auto random_number_engine = default_random_engine(0);
     auto plasma_surface = generate_diamond_square_image(random_number_engine, main_window.size());
-    auto plasma_surface_format = pixel_format_details(plasma_surface);
-    auto plasma_palette = palette(plasma_surface_format);
+    auto plasma_palette = palette(plasma_surface);
     auto plasma_colors = vector<color>(256);
 
     for (uint8_t i = 0; i < 32; ++i)

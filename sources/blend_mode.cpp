@@ -1,4 +1,4 @@
-// SDL2++
+// SDL3++
 //
 // Copyright (C) 2025 Ronald van Manen <rvanmanen@gmail.com>
 //
@@ -20,10 +20,10 @@
 
 #pragma once
 
-#include "SDL2pp/blend_mode.h"
+#include "SDL3pp/blend_mode.h"
 
 std::ostream&
-sdl2::operator<<(std::ostream& stream, sdl2::blend_mode const& value)
+sdl3::operator<<(std::ostream& stream, sdl3::blend_mode const& value)
 {
     #define RETURN(X) return stream << #X;
     #define CASE(X) case X: RETURN(X)
@@ -31,12 +31,12 @@ sdl2::operator<<(std::ostream& stream, sdl2::blend_mode const& value)
 
     switch (value)
     {
-        CASE(sdl2::blend_mode::none)
-        CASE(sdl2::blend_mode::blend)
-        CASE(sdl2::blend_mode::additive)
-        CASE(sdl2::blend_mode::modulate)
-        CASE(sdl2::blend_mode::multiply)
-        CASE(sdl2::blend_mode::invalid)
-        DEFAULT(sdl2::blend_mode::invalid)
+        CASE(sdl3::blend_mode::none)
+        CASE(sdl3::blend_mode::blend)
+        CASE(sdl3::blend_mode::additive)
+        CASE(sdl3::blend_mode::modulate)
+        CASE(sdl3::blend_mode::multiply)
+        CASE(sdl3::blend_mode::invalid)
+        DEFAULT(sdl3::blend_mode::invalid)
     }
 }

@@ -1,4 +1,4 @@
-// SDL2++
+// SDL3++
 //
 // Copyright (C) 2025 Ronald van Manen <rvanmanen@gmail.com>
 //
@@ -20,33 +20,33 @@
 
 #include <boost/test/unit_test.hpp>
 
-#include "SDL2pp/palette.h"
+#include "SDL3pp/palette.h"
 
 BOOST_AUTO_TEST_CASE(test_palette_size_constructor)
 {
-    sdl2::palette test_palette(256);
+    sdl3::palette test_palette(256);
 
     BOOST_TEST(256 == test_palette.size());
 }
 
 BOOST_AUTO_TEST_CASE(test_palette_initializer_list_constructor)
 {
-    sdl2::palette test_palette { sdl2::color::white, sdl2::color::black };
+    sdl3::palette test_palette { sdl3::color::white, sdl3::color::black };
 
     BOOST_TEST(2 == test_palette.size());
-    BOOST_TEST(test_palette[0] == sdl2::color::white);
-    BOOST_TEST(test_palette[1] == sdl2::color::black);
+    BOOST_TEST(test_palette[0] == sdl3::color::white);
+    BOOST_TEST(test_palette[1] == sdl3::color::black);
 }
 
 BOOST_AUTO_TEST_CASE(test_palette_subscript_operator)
 {
-    sdl2::palette test_palette(2);
+    sdl3::palette test_palette(2);
 
-    test_palette[0] = sdl2::color::white;
-    test_palette[1] = sdl2::color::black;
+    test_palette[0] = sdl3::color::white;
+    test_palette[1] = sdl3::color::black;
 
     BOOST_REQUIRE_THROW(test_palette[2], std::out_of_range);
     
-    BOOST_TEST(test_palette[0] == sdl2::color::white);
-    BOOST_TEST(test_palette[1] == sdl2::color::black);
+    BOOST_TEST(test_palette[0] == sdl3::color::white);
+    BOOST_TEST(test_palette[1] == sdl3::color::black);
 }

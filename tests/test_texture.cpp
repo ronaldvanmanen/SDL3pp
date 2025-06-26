@@ -1,4 +1,4 @@
-// SDL2++
+// SDL3++
 //
 // Copyright (C) 2025 Ronald van Manen <rvanmanen@gmail.com>
 //
@@ -20,12 +20,12 @@
 
 #include <boost/test/unit_test.hpp>
 
-#include "SDL2pp/argb8888.h"
-#include "SDL2pp/renderer.h"
-#include "SDL2pp/texture.h"
-#include "SDL2pp/window.h"
+#include "SDL3pp/argb8888.h"
+#include "SDL3pp/renderer.h"
+#include "SDL3pp/texture.h"
+#include "SDL3pp/window.h"
 
-using namespace sdl2;
+using namespace sdl3;
 
 BOOST_AUTO_TEST_CASE(test_texture_constructors)
 {

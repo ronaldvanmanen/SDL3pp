@@ -1,4 +1,4 @@
-// SDL2++
+// SDL3++
 //
 // Copyright (C) 2025 Ronald van Manen <rvanmanen@gmail.com>
 //
@@ -18,24 +18,24 @@
 //    misrepresented as being the original software.
 // 3. This notice may not be removed or altered from any source distribution.
 
-#include <SDL2/SDL_error.h>
+#include <SDL3/SDL_error.h>
 
-#include "SDL2pp/error.h"
+#include "SDL3pp/error.h"
 
-sdl2::error::error(std::string const& what_arg)
+sdl3::error::error(std::string const& what_arg)
 : std::runtime_error(what_arg)
 { }
 
-sdl2::error::error(const char* what_arg)
+sdl3::error::error(const char* what_arg)
 : std::runtime_error(what_arg)
 { }
 
-sdl2::error::error(sdl2::error const& other)
+sdl3::error::error(sdl3::error const& other)
 : std::runtime_error(other)
 { }
 
-sdl2::error&
-sdl2::error::operator=(error const& other)
+sdl3::error&
+sdl3::error::operator=(error const& other)
 {
     if (this != &other)
     {
@@ -45,10 +45,10 @@ sdl2::error::operator=(error const& other)
 }
 
 void
-sdl2::throw_last_error(bool condition)
+sdl3::throw_last_error(bool condition)
 {
-    if (condition)
+    if (!condition)
     {
-        throw sdl2::error(SDL_GetError());
+        throw sdl3::error(SDL_GetError());
     }
 }

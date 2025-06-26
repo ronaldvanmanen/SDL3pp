@@ -1,4 +1,4 @@
-// SDL2++
+// SDL3++
 //
 // Copyright (C) 2025 Ronald van Manen <rvanmanen@gmail.com>
 //
@@ -18,57 +18,62 @@
 //    misrepresented as being the original software.
 // 3. This notice may not be removed or altered from any source distribution.
 
-#include "SDL2pp/keyboard_event.h"
+#include "SDL3pp/keyboard_event.h"
 
-sdl2::keyboard_event::keyboard_event(SDL_Event const& native_handle)
+sdl3::keyboard_event::keyboard_event(SDL_Event const& native_handle)
 : _native_handle(native_handle)
 { }
 
-sdl2::key_event_type
-sdl2::keyboard_event::type() const
+sdl3::key_event_type
+sdl3::keyboard_event::type() const
 {
-    return static_cast<sdl2::key_event_type>(_native_handle.key.type);
+    return static_cast<sdl3::key_event_type>(_native_handle.key.type);
 }
 
-std::uint32_t
-sdl2::keyboard_event::timestamp() const
+std::uint64_t
+sdl3::keyboard_event::timestamp() const
 {
     return _native_handle.key.timestamp;
 }
 
 std::uint32_t
-sdl2::keyboard_event::window_id() const
+sdl3::keyboard_event::window_id() const
 {
     return _native_handle.key.windowID;
 }
 
-sdl2::key_state
-sdl2::keyboard_event::state() const
+bool
+sdl3::keyboard_event::released() const
 {
-    return static_cast<sdl2::key_state>(_native_handle.key.state);
+    return !pressed();
 }
 
-std::uint8_t
-sdl2::keyboard_event::repeat() const
+bool
+sdl3::keyboard_event::pressed() const
+{
+    return _native_handle.key.down;
+}
+
+bool
+sdl3::keyboard_event::repeated() const
 {
     return _native_handle.key.repeat;
 }
 
-
-sdl2::scan_code
-sdl2::keyboard_event::scan_code() const
+sdl3::scan_code
+sdl3::keyboard_event::scan_code() const
 {
-    return static_cast<sdl2::scan_code>(_native_handle.key.keysym.scancode);
+    return static_cast<sdl3::scan_code>(_native_handle.key.scancode);
 }        
 
-sdl2::key_code
-sdl2::keyboard_event::key_code() const
+sdl3::key_code
+sdl3::keyboard_event::key_code() const
 {
-    return static_cast<sdl2::key_code>(_native_handle.key.keysym.sym);
+    return static_cast<sdl3::key_code>(_native_handle.key.key);
 }
 
-sdl2::key_modifier_set
-sdl2::keyboard_event::key_modifiers() const
+sdl3::key_modifier_set
+sdl3::keyboard_event::key_modifiers() const
 {
-    return key_modifier_set(static_cast<sdl2::key_modifier>(_native_handle.key.keysym.mod));
+    return key_modifier_set(static_cast<sdl3::key_modifier>(_native_handle.key.mod));
 }

@@ -1,4 +1,4 @@
-// SDL2++
+// SDL3++
 //
 // Copyright (C) 2025 Ronald van Manen <rvanmanen@gmail.com>
 //
@@ -20,15 +20,21 @@
 
 #include <cstdint>
 
-#include "SDL2pp/keyboard_state.h"
+#include "SDL3pp/keyboard_state.h"
 
-sdl2::keyboard_state::keyboard_state(std::uint8_t const* key_states, std::int32_t key_count)
+sdl3::keyboard_state::keyboard_state(bool const* key_states, std::int32_t key_count)
 : _key_states(key_states)
 , _key_count(key_count)
 {}
 
 bool
-sdl2::keyboard_state::pressed(scan_code key) const
+sdl3::keyboard_state::pressed(scan_code key) const
 {
-    return _key_states[static_cast<int>(key)] == 1;
+    return _key_states[static_cast<int>(key)];
+}
+
+bool
+sdl3::keyboard_state::released(scan_code key) const
+{
+    return _key_states[static_cast<int>(key)];
 }

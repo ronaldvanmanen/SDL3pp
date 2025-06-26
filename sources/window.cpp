@@ -1,4 +1,4 @@
-// SDL2++
+// SDL3++
 //
 // Copyright (C) 2025 Ronald van Manen <rvanmanen@gmail.com>
 //
@@ -18,40 +18,39 @@
 //    misrepresented as being the original software.
 // 3. This notice may not be removed or altered from any source distribution.
 
-#include "SDL2pp/error.h"
-#include "SDL2pp/window.h"
+#include <SDL3/SDL.h>
+#include "SDL3pp/error.h"
+#include "SDL3pp/window.h"
 
-namespace sdl2
+namespace sdl3
 {
-    SDL_Window* create_window(std::string const& title, sdl2::length<std::int32_t> width, sdl2::length<std::int32_t> height, sdl2::window_flags flags)
+    SDL_Window* create_window(std::string const& title, sdl3::length<std::int32_t> width, sdl3::length<std::int32_t> height, sdl3::window_flags flags)
     {
         SDL_Window* native_handle =
             SDL_CreateWindow(
                 title.c_str(),
-                SDL_WINDOWPOS_UNDEFINED,
-                SDL_WINDOWPOS_UNDEFINED,
                 quantity_cast<std::int32_t>(width),
                 quantity_cast<std::int32_t>(height),
                 static_cast<std::uint32_t>(flags)
             );
-        sdl2::throw_last_error(native_handle == nullptr);        
+        sdl3::throw_last_error(native_handle != nullptr);        
         return native_handle;
     }
 }
 
-sdl2::window::window(std::string const& title, sdl2::length<std::int32_t> width, sdl2::length<std::int32_t> height)
-: _native_handle(sdl2::create_window(title, width, height, sdl2::window_flags::none))
+sdl3::window::window(std::string const& title, sdl3::length<std::int32_t> width, sdl3::length<std::int32_t> height)
+: _native_handle(sdl3::create_window(title, width, height, sdl3::window_flags::none))
 { }
 
-sdl2::window::window(std::string const& title, sdl2::length<std::int32_t> width, sdl2::length<std::int32_t> height, sdl2::window_flags flags)
-: _native_handle(sdl2::create_window(title, width, height, flags))
+sdl3::window::window(std::string const& title, sdl3::length<std::int32_t> width, sdl3::length<std::int32_t> height, sdl3::window_flags flags)
+: _native_handle(sdl3::create_window(title, width, height, flags))
 { }
 
-sdl2::window::window(sdl2::window&& other)
+sdl3::window::window(sdl3::window&& other)
 : _native_handle(std::exchange(other._native_handle, nullptr))
 { }
 
-sdl2::window::~window()
+sdl3::window::~window()
 {
     if (_native_handle != nullptr)
     {
@@ -59,31 +58,49 @@ sdl2::window::~window()
     }
 }
 
-sdl2::size_2d<std::int32_t>
-sdl2::window::size() const
+sdl3::size_2d<std::int32_t>
+sdl3::window::size() const
 {
     int width, height;
     SDL_GetWindowSize(_native_handle, &width, &height);
-    return sdl2::size_2d<std::int32_t>(
+    return sdl3::size_2d<std::int32_t>(
         width * px,
         height * px
     );
 }
 
 void
-sdl2::window::raise()
+sdl3::window::raise()
 {
-    SDL_RaiseWindow(_native_handle);
+    throw_last_error(
+        SDL_RaiseWindow(_native_handle)
+    );
 }
 
 void
-sdl2::window::update_surface()
+sdl3::window::update_surface()
 {
-    throw_last_error(SDL_UpdateWindowSurface(_native_handle) < 0);
+    throw_last_error(
+        SDL_UpdateWindowSurface(_native_handle)
+    );
+}
+
+void
+sdl3::window::relative_mouse_mode(bool enabled)
+{
+    throw_last_error(
+        SDL_SetWindowRelativeMouseMode(_native_handle, enabled)
+    );
+}
+
+bool
+sdl3::window::relative_mouse_mode() const
+{
+    return SDL_GetWindowRelativeMouseMode(_native_handle);
 }
 
 SDL_Window*
-sdl2::window::native_handle()
+sdl3::window::native_handle()
 {
     return _native_handle;
 }

@@ -1,4 +1,4 @@
-// SDL2++
+// SDL3++
 //
 // Copyright (C) 2025 Ronald van Manen <rvanmanen@gmail.com>
 //
@@ -20,22 +20,22 @@
 
 #include "stopwatch.h"
 
-sdl2::stopwatch
-sdl2::stopwatch::start_now()
+sdl3::stopwatch
+sdl3::stopwatch::start_now()
 {
-    sdl2::stopwatch stopwatch;
+    sdl3::stopwatch stopwatch;
     stopwatch.start();
     return stopwatch;
 }
 
-sdl2::stopwatch::stopwatch()
+sdl3::stopwatch::stopwatch()
 : _start_time(time_point::min())
 , _elapsed_time(duration::zero())
 , _running(false)
 { }
 
 void
-sdl2::stopwatch::start()
+sdl3::stopwatch::start()
 {
     if (_running) return;
     _start_time = clock::now();
@@ -43,7 +43,7 @@ sdl2::stopwatch::start()
 }
 
 void
-sdl2::stopwatch::stop()
+sdl3::stopwatch::stop()
 {
     if (!_running) return;
     
@@ -54,14 +54,14 @@ sdl2::stopwatch::stop()
 }
 
 void
-sdl2::stopwatch::reset()
+sdl3::stopwatch::reset()
 {
     _start_time = clock::now();
     _elapsed_time = duration::zero();
 }
 
-sdl2::stopwatch::duration
-sdl2::stopwatch::elapsed()
+sdl3::stopwatch::duration
+sdl3::stopwatch::elapsed()
 {
     auto elapsed_time = _elapsed_time;
     if (_running)
@@ -73,16 +73,16 @@ sdl2::stopwatch::elapsed()
     return elapsed_time;
 }
 
-sdl2::fractional_seconds
-sdl2::elapsed_seconds(sdl2::stopwatch &stopwatch)
+sdl3::fractional_seconds
+sdl3::elapsed_seconds(sdl3::stopwatch &stopwatch)
 {
     return std::chrono::duration_cast<
-        sdl2::fractional_seconds
+        sdl3::fractional_seconds
     >(stopwatch.elapsed());
 }
 
-sdl2::time<double>
-sdl2::elapsed_time(sdl2::stopwatch &s)
+sdl3::time<double>
+sdl3::elapsed_time(sdl3::stopwatch &s)
 {
-    return sdl2::time<double>(sdl2::elapsed_seconds(s).count() * sdl2::seconds);
+    return sdl3::time<double>(sdl3::elapsed_seconds(s).count() * sdl3::seconds);
 }
