@@ -34,6 +34,12 @@ namespace sdl3
 
         image(TPixelFormat* pixels, length<std::int32_t> width, length<std::int32_t> height, std::int32_t pitch);
 
+        ~image();
+
+    private:
+        image(TPixelFormat* pixels, length<std::int32_t> width, length<std::int32_t> height, std::int32_t pitch, bool free_pixels);
+
+    public:
         length<std::int32_t> width() const;
 
         length<std::int32_t> height() const;
@@ -50,25 +56,45 @@ namespace sdl3
         length<std::int32_t> _height;
 
         std::int32_t _pitch;
+
+        bool _free_pixels;
     };
 
     template<typename TPixelFormat>
     image<TPixelFormat>::image(length<std::int32_t> width, length<std::int32_t> height)
     : image(
-        new TPixelFormat[boost::units::quantity_cast<std::size_t>(height * width)],
+        new TPixelFormat[
+            boost::units::quantity_cast<std::size_t>(height) * boost::units::quantity_cast<std::size_t>(width)
+        ],
         width,
         height,
-        boost::units::quantity_cast<std::int32_t>(width)
+        boost::units::quantity_cast<std::int32_t>(width),
+        true
     )
-    {}
+    { }
 
     template<typename TPixelFormat>
     image<TPixelFormat>::image(TPixelFormat* pixels, length<std::int32_t> width, length<std::int32_t> height, std::int32_t pitch)
+    : image(pixels, width, height, pitch, false)
+    { }
+
+    template<typename TPixelFormat>
+    image<TPixelFormat>::image(TPixelFormat* pixels, length<std::int32_t> width, length<std::int32_t> height, std::int32_t pitch, bool free_pixels)
     : _pixels(pixels)
     , _width(width)
     , _height(height)
     , _pitch(pitch)
+    , _free_pixels(free_pixels)
     { }
+
+    template<typename TPixelFormat>
+    image<TPixelFormat>::~image()
+    {
+        if (_free_pixels)
+        {
+            delete[] _pixels;
+        }
+    }
 
     template<typename TPixelFormat>
     length<std::int32_t>
