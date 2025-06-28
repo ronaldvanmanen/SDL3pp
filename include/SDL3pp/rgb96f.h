@@ -18,35 +18,48 @@
 //    misrepresented as being the original software.
 // 3. This notice may not be removed or altered from any source distribution.
 
+#include <boost/operators.hpp>
+
+#include "pixel_format.h"
+
 namespace sdl3
 {
-    class rgb96f
+    class alignas(alignof(float)) rgb96f
+    : boost::equality_comparable<rgb96f
+    , boost::addable<rgb96f
+    , boost::multipliable<rgb96f
+    , boost::multipliable<rgb96f, float
+    > > > >
     {
     public:
+        static constexpr pixel_format format = pixel_format::rgb96f;
+
         static const rgb96f black;
 
         static const rgb96f white;
 
     public:
+        rgb96f();
+
+        rgb96f(float r, float g, float b);
+
+        rgb96f(rgb96f const& other);
+
         bool operator==(rgb96f const& other) const;
 
         rgb96f& operator+=(rgb96f const& other);
+        
+        rgb96f& operator*=(rgb96f const& other);
+
+        rgb96f& operator*=(float scalar);
+
+        rgb96f& clamp();
+
+        rgb96f clamped() const;
 
     public:
         float r, g, b;
     };
-
-    rgb96f
-    operator+(rgb96f const& left, rgb96f const& right);
-
-    rgb96f
-    operator*(rgb96f const& left, rgb96f const& right);
-
-    rgb96f
-    operator*(rgb96f const& color, float scalar);
-
-    rgb96f
-    operator*(float scalar, rgb96f const& color);
 
     inline
     rgb96f

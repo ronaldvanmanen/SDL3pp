@@ -71,6 +71,9 @@ namespace sdl3
         argb32 = SDL_PIXELFORMAT_ARGB32,
         bgra32 = SDL_PIXELFORMAT_BGRA32,
         abgr32 = SDL_PIXELFORMAT_ABGR32,
+
+        rgb96f = SDL_PIXELFORMAT_RGB96_FLOAT,
+
         yv12 = SDL_PIXELFORMAT_YV12,
         iyuv = SDL_PIXELFORMAT_IYUV,
         yuy2 = SDL_PIXELFORMAT_YUY2,
