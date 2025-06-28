@@ -20,10 +20,12 @@
 
 #include "SDL3pp/texture.h"
 
+#include <cassert>
+
 namespace sdl3
 {
     SDL_Texture* create_texture(
-        sdl3::renderer const& owner,
+        sdl3::renderer & owner,
         sdl3::pixel_format format,
         sdl3::texture_access access,
         sdl3::length<std::int32_t> width,
@@ -31,7 +33,7 @@ namespace sdl3
     )
     {
         SDL_Texture* native_handle = SDL_CreateTexture(
-            const_cast<sdl3::renderer&>(owner).native_handle(),
+            owner.native_handle(),
             static_cast<SDL_PixelFormat>(format),
             static_cast<SDL_TextureAccess>(access),
             quantity_cast<std::int32_t>(width),
@@ -40,10 +42,20 @@ namespace sdl3
         throw_last_error(native_handle != nullptr);
         return native_handle;
     }
+
+    SDL_Texture* create_texture(sdl3::renderer & owner, sdl3::property_group & properties)
+    {
+        SDL_Texture* native_handle = SDL_CreateTextureWithProperties(
+            owner.native_handle(),
+            properties.native_handle()
+        );
+        throw_last_error(native_handle != nullptr);
+        return native_handle;
+    }
 }
 
 sdl3::texture_base::texture_base(
-    sdl3::renderer const& owner,
+    sdl3::renderer & owner,
     sdl3::pixel_format format,
     sdl3::texture_access access,
     sdl3::length<std::int32_t> width,
@@ -52,12 +64,22 @@ sdl3::texture_base::texture_base(
 : _native_handle(sdl3::create_texture(owner, format, access, width, height))
 { }
 
+sdl3::texture_base::texture_base(sdl3::renderer & owner, sdl3::property_group & properties)
+: _native_handle(sdl3::create_texture(owner, properties))
+{ }
+
 sdl3::texture_base::~texture_base()
 {
     if (_native_handle != nullptr)
     {
         SDL_DestroyTexture(_native_handle);
     }
+}
+
+sdl3::property_group
+sdl3::texture_base::properties() const
+{
+    return sdl3::property_group(SDL_GetTextureProperties(_native_handle));
 }
 
 SDL_Texture*

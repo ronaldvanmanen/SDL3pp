@@ -36,6 +36,7 @@ namespace sdl3
 #include "color.h"
 #include "error.h"
 #include "pixel_format.h"
+#include "properties.h"
 #include "size.h"
 #include "texture.h"
 #include "window.h"
@@ -58,6 +59,8 @@ namespace sdl3
         renderer& operator=(renderer const& other) = delete;
 
         std::string name() const;
+
+        property_group properties() const;
 
         size_2d<std::int32_t> output_size() const;
 
