@@ -33,7 +33,6 @@ add_sample("sw_ray_tracer"
   SOURCES
   "sw_ray_tracer.cpp"
   "shared/math.cpp"
-  "shared/rgb96f.cpp"
   "shared/stopwatch.cpp"
 )
 

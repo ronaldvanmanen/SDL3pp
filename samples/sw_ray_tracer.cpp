@@ -40,11 +40,12 @@
 #include "SDL3pp/mouse_wheel_event.h"
 #include "SDL3pp/mouse.h"
 #include "SDL3pp/renderer.h"
+#include "SDL3pp/rgb96f.h"
 #include "SDL3pp/texture.h"
 #include "SDL3pp/window.h"
 
 #include "shared/math.h"
-#include "shared/rgb96f.h"
+
 #include "shared/stopwatch.h"
 
 using namespace std;
@@ -750,58 +751,30 @@ shadow(ray const& ray, world const& world, float max_distance)
     return 0.0f;
 }
 
-argb8888 to_argb8888(rgb96f const& color)
-{
-    return argb8888(
-        255_a8,
-        static_cast<r8>(
-            static_cast<uint8_t>(
-                round(
-                    clamp(color.r, 0.0f, 1.0f) * 255.0f
-                )
-            )
-        ),
-        static_cast<g8>(
-            static_cast<uint8_t>(
-                round(
-                    clamp(color.g, 0.0f, 1.0f) * 255.0f
-                )
-            )
-        ),
-        static_cast<b8>(
-            static_cast<uint8_t>(
-                round(
-                    clamp(color.b, 0.0f, 1.0f) * 255.0f
-                )
-            )
-        )
-    );
-}
-
 int main()
 {
     auto window = ::window("Software Ray Tracer", 640*px, 480*px, window_flags::resizable);
     auto renderer = ::renderer(window);
-    auto texture = ::texture<argb8888>(renderer, texture_access::streaming_access, renderer.output_size());
-    auto raster = ::image<argb8888>(renderer.output_size());
+    auto texture = ::texture<rgb96f>(renderer, texture_access::streaming_access, renderer.output_size());
+    auto raster = ::image<rgb96f>(renderer.output_size());
 
     auto event_queue = ::event_queue();
 
     // Scene
     auto world = ::world
     {
-        .ambient = rgb96f { .r = 0.55f, .g = 0.44f, .b = 0.47f },
+        .ambient = rgb96f(0.55f, 0.44f, 0.47f),
         .min_depth = 1.0f,
         .max_depth = 298.0f,
-        .depth_color = rgb96f { .r = 0.86f, .g = 0.88f, .b = 0.95f },
-        .environment = rgb96f { .r = 0.62f, .g = 0.69f, .b = 0.96f }
+        .depth_color = rgb96f(0.86f, 0.88f, 0.95f),
+        .environment = rgb96f(0.62f, 0.69f, 0.96f)
     };
 
     // Key light
     world.lights.push_back(
         point_light(
             vector3 { -300.0f, 350.0f, 10.0f },
-            rgb96f { .r = 0.70f, .g = 0.689f, .b = 0.6885f }
+            rgb96f(0.70f, 0.689f, 0.6885f)
         )
     );
 
@@ -811,7 +784,7 @@ int main()
             vector3 { 0.0f, 0.0f, 0.0f },
             vector3 { 0.0f, 1.0f, 0.0f },
             surface {
-                .color = rgb96f { .r = 1.0f, .g = 1.0f, .b = 1.0f },
+                .color = rgb96f(1.0f, 1.0f, 1.0f),
                 .reflective_coefficient = 0.0f,
                 .specular_coefficient = 0.5f,
                 .specular_exponent = 0.8f,
@@ -825,7 +798,7 @@ int main()
             vector3 { 0.0f, 5.25f, 0.0f },
             5.25f,
             surface {
-                .color = rgb96f { .r = 0.89f, .g = 0.48f, .b = 0.42f },
+                .color = rgb96f(0.89f, 0.48f, 0.42f),
                 .reflective_coefficient = 0.15f,
                 .specular_coefficient = 1.0f,
                 .specular_exponent = 165.0f,
@@ -839,7 +812,7 @@ int main()
             vector3 { -3.5f, 1.6f, -6.7f },
             1.6f,
             surface {
-                .color = rgb96f { .r = 0.95f, .g = 0.93f, .b = 0.31f },
+                .color = rgb96f(0.95f, 0.93f, 0.31f),
                 .reflective_coefficient = 0.15f,
                 .specular_coefficient = 1.0f,
                 .specular_exponent = 165.0f,
@@ -853,7 +826,7 @@ int main()
             vector3 { 14.0f, 7.0f, 6.5f },
             7.0f,
             surface {
-                .color = rgb96f { .r = 1.0f, .g = 0.44f, .b = 0.64f },
+                .color = rgb96f(1.0f, 0.44f, 0.64f),
                 .reflective_coefficient = 0.15f,
                 .specular_coefficient = 1.0f,
                 .specular_exponent = 165.0f,
@@ -867,7 +840,7 @@ int main()
             vector3 { 8.2f, 3.5f, -6.5f },
             3.5f,
             surface {
-                .color = rgb96f { .r = 0.89f, .g = 0.48f, .b = 0.42f },
+                .color = rgb96f(0.89f, 0.48f, 0.42f),
                 .reflective_coefficient = 0.15f,
                 .specular_coefficient = 1.0f,
                 .specular_exponent = 165.0f,
@@ -881,7 +854,7 @@ int main()
             vector3 { -16.6f, 6.5f, 0.0f },
             6.5f,
             surface {
-                .color = rgb96f { .r = 1.0f, .g = 0.44f, .b = 0.64f },
+                .color = rgb96f(1.0f, 0.44f, 0.64f),
                 .reflective_coefficient = 0.15f,
                 .specular_coefficient = 1.0f,
                 .specular_exponent = 165.0f,
@@ -895,7 +868,7 @@ int main()
             vector3 { -9.5f, 3.0f, -6.0f },
             3.0f,
             surface {
-                .color = rgb96f { .r = 1.0f, .g = 0.44f, .b = 0.64f },
+                .color = rgb96f(1.0f, 0.44f, 0.64f),
                 .reflective_coefficient = 0.15f,
                 .specular_coefficient = 1.0f,
                 .specular_exponent = 165.0f,
@@ -909,7 +882,7 @@ int main()
             vector3 { -15.0f, 3.0f, 12.0f },
             3.0f,
             surface {
-                .color = rgb96f { .r = 0.95f, .g = 0.93f, .b = 0.31f },
+                .color = rgb96f(0.95f, 0.93f, 0.31f),
                 .reflective_coefficient = 0.15f,
                 .specular_coefficient = 1.0f,
                 .specular_exponent = 165.0f,
@@ -923,7 +896,7 @@ int main()
             vector3 { 40.0f, 10.0f, 175.0f },
             10.0f,
             surface {
-                .color = rgb96f { .r = 0.18f, .g = 0.31f, .b = 0.68f },
+                .color = rgb96f(0.18f, 0.31f, 0.68f),
                 .reflective_coefficient = 0.15f,
                 .specular_coefficient = 1.0f,
                 .specular_exponent = 165.0f,
@@ -1091,7 +1064,7 @@ int main()
                     auto const depth = (nearest_hit) ? clamp((nearest_hit->distance - world.min_depth) / (world.max_depth - world.min_depth), 0.0f, 1.0f) : 1.0f;
                     auto const apparent_color = mix(shading_color, world.depth_color, depth);
 
-                    raster(raster_x, raster_y) = to_argb8888(apparent_color);
+                    raster(raster_x, raster_y) = apparent_color;
                 }
             }
 
