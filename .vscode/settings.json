@@ -114,6 +114,7 @@
         "cfenv": "cpp",
         "cinttypes": "cpp",
         "resumable": "cpp",
-        "csignal": "cpp"
+        "csignal": "cpp",
+        "cassert": "cpp"
     }
 }

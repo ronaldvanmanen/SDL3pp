@@ -36,6 +36,7 @@ namespace sdl3
 #include "error.h"
 #include "pixel_format_traits.h"
 #include "pixel_format.h"
+#include "properties.h"
 #include "renderer.h"
 #include "size.h"
 #include "surface.h"
@@ -46,7 +47,9 @@ namespace sdl3
     class texture_base
     {
     protected:
-        texture_base(renderer const& owner, pixel_format format, texture_access access, length<int32_t> width, length<int32_t> height);
+        texture_base(renderer & owner, pixel_format format, texture_access access, length<int32_t> width, length<int32_t> height);
+        
+        texture_base(renderer & owner, property_group & properties);
 
         texture_base(texture_base const& other) = delete;
 
@@ -55,6 +58,8 @@ namespace sdl3
         texture_base& operator=(texture_base const& other) = delete;
 
     public:
+        property_group properties() const;
+
         SDL_Texture* native_handle();
 
     protected:
@@ -65,9 +70,9 @@ namespace sdl3
     class texture : public texture_base
     {
     public:
-        texture(renderer const& owner, texture_access access, length<std::int32_t> width, length<std::int32_t> height);
+        texture(renderer & owner, texture_access access, length<std::int32_t> width, length<std::int32_t> height);
 
-        texture(renderer const& owner, texture_access access, size_2d<std::int32_t> const& size);
+        texture(renderer & owner, texture_access access, size_2d<std::int32_t> const& size);
 
         texture(texture<TPixelFormat> const& other) = delete;
 
@@ -82,12 +87,12 @@ namespace sdl3
     };
 
     template<typename TPixelFormat>
-    texture<TPixelFormat>::texture(renderer const& owner, texture_access access, length<std::int32_t> width, length<std::int32_t> height)
+    texture<TPixelFormat>::texture(renderer & owner, texture_access access, length<std::int32_t> width, length<std::int32_t> height)
     : texture_base(owner, pixel_format_traits<TPixelFormat>::format, access, width, height)
     { }
 
     template<typename TPixelFormat>
-    texture<TPixelFormat>::texture(renderer const& owner, texture_access access, size_2d<std::int32_t> const& size)
+    texture<TPixelFormat>::texture(renderer & owner, texture_access access, size_2d<std::int32_t> const& size)
     : texture_base(owner, pixel_format_traits<TPixelFormat>::format, access, size.width, size.height)
     { }
 

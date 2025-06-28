@@ -72,6 +72,12 @@ sdl3::renderer::name() const
     return std::string(retval);
 }
 
+sdl3::property_group
+sdl3::renderer::properties() const
+{
+    return sdl3::property_group(SDL_GetRendererProperties(_native_handle));
+}
+
 sdl3::size_2d<std::int32_t>
 sdl3::renderer::output_size() const
 {
