@@ -23,6 +23,7 @@
 #include <cstdint>
 
 #include "length.h"
+#include "size.h"
 
 namespace sdl3
 {
@@ -30,6 +31,8 @@ namespace sdl3
     class image
     {
     public:
+        image(size_2d<std::int32_t> size);
+
         image(length<std::int32_t> width, length<std::int32_t> height);
 
         image(TPixelFormat* pixels, length<std::int32_t> width, length<std::int32_t> height, std::int32_t pitch);
@@ -43,6 +46,10 @@ namespace sdl3
         length<std::int32_t> width() const;
 
         length<std::int32_t> height() const;
+
+        std::int32_t pitch() const;
+
+        TPixelFormat const* pixels() const;
 
         TPixelFormat& operator()(offset<int32_t> x, offset<int32_t> y);
 
@@ -59,6 +66,11 @@ namespace sdl3
 
         bool _free_pixels;
     };
+
+    template<typename TPixelFormat>
+    image<TPixelFormat>::image(size_2d<std::int32_t> size)
+    : image(size.width, size.height)
+    { }
 
     template<typename TPixelFormat>
     image<TPixelFormat>::image(length<std::int32_t> width, length<std::int32_t> height)
@@ -108,6 +120,20 @@ namespace sdl3
     image<TPixelFormat>::height() const
     {
         return _height;
+    }
+
+    template<typename TPixelFormat>
+    std::int32_t
+    image<TPixelFormat>::pitch() const
+    {
+        return _pitch;
+    }
+
+    template<typename TPixelFormat>
+    TPixelFormat const*
+    image<TPixelFormat>::pixels() const
+    {
+        return _pixels;
     }
 
     template<typename TPixelFormat>

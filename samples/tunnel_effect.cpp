@@ -155,9 +155,11 @@ int main()
     auto main_window = window("Tunnel Effect", 800*px, 600*px, window_flags::resizable);
     auto screen_renderer = renderer(main_window);
     auto screen_texture = texture<argb8888>(screen_renderer, texture_access::streaming_access, screen_renderer.output_size());
+
     auto main_event_queue = event_queue();
 
     auto source_image = generate_xor_image(screen_renderer.output_size());
+    auto target_image = image<argb8888>(screen_renderer.output_size());
     auto displacement_table = generate_displacement_image(screen_renderer.output_size());
     
     auto stopwatch = stopwatch::start_now();
@@ -176,35 +178,31 @@ int main()
         }
         else
         {
-            screen_texture.with_lock(
-                [&source_image, &displacement_table, &stopwatch](image<argb8888> &screen_image)
-                {
-                    const auto screen_width = screen_image.width();
-                    const auto screen_height = screen_image.height();
-                    const auto source_width = source_image.width();
-                    const auto source_height = source_image.height();
- 
-                    const auto time = elapsed_time(stopwatch);
-                    const auto speed_x = length<double>(source_width) / second;
-                    const auto speed_y = length<double>(source_height) * 0.25 / second;
-                    const auto shift_x = length<int32_t>(speed_x * time);
-                    const auto shift_y = length<int32_t>(speed_y * time);
-                    const auto offset_x = (source_width - screen_width) / 2;
-                    const auto offset_y = (source_height - screen_height) / 2;
-    
-                    for (auto screen_y = 0*px; screen_y < screen_height; screen_y += 1*px)
-                    {
-                        for (auto screen_x = 0*px; screen_x < screen_width; screen_x += 1*px)
-                        {
-                            const auto displacement = displacement_table(screen_x + offset_x, screen_y + offset_y);
-                            const auto source_x = power_of_two_mod(displacement.x + shift_x, source_width);
-                            const auto source_y = power_of_two_mod(displacement.y + shift_y, source_height);
-                            screen_image(screen_x, screen_y) = source_image(source_x, source_y);
-                        }
-                    }
-                }
-            );
+            const auto target_width = target_image.width();
+            const auto target_height = target_image.height();
+            const auto source_width = source_image.width();
+            const auto source_height = source_image.height();
 
+            const auto time = elapsed_time(stopwatch);
+            const auto speed_x = length<double>(source_width) / second;
+            const auto speed_y = length<double>(source_height) * 0.25 / second;
+            const auto shift_x = length<int32_t>(speed_x * time);
+            const auto shift_y = length<int32_t>(speed_y * time);
+            const auto offset_x = (source_width - target_width) / 2;
+            const auto offset_y = (source_height - target_height) / 2;
+
+            for (auto target_y = 0*px; target_y < target_height; target_y += 1*px)
+            {
+                for (auto target_x = 0*px; target_x < target_width; target_x += 1*px)
+                {
+                    const auto displacement = displacement_table(target_x + offset_x, target_y + offset_y);
+                    const auto source_x = power_of_two_mod(displacement.x + shift_x, source_width);
+                    const auto source_y = power_of_two_mod(displacement.y + shift_y, source_height);
+                    target_image(target_x, target_y) = source_image(source_x, source_y);
+                }
+            }
+
+            screen_texture.update(target_image);
             screen_renderer.draw_blend_mode(blend_mode::none);
             screen_renderer.draw_color(color::black);
             screen_renderer.clear();

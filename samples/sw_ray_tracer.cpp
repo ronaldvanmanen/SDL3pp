@@ -783,6 +783,8 @@ int main()
     auto window = ::window("Software Ray Tracer", 640*px, 480*px, window_flags::resizable);
     auto renderer = ::renderer(window);
     auto texture = ::texture<argb8888>(renderer, texture_access::streaming_access, renderer.output_size());
+    auto raster = ::image<argb8888>(renderer.output_size());
+
     auto event_queue = ::event_queue();
 
     // Scene
@@ -1061,42 +1063,39 @@ int main()
                 camera.pitch(mouse_state.y * 0.1f);
             }
 
-            texture.with_lock(
-                [&stopwatch, &world, &camera](image<argb8888> &raster)
+            auto const raster_width = raster.width();
+            auto const raster_height = raster.height();
+            auto const screen_left = camera.frustum.left;
+            auto const screen_top = camera.frustum.top;
+            auto const screen_width = camera.frustum.width();
+            auto const screen_height = camera.frustum.height();
+            auto const camera_focal_length = get_focal_length(camera, raster_width, raster_height);
+            auto const camera_to_world_matrix = camera.view_matrix();
+
+            for (auto raster_y = 0*px; raster_y < raster_height; raster_y += 1*px)
+            {
+                for (auto raster_x = 0*px; raster_x < raster_width; raster_x += 1*px)
                 {
-                    auto const raster_width = raster.width();
-                    auto const raster_height = raster.height();
-                    auto const screen_left = camera.frustum.left;
-                    auto const screen_top = camera.frustum.top;
-                    auto const screen_width = camera.frustum.width();
-                    auto const screen_height = camera.frustum.height();
-                    auto const camera_focal_length = get_focal_length(camera, raster_width, raster_height);
-                    auto const camera_to_world_matrix = camera.view_matrix();
+                    auto const ndc_x = (quantity_cast<float>(raster_x) + 0.5f) / quantity_cast<float>(raster_width);
+                    auto const ndc_y = (quantity_cast<float>(raster_y) + 0.5f) / quantity_cast<float>(raster_height);
+                    auto const screen_x = screen_left + ndc_x * screen_width;
+                    auto const screen_y = screen_top - ndc_y * screen_height;
+                    auto const primary_ray_direction = vector3 { screen_x, screen_y, camera_focal_length };
 
-                    for (auto raster_y = 0*px; raster_y < raster_height; raster_y += 1*px)
-                    {
-                        for (auto raster_x = 0*px; raster_x < raster_width; raster_x += 1*px)
-                        {
-                            auto const ndc_x = (quantity_cast<float>(raster_x) + 0.5f) / quantity_cast<float>(raster_width);
-                            auto const ndc_y = (quantity_cast<float>(raster_y) + 0.5f) / quantity_cast<float>(raster_height);
-                            auto const screen_x = screen_left + ndc_x * screen_width;
-                            auto const screen_y = screen_top - ndc_y * screen_height;
-                            auto const primary_ray_direction = vector3 { screen_x, screen_y, camera_focal_length };
+                    auto const primary_ray = transform_ray(
+                        ray(zero_vector, primary_ray_direction), camera_to_world_matrix
+                    );
 
-                            auto const primary_ray = transform_ray(
-                                ray(zero_vector, primary_ray_direction), camera_to_world_matrix
-                            );
+                    auto const nearest_hit = find_nearest_hit(primary_ray, world);
+                    auto const shading_color = (nearest_hit) ? shade(*nearest_hit, world) : world.environment;
+                    auto const depth = (nearest_hit) ? clamp((nearest_hit->distance - world.min_depth) / (world.max_depth - world.min_depth), 0.0f, 1.0f) : 1.0f;
+                    auto const apparent_color = mix(shading_color, world.depth_color, depth);
 
-                            auto const nearest_hit = find_nearest_hit(primary_ray, world);
-                            auto const shading_color = (nearest_hit) ? shade(*nearest_hit, world) : world.environment;
-                            auto const depth = (nearest_hit) ? clamp((nearest_hit->distance - world.min_depth) / (world.max_depth - world.min_depth), 0.0f, 1.0f) : 1.0f;
-                            auto const apparent_color = mix(shading_color, world.depth_color, depth);
-
-                            raster(raster_x, raster_y) = to_argb8888(apparent_color);
-                        }
-                    }
+                    raster(raster_x, raster_y) = to_argb8888(apparent_color);
                 }
-            );
+            }
+
+            texture.update(raster);
 
             renderer.draw_blend_mode(blend_mode::none);
             renderer.draw_color(color::black);
