@@ -75,6 +75,8 @@ namespace sdl3
 
         texture<TPixelFormat>& operator=(texture<TPixelFormat> const& other) = delete;
 
+        void update(image<TPixelFormat> const& pixels);
+
         template<typename CallbackFunction>
         void with_lock(CallbackFunction callback);
     };
@@ -93,6 +95,15 @@ namespace sdl3
     texture<TPixelFormat>::texture(texture<TPixelFormat>&& other)
     : _native_handle(std::exchange(other._native_handle, nullptr))
     { }
+
+    template<typename TPixelFormat>
+    void
+    texture<TPixelFormat>::update(image<TPixelFormat> const& pixels)
+    {
+        throw_last_error(
+            SDL_UpdateTexture(_native_handle, nullptr, pixels.pixels(), pixels.pitch() * sizeof(TPixelFormat))
+        );
+    }
 
     template<typename TPixelFormat> template <typename CallbackFunction>
     void
