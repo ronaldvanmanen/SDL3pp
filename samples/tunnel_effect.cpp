@@ -29,8 +29,8 @@
 #include "SDL3pp/color.h"
 #include "SDL3pp/event_queue.h"
 #include "SDL3pp/event.h"
-#include "SDL3pp/image.h"
 #include "SDL3pp/renderer.h"
+#include "SDL3pp/surface.h"
 #include "SDL3pp/texture.h"
 #include "SDL3pp/window.h"
 
@@ -54,6 +54,75 @@ struct displacement
 
     length<int32_t> y;
 };
+
+class displacement_table
+{
+public:
+    displacement_table(size_2d<std::int32_t> size);
+
+    displacement_table(length<std::int32_t> width, length<std::int32_t> height);
+
+    ~displacement_table();
+
+public:
+    length<std::int32_t> width() const;
+
+    length<std::int32_t> height() const;
+
+    displacement& operator()(offset<int32_t> x, offset<int32_t> y);
+
+    displacement const& operator()(offset<int32_t> x, offset<int32_t> y) const;
+
+private:
+    displacement* _pixels;
+
+    length<std::int32_t> _width;
+
+    length<std::int32_t> _height;
+};
+
+displacement_table::displacement_table(size_2d<std::int32_t> size)
+: displacement_table(size.width, size.height)
+{ }
+
+displacement_table::displacement_table(length<std::int32_t> width, length<std::int32_t> height)
+: _pixels(new displacement[boost::units::quantity_cast<std::size_t>(height) * boost::units::quantity_cast<std::size_t>(width)])
+, _width(width)
+, _height(height)
+{ }
+
+displacement_table::~displacement_table()
+{
+    delete[] _pixels;
+}
+
+length<std::int32_t>
+displacement_table::width() const
+{
+    return _width;
+}
+
+length<std::int32_t>
+displacement_table::height() const
+{
+    return _height;
+}
+
+displacement&
+displacement_table::operator()(offset<std::int32_t> x, offset<std::int32_t> y)
+{
+    return _pixels[
+        boost::units::quantity_cast<std::size_t>(y * _height / px + x)
+    ];
+}
+
+displacement const&
+displacement_table::operator()(offset<std::int32_t> x, offset<std::int32_t> y) const
+{
+    return _pixels[
+        boost::units::quantity_cast<std::size_t>(y * _height / px + x)
+    ];
+}
 
 length<double> calc_distance(length<double> width, length<double> height, offset<double> x, offset<double> y)
 {
@@ -80,15 +149,15 @@ length<double> calc_angle(length<double> width, length<double> height, offset<do
     );
 }
 
-image<displacement> generate_displacement_image(length<int32_t> square_size)
+displacement_table generate_displacement_image(length<int32_t> square_size)
 {
-    length<int32_t> actual_size = next_power_of_two(square_size);
+    auto const actual_size = next_power_of_two(square_size);
 
-    image<displacement> displacement_image(actual_size, actual_size);
+    displacement_table displacement_image(actual_size, actual_size);
 
-    for (offset<int32_t> y = 0; y < actual_size; y += 1*px)
+    for (offset<std::int32_t> y = 0*px; y < actual_size; y += 1*px)
     {
-        for (offset<int32_t> x = 0; x < actual_size; x += 1*px)
+        for (offset<std::int32_t> x = 0*px; x < actual_size; x += 1*px)
         {
             auto displace_x = length<int32_t>(calc_distance(actual_size, actual_size, x, y));
             auto displace_y = length<int32_t>(calc_angle(actual_size, actual_size, x, y));
@@ -99,23 +168,23 @@ image<displacement> generate_displacement_image(length<int32_t> square_size)
     return displacement_image;
 }
 
-image<displacement> generate_displacement_image(length<int32_t> width, length<int32_t> height)
+displacement_table generate_displacement_image(length<int32_t> width, length<int32_t> height)
 {
     return generate_displacement_image(
         max(width, height)
     );
 }
 
-image<displacement> generate_displacement_image(size_2d<int32_t> size)
+displacement_table generate_displacement_table(size_2d<int32_t> size)
 {
     return generate_displacement_image(size.width, size.height);
 }
 
-image<argb8888> generate_xor_image(length<int32_t> square_size)
+surface<argb8888> generate_xor_image(length<int32_t> square_size)
 {
     length<int32_t> actual_size = next_power_of_two(square_size);
 
-    image<argb8888> xor_image(actual_size, actual_size);
+    surface<argb8888> xor_image(actual_size, actual_size);
 
     for (offset<int32_t> y = 0; y < actual_size; y += 1*px)
     {
@@ -133,12 +202,12 @@ image<argb8888> generate_xor_image(length<int32_t> square_size)
     return xor_image;
 }
 
-image<argb8888> generate_xor_image(length<int32_t> width, length<int32_t> height)
+surface<argb8888> generate_xor_image(length<int32_t> width, length<int32_t> height)
 {
     return generate_xor_image(max(width, height));
 }
 
-image<argb8888> generate_xor_image(size_2d<int32_t> const& size)
+surface<argb8888> generate_xor_image(size_2d<int32_t> const& size)
 {
     return generate_xor_image(size.width, size.height);
 }
@@ -159,8 +228,8 @@ int main()
     auto main_event_queue = event_queue();
 
     auto source_image = generate_xor_image(screen_renderer.output_size());
-    auto target_image = image<argb8888>(screen_renderer.output_size());
-    auto displacement_table = generate_displacement_image(screen_renderer.output_size());
+    auto displacement_table = generate_displacement_table(screen_renderer.output_size());
+    auto target_image = surface<sargb8888>(screen_renderer.output_size());
     
     auto stopwatch = stopwatch::start_now();
     auto running = true;

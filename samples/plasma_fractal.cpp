@@ -30,7 +30,6 @@
 #include "SDL3pp/color.h"
 #include "SDL3pp/event_queue.h"
 #include "SDL3pp/event.h"
-#include "SDL3pp/image.h"
 #include "SDL3pp/index8.h"
 #include "SDL3pp/keyboard_event.h"
 #include "SDL3pp/palette.h"
@@ -48,7 +47,7 @@ using namespace sdl3;
 
 void
 diamond_step(
-    image<index8> &map,
+    surface<index8> &map,
     default_random_engine &random_number_engine,
     offset<int32_t> center_x,
     offset<int32_t> center_y,
@@ -104,7 +103,7 @@ diamond_step(
 
 void
 square_step(
-    image<index8> &map,
+    surface<index8> &map,
     default_random_engine &random_number_engine,
     offset<int32_t> center_x,
     offset<int32_t> center_y,
@@ -155,7 +154,7 @@ generate_diamond_square_image(default_random_engine &random_number_engine, lengt
 {
     auto actual_size = size_2d<int32_t>(1*px + next_power_of_two(square_size));
     auto actual_surface = surface<index8>(actual_size);
-    actual_surface.with_lock([&random_number_engine](image<index8> & image)
+    actual_surface.with_lock([&random_number_engine](surface<index8> & image)
     {
         const auto image_width = image.width();
         const auto image_height = image.height();

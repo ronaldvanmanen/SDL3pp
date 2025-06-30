@@ -23,7 +23,7 @@
 
 namespace sdl3
 {
-    SDL_Surface* create_surface(sdl3::length<std::int32_t> width, sdl3::length<std::int32_t> height, sdl3::pixel_format format)
+    SDL_Surface* create_surface(sdl3::length<std::int32_t> const& width, sdl3::length<std::int32_t> const& height, sdl3::pixel_format format)
     {
         SDL_Surface* native_handle = SDL_CreateSurface(
             boost::units::quantity_cast<std::int32_t>(width),
@@ -33,10 +33,22 @@ namespace sdl3
         throw_last_error(native_handle != nullptr);
         return native_handle;
     }
+
+    SDL_Surface* create_surface(sdl3::length<std::int32_t> const& width, sdl3::length<std::int32_t> const& height, sdl3::pixel_format format, void* pixels, std::int32_t pitch)
+    {
+        SDL_Surface* native_handle = SDL_CreateSurfaceFrom(
+            boost::units::quantity_cast<std::int32_t>(width),
+            boost::units::quantity_cast<std::int32_t>(height),
+            static_cast<SDL_PixelFormat>(format),
+            pixels,
+            pitch
+        );
+        throw_last_error(native_handle != nullptr);
+        return native_handle;
+    }
 }
 
-
-sdl3::surface_base::surface_base(sdl3::length<std::int32_t> width, sdl3::length<std::int32_t> height, sdl3::pixel_format format)
+sdl3::surface_base::surface_base(sdl3::length<std::int32_t> const& width, sdl3::length<std::int32_t> const& height, sdl3::pixel_format format)
 : _native_handle(sdl3::create_surface(width, height, format))
 , _free_handle(true)
 {
@@ -49,6 +61,11 @@ sdl3::surface_base::surface_base(sdl3::size_2d<std::int32_t> const& size, sdl3::
 {
     throw_last_error(_native_handle != nullptr);
 }
+
+sdl3::surface_base::surface_base(length<std::int32_t> const& width, length<std::int32_t> const& height, sdl3::pixel_format format, void* pixels, std::int32_t pitch)
+: _native_handle(sdl3::create_surface(width, height, format, pixels, pitch))
+, _free_handle(true)
+{ }
 
 sdl3::surface_base::surface_base(sdl3::window & window)
 : _native_handle(SDL_GetWindowSurface(window.native_handle()))
@@ -83,6 +100,30 @@ sdl3::surface_base::~surface_base()
     {
         SDL_DestroySurface(_native_handle);
     }
+}
+
+sdl3::length<std::int32_t>
+sdl3::surface_base::width() const
+{
+    return _native_handle->w * px;
+}
+
+sdl3::length<std::int32_t>
+sdl3::surface_base::height() const
+{
+    return _native_handle->h * px;
+}
+
+void
+sdl3::surface_base::colorspace(sdl3::colorspace const& value)
+{
+    SDL_SetSurfaceColorspace(_native_handle, static_cast<SDL_Colorspace>(value));
+}
+
+sdl3::colorspace
+sdl3::surface_base::colorspace() const
+{
+    return static_cast<sdl3::colorspace>(SDL_GetSurfaceColorspace(_native_handle));
 }
 
 SDL_Surface*

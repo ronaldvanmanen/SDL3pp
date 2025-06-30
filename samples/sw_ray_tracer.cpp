@@ -34,13 +34,13 @@
 #include "SDL3pp/color.h"
 #include "SDL3pp/event_queue.h"
 #include "SDL3pp/event.h"
-#include "SDL3pp/image.h"
 #include "SDL3pp/keyboard_event.h"
 #include "SDL3pp/keyboard.h"
 #include "SDL3pp/mouse_wheel_event.h"
 #include "SDL3pp/mouse.h"
 #include "SDL3pp/renderer.h"
 #include "SDL3pp/rgb96f.h"
+#include "SDL3pp/surface.h"
 #include "SDL3pp/texture.h"
 #include "SDL3pp/window.h"
 
@@ -443,7 +443,7 @@ point_light::point_light(vector3 const& position, rgb96f const& color)
 : position(position), color(color)
 { }
 
-struct surface
+struct surface_info
 {
     float ambient_coefficient = 1.0f;
 
@@ -465,7 +465,7 @@ struct surface
 class solid
 {
 protected:
-    solid(surface const& surface);
+    solid(surface_info const& surface);
 
 public:
     virtual vector3 normal_at(vector3 const& point) const = 0;
@@ -489,7 +489,7 @@ public:
     float specular_exponent;
 };
 
-solid::solid(surface const& surface)
+solid::solid(surface_info const& surface)
 : ambient_coefficient(surface.ambient_coefficient)
 , diffuse_coefficient(surface.diffuse_coefficient)
 , surface_color(surface.color)
@@ -503,7 +503,7 @@ solid::solid(surface const& surface)
 class sphere : public solid
 {
 public:
-    sphere(vector3 const& position, float radius, surface const& surface);
+    sphere(vector3 const& position, float radius, surface_info const& surface);
 
     vector3 normal_at(vector3 const& point) const;
 
@@ -515,7 +515,7 @@ public:
     float radius;
 };
 
-sphere::sphere(vector3 const& position, float radius, surface const& surface)
+sphere::sphere(vector3 const& position, float radius, surface_info const& surface)
 : solid(surface)
 , position(position)
 , radius(radius)
@@ -558,7 +558,7 @@ sphere::hit_test(ray const& ray) const
 class plane : public solid
 {
 public:
-    plane(vector3 const& position, vector3 const& normal, surface const& surface);
+    plane(vector3 const& position, vector3 const& normal, surface_info const& surface);
 
     vector3 normal_at(vector3 const& point) const;
 
@@ -570,7 +570,7 @@ public:
     vector3 normal;
 };
 
-plane::plane(vector3 const& position, vector3 const& normal, surface const& surface)
+plane::plane(vector3 const& position, vector3 const& normal, surface_info const& surface)
 : solid(surface)
 , position(position)
 , normal(normalized(normal))
@@ -756,7 +756,7 @@ int main()
     auto window = ::window("Software Ray Tracer", 640*px, 480*px, window_flags::resizable);
     auto renderer = ::renderer(window);
     auto texture = ::texture<rgb96f>(renderer, texture_access::streaming_access, renderer.output_size());
-    auto raster = ::image<rgb96f>(renderer.output_size());
+    auto raster = ::surface<rgb96f>(renderer.output_size());
 
     auto event_queue = ::event_queue();
 
@@ -783,7 +783,7 @@ int main()
         plane(
             vector3 { 0.0f, 0.0f, 0.0f },
             vector3 { 0.0f, 1.0f, 0.0f },
-            surface {
+            surface_info {
                 .color = rgb96f(1.0f, 1.0f, 1.0f),
                 .reflective_coefficient = 0.0f,
                 .specular_coefficient = 0.5f,
@@ -797,7 +797,7 @@ int main()
         sphere(
             vector3 { 0.0f, 5.25f, 0.0f },
             5.25f,
-            surface {
+            surface_info {
                 .color = rgb96f(0.89f, 0.48f, 0.42f),
                 .reflective_coefficient = 0.15f,
                 .specular_coefficient = 1.0f,
@@ -811,7 +811,7 @@ int main()
         sphere(
             vector3 { -3.5f, 1.6f, -6.7f },
             1.6f,
-            surface {
+            surface_info {
                 .color = rgb96f(0.95f, 0.93f, 0.31f),
                 .reflective_coefficient = 0.15f,
                 .specular_coefficient = 1.0f,
@@ -825,7 +825,7 @@ int main()
         sphere(
             vector3 { 14.0f, 7.0f, 6.5f },
             7.0f,
-            surface {
+            surface_info {
                 .color = rgb96f(1.0f, 0.44f, 0.64f),
                 .reflective_coefficient = 0.15f,
                 .specular_coefficient = 1.0f,
@@ -839,7 +839,7 @@ int main()
         sphere(
             vector3 { 8.2f, 3.5f, -6.5f },
             3.5f,
-            surface {
+            surface_info {
                 .color = rgb96f(0.89f, 0.48f, 0.42f),
                 .reflective_coefficient = 0.15f,
                 .specular_coefficient = 1.0f,
@@ -853,7 +853,7 @@ int main()
         sphere(
             vector3 { -16.6f, 6.5f, 0.0f },
             6.5f,
-            surface {
+            surface_info {
                 .color = rgb96f(1.0f, 0.44f, 0.64f),
                 .reflective_coefficient = 0.15f,
                 .specular_coefficient = 1.0f,
@@ -867,7 +867,7 @@ int main()
         sphere(
             vector3 { -9.5f, 3.0f, -6.0f },
             3.0f,
-            surface {
+            surface_info {
                 .color = rgb96f(1.0f, 0.44f, 0.64f),
                 .reflective_coefficient = 0.15f,
                 .specular_coefficient = 1.0f,
@@ -881,7 +881,7 @@ int main()
         sphere(
             vector3 { -15.0f, 3.0f, 12.0f },
             3.0f,
-            surface {
+            surface_info {
                 .color = rgb96f(0.95f, 0.93f, 0.31f),
                 .reflective_coefficient = 0.15f,
                 .specular_coefficient = 1.0f,
@@ -895,7 +895,7 @@ int main()
         sphere(
             vector3 { 40.0f, 10.0f, 175.0f },
             10.0f,
-            surface {
+            surface_info {
                 .color = rgb96f(0.18f, 0.31f, 0.68f),
                 .reflective_coefficient = 0.15f,
                 .specular_coefficient = 1.0f,
