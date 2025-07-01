@@ -18,21 +18,28 @@
 //    misrepresented as being the original software.
 // 3. This notice may not be removed or altered from any source distribution.
 
+#include <algorithm>
+
 #include <boost/operators.hpp>
 
+#include "color_space.h"
 #include "pixel_format.h"
 
 namespace sdl3
 {
+    template<color_space ColorSpace>
     class alignas(alignof(float)) rgb96f
-    : boost::equality_comparable<rgb96f
-    , boost::addable<rgb96f
-    , boost::multipliable<rgb96f
-    , boost::multipliable<rgb96f, float
-    > > > >
+    : boost::equality_comparable<rgb96f<ColorSpace>
+    , boost::addable<rgb96f<ColorSpace>
+    , boost::multipliable<rgb96f<ColorSpace>
+    , boost::multipliable<rgb96f<ColorSpace>, float
+    , boost::dividable<rgb96f<ColorSpace>, float
+    > > > > >
     {
     public:
         static constexpr pixel_format format = pixel_format::rgb96f;
+
+        static constexpr color_space color_space = ColorSpace;
 
         static const rgb96f black;
 
@@ -43,27 +50,114 @@ namespace sdl3
 
         rgb96f(float r, float g, float b);
 
-        rgb96f(rgb96f const& other);
+        rgb96f(rgb96f<ColorSpace> const& other);
 
-        bool operator==(rgb96f const& other) const;
+        bool operator==(rgb96f<ColorSpace> const& other) const;
 
-        rgb96f& operator+=(rgb96f const& other);
+        rgb96f<ColorSpace>& operator=(rgb96f<ColorSpace> const& other);
+
+        rgb96f<ColorSpace>& operator+=(rgb96f<ColorSpace> const& other);
         
-        rgb96f& operator*=(rgb96f const& other);
+        rgb96f<ColorSpace>& operator*=(rgb96f<ColorSpace> const& other);
 
-        rgb96f& operator*=(float scalar);
+        rgb96f<ColorSpace>& operator*=(float scalar);
 
-        rgb96f& clamp();
-
-        rgb96f clamped() const;
+        rgb96f<ColorSpace>& operator/=(float scalar);
 
     public:
         float r, g, b;
     };
 
+    using srgb96f = rgb96f<color_space::srgb>;
+
+    template<color_space ColorSpace>
+    rgb96f<ColorSpace> const rgb96f<ColorSpace>::black(0.0f, 0.0f, 0.0f);
+
+    template<color_space ColorSpace>
+    rgb96f<ColorSpace> const rgb96f<ColorSpace>::white(1.0f, 1.0f, 1.0f);
+
+    template<color_space ColorSpace>
+    rgb96f<ColorSpace>::rgb96f()
+    : r(0.0f)
+    , g(0.0f)
+    , b(0.0f)
+    { }
+
+    template<color_space ColorSpace>
+    rgb96f<ColorSpace>::rgb96f(float r, float g, float b)
+    : r(r)
+    , g(g)
+    , b(b)
+    { }
+
+    template<color_space ColorSpace>
+    rgb96f<ColorSpace>::rgb96f(rgb96f<ColorSpace> const& other)
+    : r(other.r)
+    , g(other.g)
+    , b(other.b)
+    { }
+
+    template<color_space ColorSpace>
+    bool
+    rgb96f<ColorSpace>::operator==(rgb96f<ColorSpace> const& other) const
+    {
+        return r == other.r && g == other.g && b == other.b;
+    }
+
+    template<color_space ColorSpace>
+    rgb96f<ColorSpace> &
+    rgb96f<ColorSpace>::operator=(rgb96f<ColorSpace> const& other)
+    {
+        r = other.r;
+        g = other.g;
+        b = other.b;
+        return *this;
+    }
+
+    template<color_space ColorSpace>
+    rgb96f<ColorSpace> &
+    rgb96f<ColorSpace>::operator+=(rgb96f<ColorSpace> const& other)
+    {
+        r += other.r;
+        g += other.g;
+        b += other.b;
+        return *this;
+    }
+            
+    template<color_space ColorSpace>
+    rgb96f<ColorSpace> &
+    rgb96f<ColorSpace>::operator*=(rgb96f<ColorSpace> const& other)
+    {
+        r *= other.r;
+        g *= other.g;
+        b *= other.b;
+        return *this;
+    }
+
+    template<color_space ColorSpace>
+    rgb96f<ColorSpace> &
+    rgb96f<ColorSpace>::operator*=(float scalar)
+    {
+        r *= scalar;
+        g *= scalar;
+        b *= scalar;
+        return *this;
+    }
+
+    template<color_space ColorSpace>
+    rgb96f<ColorSpace> &
+    rgb96f<ColorSpace>::operator/=(float scalar)
+    {
+        r /= scalar;
+        g /= scalar;
+        b /= scalar;
+        return *this;
+    }
+
+    template<color_space ColorSpace>
     inline
-    rgb96f
-    mix(rgb96f const& color0, rgb96f const& color1, float value)
+    rgb96f<ColorSpace>
+    mix(rgb96f<ColorSpace> const& color0, rgb96f<ColorSpace> const& color1, float value)
     {
         return (1.0f - value) * color0 + value * color1;
     }    

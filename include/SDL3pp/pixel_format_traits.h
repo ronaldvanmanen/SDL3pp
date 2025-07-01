@@ -24,6 +24,7 @@
 
 #include <SDL3/SDL_pixels.h>
 
+#include "color_space.h"
 #include "pixel_bit_depth.h"
 #include "pixel_byte_depth.h"
 #include "pixel_format.h"

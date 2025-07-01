@@ -24,41 +24,124 @@
 
 #include <boost/operators.hpp>
 
+#include "color_space.h"
 #include "pixel_format.h"
 
 namespace sdl3
 {
+    template<color_space ColorSpace>
     class alignas(alignof(std::uint8_t)) index8
-    : public boost::operators<index8>
+    : public boost::operators<index8<ColorSpace>
+    >
     {
     public:
         static constexpr pixel_format format = pixel_format::index8;
+
+        static constexpr color_space color_space = ColorSpace;
 
     public:
         index8();
 
         index8(std::uint8_t value);
 
-        index8(index8 const& other);
+        index8(index8<ColorSpace> const& other);
 
-        index8& operator=(index8 const& other);
+        index8<ColorSpace> & operator=(index8 const& other);
 
-        index8& operator+=(index8 const& other);
+        index8<ColorSpace> & operator+=(index8 const& other);
 
-        index8& operator-=(index8 const& other);
+        index8<ColorSpace> & operator-=(index8 const& other);
 
-        index8& operator++();
+        index8<ColorSpace> & operator++();
 
-        index8& operator--();
+        index8<ColorSpace> & operator--();
 
-        bool operator==(index8 const& other) const;
+        bool operator==(index8<ColorSpace> const& other) const;
 
-        bool operator<(index8 const& other) const;
+        bool operator<(index8<ColorSpace> const& other) const;
 
         operator std::uint8_t() const;
 
     private:
         std::uint8_t _value;
     };
+
+    using sindex8 = index8<color_space::srgb>;
+
+    template<color_space ColorSpace>
+    index8<ColorSpace>::index8() { }
+
+    template<color_space ColorSpace>
+    index8<ColorSpace>::index8(std::uint8_t value)
+    : _value(value)
+    { }
+
+    template<color_space ColorSpace>
+    index8<ColorSpace>::index8(index8 const& other)
+    : _value(other._value)
+    { }
+
+    template<color_space ColorSpace>
+    index8<ColorSpace> &
+    index8<ColorSpace>::operator=(index8<ColorSpace> const& other)
+    {
+        if (this != &other)
+        {
+            _value = other._value;
+        }
+        return *this;    
+    }
+
+    template<color_space ColorSpace>
+    index8<ColorSpace> &
+    index8<ColorSpace>::operator+=(index8<ColorSpace> const& other)
+    {
+        _value += other._value;
+        return *this;    
+    }
+
+    template<color_space ColorSpace>
+    index8<ColorSpace> &
+    index8<ColorSpace>::operator-=(index8<ColorSpace> const& other)
+    {
+        _value += other._value;
+        return *this;    
+    }
+
+    template<color_space ColorSpace>
+    index8<ColorSpace> &
+    index8<ColorSpace>::operator++()
+    {
+        ++_value;
+        return *this;
+    }
+
+    template<color_space ColorSpace>
+    index8<ColorSpace> &
+    index8<ColorSpace>::operator--()
+    {
+        --_value;
+        return *this;
+    }
+
+    template<color_space ColorSpace>
+    bool
+    index8<ColorSpace>::operator==(index8<ColorSpace> const& other) const
+    {
+        return _value == other._value;
+    }
+
+    template<color_space ColorSpace>
+    bool
+    index8<ColorSpace>::operator<(index8<ColorSpace> const& other) const
+    {
+        return _value < other._value;
+    }
+
+    template<color_space ColorSpace>
+    index8<ColorSpace>::operator std::uint8_t() const
+    {
+        return _value;
+    }    
 }
  

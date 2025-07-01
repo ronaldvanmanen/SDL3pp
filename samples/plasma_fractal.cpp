@@ -47,7 +47,7 @@ using namespace sdl3;
 
 void
 diamond_step(
-    surface<index8> &map,
+    surface<sindex8> &map,
     default_random_engine &random_number_engine,
     offset<int32_t> center_x,
     offset<int32_t> center_y,
@@ -98,12 +98,12 @@ diamond_step(
     int random = random_number_distribution(random_number_engine);
     int value = clamp(average + random, 0, 255);
 
-    map(center_x, center_y) = static_cast<index8>(value);
+    map(center_x, center_y) = static_cast<sindex8>(value);
 }
 
 void
 square_step(
-    surface<index8> &map,
+    surface<sindex8> &map,
     default_random_engine &random_number_engine,
     offset<int32_t> center_x,
     offset<int32_t> center_y,
@@ -146,15 +146,15 @@ square_step(
     int random = random_number_distribution(random_number_engine);
     int value = clamp(average + random, 0, 255);
 
-    map(center_x, center_y) = static_cast<index8>(value);
+    map(center_x, center_y) = static_cast<sindex8>(value);
 }
 
-surface<index8>
+surface<sindex8>
 generate_diamond_square_image(default_random_engine &random_number_engine, length<int32_t> square_size)
 {
     auto actual_size = size_2d<int32_t>(1*px + next_power_of_two(square_size));
-    auto actual_surface = surface<index8>(actual_size);
-    actual_surface.with_lock([&random_number_engine](surface<index8> & image)
+    auto actual_surface = surface<sindex8>(actual_size);
+    actual_surface.with_lock([&random_number_engine](surface<sindex8> & image)
     {
         const auto image_width = image.width();
         const auto image_height = image.height();
@@ -162,10 +162,10 @@ generate_diamond_square_image(default_random_engine &random_number_engine, lengt
         
         auto random_number_distribution = uniform_int_distribution<int>(0, initial_randomness - 1);
 
-        image(0*px,                 0*px)                   = index8(random_number_distribution(random_number_engine));
-        image(image_width - 1*px,   0*px)                   = index8(random_number_distribution(random_number_engine));
-        image(0*px,                 image_height - 1*px)    = index8(random_number_distribution(random_number_engine));
-        image(image_width - 1*px,   image_height - 1*px)    = index8(random_number_distribution(random_number_engine));
+        image(0*px,                 0*px)                   = sindex8(random_number_distribution(random_number_engine));
+        image(image_width - 1*px,   0*px)                   = sindex8(random_number_distribution(random_number_engine));
+        image(0*px,                 image_height - 1*px)    = sindex8(random_number_distribution(random_number_engine));
+        image(image_width - 1*px,   image_height - 1*px)    = sindex8(random_number_distribution(random_number_engine));
 
         auto randomness = initial_randomness / 2;
 
@@ -196,13 +196,13 @@ generate_diamond_square_image(default_random_engine &random_number_engine, lengt
     return actual_surface;
 }
 
-surface<index8>
+surface<sindex8>
 generate_diamond_square_image(default_random_engine &random_number_engine, length<int32_t> width, length<int32_t> height)
 {
     return generate_diamond_square_image(random_number_engine, max(width, height));
 }
 
-surface<index8>
+surface<sindex8>
 generate_diamond_square_image(default_random_engine &random_number_engine, size_2d<int32_t> size)
 {
     return generate_diamond_square_image(random_number_engine, size.width, size.height);
@@ -271,7 +271,7 @@ int main()
         }
         else
         {
-            auto main_surface = surface<argb8888>(main_window);
+            auto main_surface = surface<sargb8888>(main_window);
             main_surface.blit(plasma_surface);
             main_window.update_surface();
 

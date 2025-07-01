@@ -28,6 +28,6 @@ using namespace sdl3;
 BOOST_AUTO_TEST_CASE(test_surface_constructors)
 {
     BOOST_REQUIRE_NO_THROW(
-        surface<index8> test_surface(512*px, 384*px)
+        surface<sindex8> test_surface(512*px, 384*px)
     );
 }

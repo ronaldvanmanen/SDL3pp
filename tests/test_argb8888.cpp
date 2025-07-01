@@ -31,12 +31,13 @@ using sdl3::operator""_b8;
 
 BOOST_AUTO_TEST_CASE(test_argb8888_traits)
 {
-    BOOST_TEST(sdl3::argb8888::format == sdl3::pixel_format::argb8888);
+    BOOST_TEST(sdl3::sargb8888::color_space == sdl3::color_space::srgb);
+    BOOST_TEST(sdl3::sargb8888::format == sdl3::pixel_format::argb8888);
 }
 
 BOOST_AUTO_TEST_CASE(test_argb8888_default_constructor)
 {
-    sdl3::argb8888 test_color;
+    sdl3::sargb8888 test_color;
 
     BOOST_TEST(test_color.a == 0);
     BOOST_TEST(test_color.r == 0);
@@ -46,7 +47,7 @@ BOOST_AUTO_TEST_CASE(test_argb8888_default_constructor)
 
 BOOST_AUTO_TEST_CASE(test_argb8888_component_constructor)
 {
-    sdl3::argb8888 test_color(0xDE_a8, 0xAD_r8, 0xBE_g8, 0xEF_b8);
+    sdl3::sargb8888 test_color(0xDE_a8, 0xAD_r8, 0xBE_g8, 0xEF_b8);
 
     BOOST_TEST(test_color.a == 0xDE);
     BOOST_TEST(test_color.r == 0xAD);
@@ -56,9 +57,9 @@ BOOST_AUTO_TEST_CASE(test_argb8888_component_constructor)
 
 BOOST_AUTO_TEST_CASE(test_argb8888_copy_constructor)
 {
-    sdl3::argb8888 temp_color(0xDE_a8, 0xAD_r8, 0xBE_g8, 0xEF_b8);
+    sdl3::sargb8888 temp_color(0xDE_a8, 0xAD_r8, 0xBE_g8, 0xEF_b8);
 
-    sdl3::argb8888 test_color(temp_color);
+    sdl3::sargb8888 test_color(temp_color);
 
     BOOST_TEST(test_color.a == 0xDE);
     BOOST_TEST(test_color.r == 0xAD);
@@ -68,9 +69,9 @@ BOOST_AUTO_TEST_CASE(test_argb8888_copy_constructor)
 
 BOOST_AUTO_TEST_CASE(test_argb8888_assignment_operator)
 {
-    sdl3::argb8888 test_color;
+    sdl3::sargb8888 test_color;
     
-    test_color = sdl3::argb8888(0xDE_a8, 0xAD_r8, 0xBE_g8, 0xEF_b8);
+    test_color = sdl3::sargb8888(0xDE_a8, 0xAD_r8, 0xBE_g8, 0xEF_b8);
 
     BOOST_TEST(test_color.a == 0xDE);
     BOOST_TEST(test_color.r == 0xAD);

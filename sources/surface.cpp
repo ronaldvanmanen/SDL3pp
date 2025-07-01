@@ -115,15 +115,15 @@ sdl3::surface_base::height() const
 }
 
 void
-sdl3::surface_base::colorspace(sdl3::colorspace const& value)
+sdl3::surface_base::color_space(sdl3::color_space const& value)
 {
     SDL_SetSurfaceColorspace(_native_handle, static_cast<SDL_Colorspace>(value));
 }
 
-sdl3::colorspace
-sdl3::surface_base::colorspace() const
+sdl3::color_space
+sdl3::surface_base::color_space() const
 {
-    return static_cast<sdl3::colorspace>(SDL_GetSurfaceColorspace(_native_handle));
+    return static_cast<sdl3::color_space>(SDL_GetSurfaceColorspace(_native_handle));
 }
 
 SDL_Surface*

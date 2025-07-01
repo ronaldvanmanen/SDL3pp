@@ -51,6 +51,8 @@ namespace sdl3
         
         texture_base(renderer & owner, property_group & properties);
 
+        texture_base(renderer & owner, property_group && properties);
+
         texture_base(texture_base const& other) = delete;
 
         ~texture_base();
@@ -86,14 +88,28 @@ namespace sdl3
         void with_lock(CallbackFunction callback);
     };
 
+    namespace
+    {
+        property_group make_texture_properties(pixel_format format, color_space color_space, texture_access access, length<std::int32_t> width, length<std::int32_t> height)
+        {
+            property_group properties;
+            properties.set(SDL_PROP_TEXTURE_CREATE_FORMAT_NUMBER, static_cast<SDL_PixelFormat>(format));
+            properties.set(SDL_PROP_TEXTURE_CREATE_COLORSPACE_NUMBER, static_cast<SDL_Colorspace>(color_space));
+            properties.set(SDL_PROP_TEXTURE_CREATE_ACCESS_NUMBER, static_cast<SDL_TextureAccess>(access));
+            properties.set(SDL_PROP_TEXTURE_CREATE_WIDTH_NUMBER, quantity_cast<std::int32_t>(width));
+            properties.set(SDL_PROP_TEXTURE_CREATE_HEIGHT_NUMBER, quantity_cast<std::int32_t>(height));
+            return properties;
+        }
+    }
+
     template<typename TPixelFormat>
     texture<TPixelFormat>::texture(renderer & owner, texture_access access, length<std::int32_t> width, length<std::int32_t> height)
-    : texture_base(owner, pixel_format_traits<TPixelFormat>::format, access, width, height)
+    : texture_base(owner, make_texture_properties(TPixelFormat::format, TPixelFormat::color_space, access, width, height))
     { }
 
     template<typename TPixelFormat>
     texture<TPixelFormat>::texture(renderer & owner, texture_access access, size_2d<std::int32_t> const& size)
-    : texture_base(owner, pixel_format_traits<TPixelFormat>::format, access, size.width, size.height)
+    : texture_base(owner, make_texture_properties(TPixelFormat::format, TPixelFormat::color_space, access, size.width, size.height))
     { }
 
     template<typename TPixelFormat>

@@ -180,17 +180,17 @@ displacement_table generate_displacement_table(size_2d<int32_t> size)
     return generate_displacement_image(size.width, size.height);
 }
 
-surface<argb8888> generate_xor_image(length<int32_t> square_size)
+surface<sargb8888> generate_xor_image(length<int32_t> square_size)
 {
     length<int32_t> actual_size = next_power_of_two(square_size);
 
-    surface<argb8888> xor_image(actual_size, actual_size);
+    surface<sargb8888> xor_image(actual_size, actual_size);
 
     for (offset<int32_t> y = 0; y < actual_size; y += 1*px)
     {
         for (offset<int32_t> x = 0; x < actual_size; x += 1*px)
         {
-            xor_image(x, y) = argb8888(
+            xor_image(x, y) = sargb8888(
                 a8(0xFF),
                 r8(0x00),
                 g8(0x00),
@@ -202,12 +202,12 @@ surface<argb8888> generate_xor_image(length<int32_t> square_size)
     return xor_image;
 }
 
-surface<argb8888> generate_xor_image(length<int32_t> width, length<int32_t> height)
+surface<sargb8888> generate_xor_image(length<int32_t> width, length<int32_t> height)
 {
     return generate_xor_image(max(width, height));
 }
 
-surface<argb8888> generate_xor_image(size_2d<int32_t> const& size)
+surface<sargb8888> generate_xor_image(size_2d<int32_t> const& size)
 {
     return generate_xor_image(size.width, size.height);
 }
@@ -223,7 +223,7 @@ int main()
 {
     auto main_window = window("Tunnel Effect", 800*px, 600*px, window_flags::resizable);
     auto screen_renderer = renderer(main_window);
-    auto screen_texture = texture<argb8888>(screen_renderer, texture_access::streaming_access, screen_renderer.output_size());
+    auto screen_texture = texture<sargb8888>(screen_renderer, texture_access::streaming_access, screen_renderer.output_size());
 
     auto main_event_queue = event_queue();
 

@@ -27,6 +27,7 @@
 
 #include <SDL3/SDL_surface.h>
 
+#include "color_space.h"
 #include "error.h"
 #include "length.h"
 #include "pixel_format.h"
@@ -55,6 +56,10 @@ namespace sdl3
         ~surface_base();
 
         surface_base& operator=(surface_base const& other) = delete;
+
+        void color_space(sdl3::color_space const& value);
+
+        sdl3::color_space color_space() const;
 
         length<std::int32_t> width() const;
 
@@ -101,27 +106,37 @@ namespace sdl3
     template<typename TPixelFormat>
     surface<TPixelFormat>::surface(length<std::int32_t> const& width, length<std::int32_t> const& height)
     : surface_base(width, height, pixel_format_traits<TPixelFormat>::format)
-    { }
+    {
+        color_space(TPixelFormat::color_space);
+    }
 
     template<typename TPixelFormat>
     surface<TPixelFormat>::surface(size_2d<std::int32_t> const& size)
     : surface_base(size, pixel_format_traits<TPixelFormat>::format)
-    { }
+    {
+        color_space(TPixelFormat::color_space);
+    }
 
     template<typename TPixelFormat>
     surface<TPixelFormat>::surface(length<std::int32_t> const& width, length<std::int32_t> const& height, TPixelFormat* pixels, std::int32_t pitch)
     : surface_base(width, height, pixel_format_traits<TPixelFormat>::format, pixels, pitch * sizeof(TPixelFormat))
-    { }
+    {
+        color_space(TPixelFormat::color_space);
+    }
 
     template<typename TPixelFormat>
     surface<TPixelFormat>::surface(window & owner)
     : surface_base(owner)
-    { }
+    {
+        color_space(TPixelFormat::color_space);
+    }
 
     template<typename TPixelFormat>
     surface<TPixelFormat>::surface(surface<TPixelFormat> const& other)
     : surface_base(other)
-    { }
+    {
+        color_space(TPixelFormat::color_space);
+    }
 
     template<typename TPixelFormat>
     std::int32_t
