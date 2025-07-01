@@ -26,17 +26,21 @@
 
 #include "a8.h"
 #include "b8.h"
+#include "color_space.h"
 #include "g8.h"
 #include "pixel_format.h"
 #include "r8.h"
 
 namespace sdl3
 {
+    template<color_space ColorSpace>
     class alignas(alignof(std::uint32_t)) argb8888
-    : public boost::equality_comparable<argb8888>
+    : public boost::equality_comparable<argb8888<ColorSpace> >
     {
     public:
         static constexpr pixel_format format = pixel_format::argb8888;
+
+        static constexpr color_space color_space = ColorSpace;
 
         static const argb8888 black;
 
@@ -45,7 +49,7 @@ namespace sdl3
     public:
         argb8888();
 
-        argb8888(sdl3::a8 a, sdl3::r8 r, sdl3::g8 g, sdl3::b8 b);
+        argb8888(a8 a, r8 r, g8 g, b8 b);
 
         argb8888(argb8888 const& other);
 
@@ -54,11 +58,67 @@ namespace sdl3
         bool operator==(argb8888 const& other) const;
 
     public:
-        sdl3::b8 b;
-        sdl3::g8 g;
-        sdl3::r8 r;
-        sdl3::a8 a;
+        b8 b;
+        g8 g;
+        r8 r;
+        a8 a;
     };
 
-    std::ostream& operator<<(std::ostream& stream, argb8888 const& value);
+    using sargb8888 = argb8888<color_space::srgb>;
+
+    template<color_space ColorSpace>
+    const argb8888<ColorSpace> argb8888<ColorSpace>::black(255_a8, 0_r8, 0_g8, 0_b8);
+
+    template<color_space ColorSpace>
+    const argb8888<ColorSpace> argb8888<ColorSpace>::white(255_a8, 255_r8, 255_g8, 255_b8);
+
+    template<color_space ColorSpace>
+    argb8888<ColorSpace>::argb8888()
+    : argb8888(0_a8, 0_r8, 0_g8, 0_b8)
+    { }
+
+    template<color_space ColorSpace>
+    argb8888<ColorSpace>::argb8888(a8 a, r8 r, g8 g, b8 b)
+    : b(b), r(r), g(g), a(a)
+    { }
+
+    template<color_space ColorSpace>
+    argb8888<ColorSpace>::argb8888(argb8888<ColorSpace> const& other)
+    : b(other.b), r(other.r), g(other.g), a(other.a)
+    { }
+
+    template<color_space ColorSpace>
+    argb8888<ColorSpace>&
+    argb8888<ColorSpace>::operator=(argb8888<ColorSpace> const& other)
+    {
+        if (this != &other)
+        {
+            b = other.b;
+            r = other.r;
+            g = other.g;
+            a = other.a;
+        }
+        return *this;
+    }
+
+    template<color_space ColorSpace>
+    bool
+    argb8888<ColorSpace>::operator==(argb8888<ColorSpace> const& other) const
+    {
+        return b == other.b && r == other.r && g == other.g && a == other.a;
+    }
+
+    template<color_space ColorSpace>
+    std::ostream&
+    operator<<(std::ostream& stream, argb8888<ColorSpace> const& value)
+    {
+        return stream
+            << static_cast<unsigned int>(value.a)
+            << ','
+            << static_cast<unsigned int>(value.r)
+            << ','
+            << static_cast<unsigned int>(value.g)
+            << ','
+            << static_cast<unsigned int>(value.b);
+    }
 }

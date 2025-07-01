@@ -39,7 +39,7 @@ BOOST_AUTO_TEST_CASE(test_texture_constructors)
     renderer test_renderer(test_window);
 
     BOOST_REQUIRE_NO_THROW(
-        texture<argb8888> test_texture(
+        texture<sargb8888> test_texture(
             test_renderer,
             texture_access::streaming_access,
             test_renderer.output_size()

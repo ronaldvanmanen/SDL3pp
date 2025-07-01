@@ -23,7 +23,6 @@ project ("SDL3pp")
 include(CTest)
 
 add_library("${PROJECT_NAME}"
-  "sources/argb8888.cpp"
   "sources/blend_mode.cpp"
   "sources/color.cpp"
   "sources/display_mode.cpp"
@@ -41,11 +40,11 @@ add_library("${PROJECT_NAME}"
   "sources/pixel_format_details.cpp"
   "sources/pixel_format.cpp"
   "sources/renderer.cpp"
-  "sources/rgb96f.cpp"
   "sources/surface.cpp"
   "sources/texture.cpp"
   "sources/window_flags.cpp"
-  "sources/window.cpp")
+  "sources/window.cpp"
+)
 
 if (CMAKE_VERSION VERSION_GREATER 3.12)
   set_property(TARGET "${PROJECT_NAME}" PROPERTY CXX_STANDARD 20)

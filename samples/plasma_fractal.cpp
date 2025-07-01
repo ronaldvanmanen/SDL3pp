@@ -271,7 +271,7 @@ int main()
         }
         else
         {
-            auto main_surface = surface<argb8888>(main_window);
+            auto main_surface = surface<sargb8888>(main_window);
             main_surface.blit(plasma_surface);
             main_window.update_surface();
 

@@ -27,6 +27,7 @@
 
 #include <SDL3/SDL_surface.h>
 
+#include "color_space.h"
 #include "error.h"
 #include "length.h"
 #include "pixel_format.h"
@@ -55,6 +56,10 @@ namespace sdl3
         ~surface_base();
 
         surface_base& operator=(surface_base const& other) = delete;
+
+        void color_space(sdl3::color_space const& value);
+
+        sdl3::color_space color_space() const;
 
         length<std::int32_t> width() const;
 

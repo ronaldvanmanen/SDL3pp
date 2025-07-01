@@ -52,6 +52,16 @@ namespace sdl3
         throw_last_error(native_handle != nullptr);
         return native_handle;
     }
+
+    SDL_Texture* create_texture(sdl3::renderer & owner, sdl3::property_group && properties)
+    {
+        SDL_Texture* native_handle = SDL_CreateTextureWithProperties(
+            owner.native_handle(),
+            properties.native_handle()
+        );
+        throw_last_error(native_handle != nullptr);
+        return native_handle;
+    }
 }
 
 sdl3::texture_base::texture_base(
@@ -65,6 +75,10 @@ sdl3::texture_base::texture_base(
 { }
 
 sdl3::texture_base::texture_base(sdl3::renderer & owner, sdl3::property_group & properties)
+: _native_handle(sdl3::create_texture(owner, properties))
+{ }
+
+sdl3::texture_base::texture_base(sdl3::renderer & owner, sdl3::property_group && properties)
 : _native_handle(sdl3::create_texture(owner, properties))
 { }
 

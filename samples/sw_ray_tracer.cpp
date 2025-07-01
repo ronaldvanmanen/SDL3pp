@@ -432,14 +432,14 @@ get_focal_length(perspective_camera const& camera, length<int32_t> width, length
 class point_light
 {
 public:
-    point_light(vector3 const& position, rgb96f const& color);
+    point_light(vector3 const& position, srgb96f const& color);
 
     vector3 position;
 
-    rgb96f color;
+    srgb96f color;
 };
 
-point_light::point_light(vector3 const& position, rgb96f const& color)
+point_light::point_light(vector3 const& position, srgb96f const& color)
 : position(position), color(color)
 { }
 
@@ -449,7 +449,7 @@ struct surface_info
 
     float diffuse_coefficient = 1.0f;
 
-    rgb96f color = rgb96f::black;
+    srgb96f color = srgb96f::black;
 
     float index_of_refraction = 0.0f;
 
@@ -476,7 +476,7 @@ public:
 
     float diffuse_coefficient;
 
-    rgb96f surface_color;
+    srgb96f surface_color;
 
     float index_of_refraction;
 
@@ -603,15 +603,15 @@ plane::hit_test(ray const& ray) const
 
 struct world
 {
-    rgb96f ambient;
+    srgb96f ambient;
 
     float min_depth;
 
     float max_depth;
 
-    rgb96f depth_color;
+    srgb96f depth_color;
 
-    rgb96f environment;
+    srgb96f environment;
 
     boost::base_collection<solid> objects;
 
@@ -650,10 +650,10 @@ find_nearest_hit(ray const& ray, world const& world)
     return hit { ray, nearest_object_distance, *nearest_object };
 }
 
-rgb96f
+srgb96f
 shade(hit const& hit, world const& world, int level, float weight);
 
-rgb96f
+srgb96f
 trace(ray const& ray, world const& world, int level, float weight)
 {
     auto const nearest_hit = find_nearest_hit(ray, world);
@@ -664,7 +664,7 @@ trace(ray const& ray, world const& world, int level, float weight)
     return world.environment;
 }
 
-rgb96f
+srgb96f
 trace(ray const& ray, world const& world)
 {
     return trace(ray, world, 0, 1.0f);
@@ -673,7 +673,7 @@ trace(ray const& ray, world const& world)
 float
 shadow(ray const& ray, world const& world, float max_distance);
 
-rgb96f
+srgb96f
 shade(hit const& hit, world const& world, int level, float weight)
 {
     auto const surface_position = hit.ray.origin + hit.ray.direction * hit.distance;
@@ -734,7 +734,7 @@ shade(hit const& hit, world const& world, int level, float weight)
     return color;
 }
 
-rgb96f
+srgb96f
 shade(hit const& hit, world const& world)
 {
     return shade(hit, world, 0, 1.0f);
@@ -755,26 +755,26 @@ int main()
 {
     auto window = ::window("Software Ray Tracer", 640*px, 480*px, window_flags::resizable);
     auto renderer = ::renderer(window);
-    auto texture = ::texture<rgb96f>(renderer, texture_access::streaming_access, renderer.output_size());
-    auto raster = ::surface<rgb96f>(renderer.output_size());
+    auto texture = ::texture<srgb96f>(renderer, texture_access::streaming_access, renderer.output_size());
+    auto raster = ::surface<srgb96f>(renderer.output_size());
 
     auto event_queue = ::event_queue();
 
     // Scene
     auto world = ::world
     {
-        .ambient = rgb96f(0.55f, 0.44f, 0.47f),
+        .ambient = srgb96f(0.55f, 0.44f, 0.47f),
         .min_depth = 1.0f,
         .max_depth = 298.0f,
-        .depth_color = rgb96f(0.86f, 0.88f, 0.95f),
-        .environment = rgb96f(0.62f, 0.69f, 0.96f)
+        .depth_color = srgb96f(0.86f, 0.88f, 0.95f),
+        .environment = srgb96f(0.62f, 0.69f, 0.96f)
     };
 
     // Key light
     world.lights.push_back(
         point_light(
             vector3 { -300.0f, 350.0f, 10.0f },
-            rgb96f(0.70f, 0.689f, 0.6885f)
+            srgb96f(0.70f, 0.689f, 0.6885f)
         )
     );
 
@@ -784,7 +784,7 @@ int main()
             vector3 { 0.0f, 0.0f, 0.0f },
             vector3 { 0.0f, 1.0f, 0.0f },
             surface_info {
-                .color = rgb96f(1.0f, 1.0f, 1.0f),
+                .color = srgb96f(1.0f, 1.0f, 1.0f),
                 .reflective_coefficient = 0.0f,
                 .specular_coefficient = 0.5f,
                 .specular_exponent = 0.8f,
@@ -798,7 +798,7 @@ int main()
             vector3 { 0.0f, 5.25f, 0.0f },
             5.25f,
             surface_info {
-                .color = rgb96f(0.89f, 0.48f, 0.42f),
+                .color = srgb96f(0.89f, 0.48f, 0.42f),
                 .reflective_coefficient = 0.15f,
                 .specular_coefficient = 1.0f,
                 .specular_exponent = 165.0f,
@@ -812,7 +812,7 @@ int main()
             vector3 { -3.5f, 1.6f, -6.7f },
             1.6f,
             surface_info {
-                .color = rgb96f(0.95f, 0.93f, 0.31f),
+                .color = srgb96f(0.95f, 0.93f, 0.31f),
                 .reflective_coefficient = 0.15f,
                 .specular_coefficient = 1.0f,
                 .specular_exponent = 165.0f,
@@ -826,7 +826,7 @@ int main()
             vector3 { 14.0f, 7.0f, 6.5f },
             7.0f,
             surface_info {
-                .color = rgb96f(1.0f, 0.44f, 0.64f),
+                .color = srgb96f(1.0f, 0.44f, 0.64f),
                 .reflective_coefficient = 0.15f,
                 .specular_coefficient = 1.0f,
                 .specular_exponent = 165.0f,
@@ -840,7 +840,7 @@ int main()
             vector3 { 8.2f, 3.5f, -6.5f },
             3.5f,
             surface_info {
-                .color = rgb96f(0.89f, 0.48f, 0.42f),
+                .color = srgb96f(0.89f, 0.48f, 0.42f),
                 .reflective_coefficient = 0.15f,
                 .specular_coefficient = 1.0f,
                 .specular_exponent = 165.0f,
@@ -854,7 +854,7 @@ int main()
             vector3 { -16.6f, 6.5f, 0.0f },
             6.5f,
             surface_info {
-                .color = rgb96f(1.0f, 0.44f, 0.64f),
+                .color = srgb96f(1.0f, 0.44f, 0.64f),
                 .reflective_coefficient = 0.15f,
                 .specular_coefficient = 1.0f,
                 .specular_exponent = 165.0f,
@@ -868,7 +868,7 @@ int main()
             vector3 { -9.5f, 3.0f, -6.0f },
             3.0f,
             surface_info {
-                .color = rgb96f(1.0f, 0.44f, 0.64f),
+                .color = srgb96f(1.0f, 0.44f, 0.64f),
                 .reflective_coefficient = 0.15f,
                 .specular_coefficient = 1.0f,
                 .specular_exponent = 165.0f,
@@ -882,7 +882,7 @@ int main()
             vector3 { -15.0f, 3.0f, 12.0f },
             3.0f,
             surface_info {
-                .color = rgb96f(0.95f, 0.93f, 0.31f),
+                .color = srgb96f(0.95f, 0.93f, 0.31f),
                 .reflective_coefficient = 0.15f,
                 .specular_coefficient = 1.0f,
                 .specular_exponent = 165.0f,
@@ -896,7 +896,7 @@ int main()
             vector3 { 40.0f, 10.0f, 175.0f },
             10.0f,
             surface_info {
-                .color = rgb96f(0.18f, 0.31f, 0.68f),
+                .color = srgb96f(0.18f, 0.31f, 0.68f),
                 .reflective_coefficient = 0.15f,
                 .specular_coefficient = 1.0f,
                 .specular_exponent = 165.0f,
