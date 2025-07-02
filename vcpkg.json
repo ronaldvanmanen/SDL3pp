@@ -5,12 +5,12 @@
   "homepage": "https://github.com/ronaldvanmanen/sdl3pp",
   "license": "zlib",
   "dependencies": [
-    "boost-optional",
-    "boost-poly-collection",
-    "boost-qvm",
-    "boost-test",
-    "boost-units",
-    "boost-utility",
-    "sdl3"
+    "sdl3",
+    { "name": "boost-optional",         "host": true },
+    { "name": "boost-poly-collection",  "host": true },
+    { "name": "boost-qvm",              "host": true },
+    { "name": "boost-test",             "host": true },
+    { "name": "boost-units",            "host": true },
+    { "name": "boost-utility",          "host": true }
   ]
 }
