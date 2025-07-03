@@ -763,18 +763,18 @@ int main()
     // Scene
     auto world = ::world
     {
-        .ambient = srgb96f(0.55f, 0.44f, 0.47f),
+        .ambient = srgb96f(0.55_r32f, 0.44_g32f, 0.47_b32f),
         .min_depth = 1.0f,
         .max_depth = 298.0f,
-        .depth_color = srgb96f(0.86f, 0.88f, 0.95f),
-        .environment = srgb96f(0.62f, 0.69f, 0.96f)
+        .depth_color = srgb96f(0.86_r32f, 0.88_g32f, 0.95_b32f),
+        .environment = srgb96f(0.62_r32f, 0.69_g32f, 0.96_b32f)
     };
 
     // Key light
     world.lights.push_back(
         point_light(
             vector3 { -300.0f, 350.0f, 10.0f },
-            srgb96f(0.70f, 0.689f, 0.6885f)
+            srgb96f(0.70_r32f, 0.689_g32f, 0.6885_b32f)
         )
     );
 
@@ -784,7 +784,7 @@ int main()
             vector3 { 0.0f, 0.0f, 0.0f },
             vector3 { 0.0f, 1.0f, 0.0f },
             surface_info {
-                .color = srgb96f(1.0f, 1.0f, 1.0f),
+                .color = srgb96f(1.0_r32f, 1.0_g32f, 1.0_b32f),
                 .reflective_coefficient = 0.0f,
                 .specular_coefficient = 0.5f,
                 .specular_exponent = 0.8f,
@@ -798,7 +798,7 @@ int main()
             vector3 { 0.0f, 5.25f, 0.0f },
             5.25f,
             surface_info {
-                .color = srgb96f(0.89f, 0.48f, 0.42f),
+                .color = srgb96f(0.89_r32f, 0.48_g32f, 0.42_b32f),
                 .reflective_coefficient = 0.15f,
                 .specular_coefficient = 1.0f,
                 .specular_exponent = 165.0f,
@@ -812,7 +812,7 @@ int main()
             vector3 { -3.5f, 1.6f, -6.7f },
             1.6f,
             surface_info {
-                .color = srgb96f(0.95f, 0.93f, 0.31f),
+                .color = srgb96f(0.95_r32f, 0.93_g32f, 0.31_b32f),
                 .reflective_coefficient = 0.15f,
                 .specular_coefficient = 1.0f,
                 .specular_exponent = 165.0f,
@@ -826,7 +826,7 @@ int main()
             vector3 { 14.0f, 7.0f, 6.5f },
             7.0f,
             surface_info {
-                .color = srgb96f(1.0f, 0.44f, 0.64f),
+                .color = srgb96f(1.0_r32f, 0.44_g32f, 0.64_b32f),
                 .reflective_coefficient = 0.15f,
                 .specular_coefficient = 1.0f,
                 .specular_exponent = 165.0f,
@@ -840,7 +840,7 @@ int main()
             vector3 { 8.2f, 3.5f, -6.5f },
             3.5f,
             surface_info {
-                .color = srgb96f(0.89f, 0.48f, 0.42f),
+                .color = srgb96f(0.89_r32f, 0.48_g32f, 0.42_b32f),
                 .reflective_coefficient = 0.15f,
                 .specular_coefficient = 1.0f,
                 .specular_exponent = 165.0f,
@@ -854,7 +854,7 @@ int main()
             vector3 { -16.6f, 6.5f, 0.0f },
             6.5f,
             surface_info {
-                .color = srgb96f(1.0f, 0.44f, 0.64f),
+                .color = srgb96f(1.0_r32f, 0.44_g32f, 0.64_b32f),
                 .reflective_coefficient = 0.15f,
                 .specular_coefficient = 1.0f,
                 .specular_exponent = 165.0f,
@@ -868,7 +868,7 @@ int main()
             vector3 { -9.5f, 3.0f, -6.0f },
             3.0f,
             surface_info {
-                .color = srgb96f(1.0f, 0.44f, 0.64f),
+                .color = srgb96f(1.0_r32f, 0.44_g32f, 0.64_b32f),
                 .reflective_coefficient = 0.15f,
                 .specular_coefficient = 1.0f,
                 .specular_exponent = 165.0f,
@@ -882,7 +882,7 @@ int main()
             vector3 { -15.0f, 3.0f, 12.0f },
             3.0f,
             surface_info {
-                .color = srgb96f(0.95f, 0.93f, 0.31f),
+                .color = srgb96f(0.95_r32f, 0.93_g32f, 0.31_b32f),
                 .reflective_coefficient = 0.15f,
                 .specular_coefficient = 1.0f,
                 .specular_exponent = 165.0f,
@@ -896,7 +896,7 @@ int main()
             vector3 { 40.0f, 10.0f, 175.0f },
             10.0f,
             surface_info {
-                .color = srgb96f(0.18f, 0.31f, 0.68f),
+                .color = srgb96f(0.18_r32f, 0.31_g32f, 0.68_b32f),
                 .reflective_coefficient = 0.15f,
                 .specular_coefficient = 1.0f,
                 .specular_exponent = 165.0f,

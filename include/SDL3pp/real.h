@@ -24,37 +24,37 @@
 
 #include <boost/operators.hpp>
 
-#define SDL3PP_INTEGER_DECL(NAME, BASE_TYPE)            \
+#define SDL3PP_REAL_DECL(NAME, BASE_TYPE)            \
     struct NAME##_tag {};                               \
-    using NAME = sdl3::integer<NAME##_tag, BASE_TYPE>;
+    using NAME = sdl3::real<NAME##_tag, BASE_TYPE>;
 
 namespace sdl3
 {
     template<typename Tag, typename T>
-    class integer : boost::operators<integer<Tag, T>>
+    class real : boost::operators<real<Tag, T>>
     {
     public:
-        explicit integer(T value);
+        explicit real(T value);
 
-        integer(integer<Tag, T> const& other);
+        real(real<Tag, T> const& other);
 
-        integer<Tag, T>& operator=(integer<Tag, T> const& other);
+        real<Tag, T>& operator=(real<Tag, T> const& other);
 
-        integer<Tag, T>& operator*=(integer<Tag, T> const& other);
+        real<Tag, T>& operator*=(real<Tag, T> const& other);
 
-        integer<Tag, T>& operator/=(integer<Tag, T> const& other);
+        real<Tag, T>& operator/=(real<Tag, T> const& other);
 
-        integer<Tag, T>& operator+=(integer<Tag, T> const& other);
+        real<Tag, T>& operator+=(real<Tag, T> const& other);
 
-        integer<Tag, T>& operator-=(integer<Tag, T> const& other);
+        real<Tag, T>& operator-=(real<Tag, T> const& other);
 
-        integer<Tag, T>& operator++();
+        real<Tag, T>& operator++();
 
-        integer<Tag, T>& operator--();
+        real<Tag, T>& operator--();
 
-        bool operator==(integer<Tag, T> const& other) const;
+        bool operator==(real<Tag, T> const& other) const;
 
-        bool operator<(integer<Tag, T> const& other) const;
+        bool operator<(real<Tag, T> const& other) const;
 
         operator T() const;
 
@@ -63,18 +63,18 @@ namespace sdl3
     };
 
     template<typename Tag, typename T>
-    integer<Tag, T>::integer(T value)
+    real<Tag, T>::real(T value)
     : _value(value)
     { }
 
     template<typename Tag, typename T>
-    integer<Tag, T>::integer(integer<Tag, T> const& other)
+    real<Tag, T>::real(real<Tag, T> const& other)
     : _value(other._value)
     { }
 
     template<typename Tag, typename T>
-    integer<Tag, T> &
-    integer<Tag, T>::operator=(integer<Tag, T> const& other)
+    real<Tag, T> &
+    real<Tag, T>::operator=(real<Tag, T> const& other)
     {
         if (*this != other)
         {
@@ -84,48 +84,48 @@ namespace sdl3
     }
 
     template<typename Tag, typename T>
-    integer<Tag, T> &
-    integer<Tag, T>::operator*=(integer<Tag, T> const& other)
+    real<Tag, T> &
+    real<Tag, T>::operator*=(real<Tag, T> const& other)
     {
         _value *= other._value;
         return *this;
     }
 
     template<typename Tag, typename T>
-    integer<Tag, T> &
-    integer<Tag, T>::operator/=(integer<Tag, T> const& other)
+    real<Tag, T> &
+    real<Tag, T>::operator/=(real<Tag, T> const& other)
     {
         _value /= other._value;
         return *this;
     }
 
     template<typename Tag, typename T>
-    integer<Tag, T> &
-    integer<Tag, T>::operator+=(integer<Tag, T> const& other)
+    real<Tag, T> &
+    real<Tag, T>::operator+=(real<Tag, T> const& other)
     {
         _value += other._value;
         return *this;
     }
 
     template<typename Tag, typename T>
-    integer<Tag, T> &
-    integer<Tag, T>::operator-=(integer<Tag, T> const& other)
+    real<Tag, T> &
+    real<Tag, T>::operator-=(real<Tag, T> const& other)
     {
         _value -= other._value;
         return *this;
     }
 
     template<typename Tag, typename T>
-    integer<Tag, T> &
-    integer<Tag, T>::operator++()
+    real<Tag, T> &
+    real<Tag, T>::operator++()
     {
         ++_value;
         return *this;
     }
 
     template<typename Tag, typename T>
-    integer<Tag, T> &
-    integer<Tag, T>::operator--()
+    real<Tag, T> &
+    real<Tag, T>::operator--()
     {
         --_value;
         return *this;
@@ -133,20 +133,20 @@ namespace sdl3
 
     template<typename Tag, typename T>
     bool
-    integer<Tag, T>::operator==(integer<Tag, T> const& other) const
+    real<Tag, T>::operator==(real<Tag, T> const& other) const
     {
         return _value == other._value;
     }
 
     template<typename Tag, typename T>
     bool
-    integer<Tag, T>::operator<(integer<Tag, T> const& other) const
+    real<Tag, T>::operator<(real<Tag, T> const& other) const
     {
         return _value < other._value;
     }
 
     template<typename Tag, typename T>
-    integer<Tag, T>::operator T() const
+    real<Tag, T>::operator T() const
     {
         return _value;
     }
