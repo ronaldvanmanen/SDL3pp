@@ -22,8 +22,11 @@
 
 #include <boost/operators.hpp>
 
+#include "b32f.h"
 #include "color_space.h"
+#include "g32f.h"
 #include "pixel_format.h"
+#include "r32f.h"
 
 namespace sdl3
 {
@@ -48,7 +51,7 @@ namespace sdl3
     public:
         rgb96f();
 
-        rgb96f(float r, float g, float b);
+        rgb96f(r32f r, g32f g, b32f b);
 
         rgb96f(rgb96f<ColorSpace> const& other);
 
@@ -65,7 +68,9 @@ namespace sdl3
         rgb96f<ColorSpace>& operator/=(float scalar);
 
     public:
-        float r, g, b;
+        r32f r;
+        g32f g;
+        b32f b;
     };
 
     using srgb96f = rgb96f<color_space::srgb>;
@@ -84,7 +89,7 @@ namespace sdl3
     { }
 
     template<color_space ColorSpace>
-    rgb96f<ColorSpace>::rgb96f(float r, float g, float b)
+    rgb96f<ColorSpace>::rgb96f(r32f r, g32f g, b32f b)
     : r(r)
     , g(g)
     , b(b)
@@ -138,9 +143,9 @@ namespace sdl3
     rgb96f<ColorSpace> &
     rgb96f<ColorSpace>::operator*=(float scalar)
     {
-        r *= scalar;
-        g *= scalar;
-        b *= scalar;
+        r *= r32f(scalar);
+        g *= g32f(scalar);
+        b *= b32f(scalar);
         return *this;
     }
 
@@ -148,9 +153,9 @@ namespace sdl3
     rgb96f<ColorSpace> &
     rgb96f<ColorSpace>::operator/=(float scalar)
     {
-        r /= scalar;
-        g /= scalar;
-        b /= scalar;
+        r /= r32f(scalar);
+        g /= g32f(scalar);
+        b /= b32f(scalar);
         return *this;
     }
 
