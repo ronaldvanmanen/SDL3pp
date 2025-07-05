@@ -22,11 +22,9 @@
 
 #include <boost/operators.hpp>
 
-#include "b32f.h"
 #include "color_space.h"
-#include "g32f.h"
+#include "color.h"
 #include "pixel_format.h"
-#include "r32f.h"
 
 namespace sdl3
 {
@@ -143,9 +141,9 @@ namespace sdl3
     rgb96f<ColorSpace> &
     rgb96f<ColorSpace>::operator*=(float scalar)
     {
-        r *= r32f(scalar);
-        g *= g32f(scalar);
-        b *= b32f(scalar);
+        r *= scalar;
+        g *= scalar;
+        b *= scalar;
         return *this;
     }
 
@@ -153,9 +151,9 @@ namespace sdl3
     rgb96f<ColorSpace> &
     rgb96f<ColorSpace>::operator/=(float scalar)
     {
-        r /= r32f(scalar);
-        g /= g32f(scalar);
-        b /= b32f(scalar);
+        r /= scalar;
+        g /= scalar;
+        b /= scalar;
         return *this;
     }
 

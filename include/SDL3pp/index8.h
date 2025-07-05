@@ -61,4 +61,3 @@ namespace sdl3
         std::uint8_t _value;
     };
 }
- 

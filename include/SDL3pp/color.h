@@ -22,7 +22,6 @@
 
 #include <iostream>
 #include <cstdint>
-
 #include <boost/operators.hpp>
 
 namespace sdl3

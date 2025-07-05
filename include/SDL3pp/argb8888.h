@@ -24,12 +24,9 @@
 
 #include <boost/operators.hpp>
 
-#include "a8.h"
-#include "b8.h"
 #include "color_space.h"
-#include "g8.h"
 #include "pixel_format.h"
-#include "r8.h"
+#include "primary_color.h"
 
 namespace sdl3
 {
