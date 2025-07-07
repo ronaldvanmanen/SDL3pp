@@ -22,7 +22,7 @@
 
 #include <SDL3/SDL_pixels.h>
 
-#include "SDL3pp/argb8888.h"
+#include "SDL3pp/packed_color.h"
 
 using sdl3::operator""_a8;
 using sdl3::operator""_r8;

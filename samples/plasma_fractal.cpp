@@ -26,12 +26,12 @@
 
 #include <boost/units/cmath.hpp>
 
-#include "SDL3pp/argb8888.h"
 #include "SDL3pp/color.h"
 #include "SDL3pp/event_queue.h"
 #include "SDL3pp/event.h"
 #include "SDL3pp/index8.h"
 #include "SDL3pp/keyboard_event.h"
+#include "SDL3pp/packed_color.h"
 #include "SDL3pp/palette.h"
 #include "SDL3pp/pixel_format_details.h"
 #include "SDL3pp/renderer.h"

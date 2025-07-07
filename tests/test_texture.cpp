@@ -20,7 +20,7 @@
 
 #include <boost/test/unit_test.hpp>
 
-#include "SDL3pp/argb8888.h"
+#include "SDL3pp/packed_color.h"
 #include "SDL3pp/renderer.h"
 #include "SDL3pp/texture.h"
 #include "SDL3pp/window.h"
