@@ -940,8 +940,8 @@ int main()
                     auto const modifiers = key_event.key_modifiers();
                     if (symbol == scan_code::m && modifiers == (key_modifier::left_ctrl | key_modifier::left_alt))
                     {
-                        window.relative_mouse_mode(
-                            !window.relative_mouse_mode()
+                        set_relative_mouse_mode(window,
+                            !get_relative_mouse_mode(window)
                         );
                     }
                 }
@@ -1029,7 +1029,7 @@ int main()
                 camera.zoom_out(left_shift ? 2.0f : 1.0f);
             }
 
-            if (window.relative_mouse_mode())
+            if (get_relative_mouse_mode(window))
             {
                 auto const mouse_state = mouse::relative_state();
                 camera.yaw(mouse_state.x * 0.1f);

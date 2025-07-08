@@ -67,11 +67,6 @@ sdl3::surface_base::surface_base(length<std::int32_t> const& width, length<std::
 , _free_handle(true)
 { }
 
-sdl3::surface_base::surface_base(sdl3::window & window)
-: _native_handle(SDL_GetWindowSurface(window.native_handle()))
-, _free_handle(false)
-{ }
-
 sdl3::surface_base::surface_base(SDL_Surface * native_handle, bool free_handle)
 : _native_handle(native_handle)
 , _free_handle(free_handle)
@@ -132,12 +127,20 @@ sdl3::surface_base::native_handle()
     return _native_handle;
 }
 
+sdl3::surface_base
+sdl3::get_surface(sdl3::window & window)
+{
+    return surface_base(
+        SDL_GetWindowSurface(window.native_handle()), false
+    );
+}
+
 void
-sdl3::surface_base::blit(sdl3::surface_base & source)
+sdl3::blit(sdl3::surface_base & source, sdl3::surface_base & target)
 {
     auto source_handle = source.native_handle();
     auto source_rect = SDL_Rect { 0, 0, source_handle->w, source_handle->h };
-    auto target_handle = this->native_handle();
+    auto target_handle = target.native_handle();
     auto target_rect = SDL_Rect { 0, 0, target_handle->w, target_handle->h };
     throw_last_error(
         SDL_BlitSurface(source_handle, &source_rect, target_handle, &target_rect)

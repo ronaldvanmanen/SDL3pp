@@ -224,7 +224,7 @@ int main()
     auto main_event_queue = event_queue();
 
     auto random_number_engine = default_random_engine(0);
-    auto plasma_surface = generate_diamond_square_image(random_number_engine, main_window.size());
+    auto plasma_surface = generate_diamond_square_image(random_number_engine, get_size(main_window));
     auto plasma_palette = palette(plasma_surface);
     auto plasma_colors = vector<color>(256);
 
@@ -272,8 +272,8 @@ int main()
         else
         {
             auto main_surface = surface<sargb8888>(main_window);
-            main_surface.blit(plasma_surface);
-            main_window.update_surface();
+            blit(plasma_surface, main_surface);
+            update_surface(main_window);
 
             static const auto refresh_rate = fractional_seconds(1.0 / 60.0);
             const auto elapsed = elapsed_seconds(stopwatch);

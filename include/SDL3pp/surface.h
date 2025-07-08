@@ -46,8 +46,6 @@ namespace sdl3
 
         surface_base(length<std::int32_t> const& width, length<std::int32_t> const& height, pixel_format format, void* pixels, std::int32_t pitch);
 
-        surface_base(window & owner);
-
         surface_base(surface_base const& other);
 
         surface_base(SDL_Surface * native_handle, bool free_handle);
@@ -67,13 +65,15 @@ namespace sdl3
 
         SDL_Surface* native_handle();
 
-        void blit(surface_base & source);
-
     protected:
         SDL_Surface* _native_handle;
 
         bool _free_handle;
     };
+
+    surface_base get_surface(window & owner);
+
+    void blit(surface_base & source, surface_base & target);
 
     template<typename TPixelFormat>
     class surface : public surface_base

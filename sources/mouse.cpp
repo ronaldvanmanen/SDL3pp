@@ -38,3 +38,17 @@ sdl3::mouse_state::pressed(std::uint32_t which) const
 {
     return ((this->buttons & which) == which);
 }
+
+void
+sdl3::set_relative_mouse_mode(sdl3::window & target, bool enabled)
+{
+    throw_last_error(
+        SDL_SetWindowRelativeMouseMode(target.native_handle(), enabled)
+    );
+}
+
+bool
+sdl3::get_relative_mouse_mode(sdl3::window & target)
+{
+    return SDL_GetWindowRelativeMouseMode(target.native_handle());
+}

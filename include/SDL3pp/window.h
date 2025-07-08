@@ -46,19 +46,15 @@ namespace sdl3
 
         window& operator=(window const& other) = delete;
 
-        size_2d<std::int32_t> size() const;
-
-        void relative_mouse_mode(bool enable);
-
-        bool relative_mouse_mode() const;
-
-        void raise();
-
-        void update_surface();
-
         SDL_Window* native_handle();
 
     private:
         SDL_Window* _native_handle;
     };
+
+    size_2d<std::int32_t> get_size(window & target);
+
+    void raise(window & target);
+
+    void update_surface(window & target);
 }

@@ -24,6 +24,7 @@
 
 #include "key_modifier.h"
 #include "keyboard_state.h"
+#include "window.h"
 
 namespace sdl3
 {
@@ -41,4 +42,8 @@ namespace sdl3
     public:
         static mouse_state relative_state();
     };
+
+    void set_relative_mouse_mode(window & target, bool enable);
+
+    bool get_relative_mouse_mode(window & target);
 }
