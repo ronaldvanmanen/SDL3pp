@@ -1,4 +1,4 @@
-﻿cmake_minimum_required (VERSION 3.10)
+﻿cmake_minimum_required (VERSION 3.20)
 
 # Enable Hot Reload for MSVC compilers if supported.
 if (POLICY CMP0141)
@@ -7,6 +7,8 @@ if (POLICY CMP0141)
 endif()
 
 project ("SDL3pp")
+
+set(CMAKE_CXX_STANDARD 23)
 
 # if (MSVC)
 #   set(ENV{esp.extensions} cppcorecheck.dll)
@@ -45,10 +47,6 @@ add_library("${PROJECT_NAME}"
   "sources/window_flags.cpp"
   "sources/window.cpp"
 )
-
-if (CMAKE_VERSION VERSION_GREATER 3.12)
-  set_property(TARGET "${PROJECT_NAME}" PROPERTY CXX_STANDARD 20)
-endif()
 
 find_package(boost_optional REQUIRED CONFIG)
 find_package(boost_qvm REQUIRED CONFIG)

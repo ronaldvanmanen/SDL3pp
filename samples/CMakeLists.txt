@@ -1,4 +1,4 @@
-cmake_minimum_required (VERSION 3.10)
+cmake_minimum_required (VERSION 3.20)
 
 # Enable Hot Reload for MSVC compilers if supported.
 if (POLICY CMP0141)
@@ -10,13 +10,7 @@ project ("SDL3pp-samples")
 
 macro("add_sample" TARGET)
   cmake_parse_arguments(arg "" "" "SOURCES" ${ARGN})
-
   add_executable(${TARGET} ${arg_SOURCES})
-
-  if (CMAKE_VERSION VERSION_GREATER 3.12)
-    set_property(TARGET ${TARGET} PROPERTY CXX_STANDARD 20)
-  endif()
-
   target_link_libraries(${TARGET} PRIVATE SDL3pp)
 endmacro()
 

@@ -1,4 +1,5 @@
 {
+    "C_Cpp.default.cppStandard": "c++23",
     "cmake.ctest.debugLaunchTarget": "(Windows) Launch ctest",
     "files.associations": {
         "ostream": "cpp",

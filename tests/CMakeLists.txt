@@ -1,4 +1,4 @@
-cmake_minimum_required (VERSION 3.10)
+cmake_minimum_required (VERSION 3.20)
 
 # Enable Hot Reload for MSVC compilers if supported.
 if (POLICY CMP0141)
@@ -20,10 +20,6 @@ add_executable("${PROJECT_NAME}"
   "test_texture.cpp"
   "test_window.cpp"
 )
-
-if (CMAKE_VERSION VERSION_GREATER 3.12)
-  set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD 20)
-endif()
 
 find_package(boost_unit_test_framework REQUIRED CONFIG)
 target_link_libraries("${PROJECT_NAME}"
