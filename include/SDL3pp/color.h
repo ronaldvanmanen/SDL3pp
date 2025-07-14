@@ -22,11 +22,17 @@
 
 #include <iostream>
 #include <cstdint>
+
 #include <boost/operators.hpp>
+
+#include <SDL3/SDL_pixels.h>
+
+#include "primary_color.h"
 
 namespace sdl3
 {
-    class color : boost::equality_comparable<color>
+    class alignas(alignof(SDL_Color)) color
+    : boost::equality_comparable<color>
     {
     public:
         static const color black;
@@ -42,7 +48,7 @@ namespace sdl3
     public:
         color();
         
-        color(std::uint8_t r, std::uint8_t g, std::uint8_t b, std::uint8_t a);
+        color(r8 r, g8 g, b8 b, a8 a);
 
         color(color const& other);
 
@@ -51,7 +57,10 @@ namespace sdl3
         bool operator==(color const& other) const;
 
     public:
-        std::uint8_t r, g, b, a;
+        r8 r;
+        g8 g;
+        b8 b;
+        a8 a;
     };
 
     template<class CharT, class Traits>

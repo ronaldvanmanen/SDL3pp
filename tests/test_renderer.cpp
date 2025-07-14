@@ -45,9 +45,9 @@ BOOST_AUTO_TEST_CASE(test_renderer_output_size)
 
 BOOST_AUTO_TEST_CASE(test_renderer_draw_color)
 {
-    window test_window("test_renderer_draw_color", 640*px, 480*px, window_flags::hidden);
-    renderer test_renderer(test_window);
-    color test_color(0xDE, 0xAD, 0xBE, 0xEF);
+    auto test_window = window("test_renderer_draw_color", 640*px, 480*px, window_flags::hidden);
+    auto test_renderer = renderer(test_window);
+    auto test_color = color(0xDE_r8, 0xAD_g8, 0xBE_b8, 0xEF_a8);
     
     test_renderer.draw_color(test_color);
 

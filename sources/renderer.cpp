@@ -95,7 +95,7 @@ sdl3::renderer::draw_color() const
     throw_last_error(
         SDL_GetRenderDrawColor(_native_handle, &r, &g, &b, &a)
     );
-    return sdl3::color(r, g, b, a);
+    return sdl3::color(sdl3::r8(r), sdl3::g8(g), sdl3::b8(b), sdl3::a8(a));
 }
 
 void

@@ -22,21 +22,21 @@
 
 #include "SDL3pp/color.h"
 
-const sdl3::color sdl3::color::black(0, 0, 0, 255);
+const sdl3::color sdl3::color::black(0_r8, 0_g8, 0_b8, 255_a8);
 
-const sdl3::color sdl3::color::white(255, 255, 255, 255);
+const sdl3::color sdl3::color::white(255_r8, 255_g8, 255_b8, 255_a8);
 
-const sdl3::color sdl3::color::red(255, 0, 0, 255);
+const sdl3::color sdl3::color::red(255_r8, 0_g8, 0_b8, 255_a8);
 
-const sdl3::color sdl3::color::green(0, 255, 0, 255);
+const sdl3::color sdl3::color::green(0_r8, 255_g8, 0_b8, 255_a8);
 
-const sdl3::color sdl3::color::blue(0, 0, 255, 255);
+const sdl3::color sdl3::color::blue(0_r8, 0_g8, 255_b8, 255_a8);
 
 sdl3::color::color()
 : r(0), g(0), b(0), a(0)
 { }
 
-sdl3::color::color(std::uint8_t r, std::uint8_t g, std::uint8_t b, std::uint8_t a)
+sdl3::color::color(sdl3::r8 r, sdl3::g8 g, sdl3::b8 b, sdl3::a8 a)
 : r(r), g(g), b(b), a(a)
 { }
 
