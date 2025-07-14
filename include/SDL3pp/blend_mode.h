@@ -37,5 +37,19 @@ namespace sdl3
         invalid = SDL_BLENDMODE_INVALID
     };
 
-    std::ostream & operator<<(std::ostream & stream, blend_mode const& value);
+    template<class CharT, class Traits>
+    std::basic_ostream<CharT, Traits>&
+    operator<<(std::basic_ostream<CharT, Traits>& stream, blend_mode const& value)
+    {
+        switch (value)
+        {
+            case blend_mode::none: stream << "none";
+            case blend_mode::blend: stream << "blend";
+            case blend_mode::additive: stream << "additive";
+            case blend_mode::modulate: stream << "modulate";
+            case blend_mode::multiply: stream << "multiply";
+            case blend_mode::invalid: stream << "invalid";
+        }
+        return stream;
+    }
 }

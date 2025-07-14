@@ -42,9 +42,9 @@ namespace sdl3
         bt2020_full = SDL_COLORSPACE_BT2020_FULL,
     };
 
-    inline
-    std::ostream &
-    operator<<(std::ostream & stream, color_space const& value)
+    template<class CharT, class Traits>
+    std::basic_ostream<CharT, Traits>&
+    operator<<(std::basic_ostream<CharT, Traits>& stream, color_space const& value)
     {
         switch(value)
         {

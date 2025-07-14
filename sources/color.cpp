@@ -62,16 +62,3 @@ sdl3::color::operator==(color const& other) const
 {
     return r == other.r && g == other.g && b == other.b && a == other.a;
 }
-
-std::ostream &
-sdl3::operator<<(std::ostream & stream, color const& value)
-{
-    return stream
-        << static_cast<unsigned int>(value.r)
-        << ','
-        << static_cast<unsigned int>(value.g)
-        << ','
-        << static_cast<unsigned int>(value.b)
-        << ','
-        << static_cast<unsigned int>(value.a);
-}

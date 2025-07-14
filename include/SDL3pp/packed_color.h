@@ -105,17 +105,10 @@ namespace sdl3
         return b == other.b && r == other.r && g == other.g && a == other.a;
     }
 
-    template<color_space ColorSpace>
-    std::ostream &
-    operator<<(std::ostream & stream, argb8888<ColorSpace> const& value)
+    template<class CharT, class Traits, color_space ColorSpace>
+    std::basic_ostream<CharT, Traits> &
+    operator<<(std::basic_ostream<CharT, Traits> & stream, argb8888<ColorSpace> const& value)
     {
-        return stream
-            << static_cast<unsigned int>(value.a)
-            << ','
-            << static_cast<unsigned int>(value.r)
-            << ','
-            << static_cast<unsigned int>(value.g)
-            << ','
-            << static_cast<unsigned int>(value.b);
+        return stream << value.a << ',' << value.r << ',' << value.g << ',' << value.b;
     }
 }

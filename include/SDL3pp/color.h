@@ -54,5 +54,10 @@ namespace sdl3
         std::uint8_t r, g, b, a;
     };
 
-    std::ostream & operator<<(std::ostream & stream, color const& value);
+    template<class CharT, class Traits>
+    std::basic_ostream<CharT, Traits>&
+    operator<<(std::basic_ostream<CharT, Traits>& stream, color const& value)
+    {
+        return stream << value.r << ',' << value.g << ',' << value.b << ',' << value.a;
+    }
 }

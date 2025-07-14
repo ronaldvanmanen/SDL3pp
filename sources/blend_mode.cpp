@@ -21,22 +21,3 @@
 #pragma once
 
 #include "SDL3pp/blend_mode.h"
-
-std::ostream &
-sdl3::operator<<(std::ostream & stream, sdl3::blend_mode const& value)
-{
-    #define RETURN(X) return stream << #X;
-    #define CASE(X) case X: RETURN(X)
-    #define DEFAULT(X) default: RETURN(X);
-
-    switch (value)
-    {
-        CASE(sdl3::blend_mode::none)
-        CASE(sdl3::blend_mode::blend)
-        CASE(sdl3::blend_mode::additive)
-        CASE(sdl3::blend_mode::modulate)
-        CASE(sdl3::blend_mode::multiply)
-        CASE(sdl3::blend_mode::invalid)
-        DEFAULT(sdl3::blend_mode::invalid)
-    }
-}

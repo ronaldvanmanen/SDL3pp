@@ -84,5 +84,53 @@ namespace sdl3
         external_oes = SDL_PIXELFORMAT_EXTERNAL_OES
     };
 
-    std::ostream & operator<<(std::ostream & stream, pixel_format const& value);
+    template<class CharT, class Traits>
+    std::basic_ostream<CharT, Traits>&
+    operator<<(std::basic_ostream<CharT, Traits>& stream, sdl3::pixel_format const& value)
+    {
+        switch (value)
+        {
+            case pixel_format::unknown: stream << "unknown"; break;
+            case pixel_format::index1lsb: stream << "index1lsb"; break;
+            case pixel_format::index1msb: stream << "index1msb"; break;
+            case pixel_format::index4lsb: stream << "index4lsb"; break;
+            case pixel_format::index4msb: stream << "index4msb"; break;
+            case pixel_format::index8: stream << "index8"; break;
+            case pixel_format::rgb332: stream << "rgb332"; break;
+            case pixel_format::xrgb4444: stream << "xrgb4444"; break;
+            case pixel_format::xbgr4444: stream << "xbgr4444"; break;
+            case pixel_format::xrgb1555: stream << "xrgb1555"; break;
+            case pixel_format::xbgr1555: stream << "xbgr1555"; break;
+            case pixel_format::argb4444: stream << "argb4444"; break;
+            case pixel_format::rgba4444: stream << "rgba4444"; break;
+            case pixel_format::abgr4444: stream << "abgr4444"; break;
+            case pixel_format::bgra4444: stream << "bgra4444"; break;
+            case pixel_format::argb1555: stream << "argb1555"; break;
+            case pixel_format::rgba5551: stream << "rgba5551"; break;
+            case pixel_format::abgr1555: stream << "abgr1555"; break;
+            case pixel_format::bgra5551: stream << "bgra5551"; break;
+            case pixel_format::rgb565: stream << "rgb565"; break;
+            case pixel_format::bgr565: stream << "bgr565"; break;
+            case pixel_format::rgb24: stream << "rgb24"; break;
+            case pixel_format::bgr24: stream << "bgr24"; break;
+            case pixel_format::xrgb8888: stream << "xrgb8888"; break;
+            case pixel_format::rgbx8888: stream << "rgbx8888"; break;
+            case pixel_format::xbgr8888: stream << "xbgr8888"; break;
+            case pixel_format::bgrx8888: stream << "bgrx8888"; break;
+            case pixel_format::argb8888: stream << "argb8888"; break;
+            case pixel_format::rgba8888: stream << "rgba8888"; break;
+            case pixel_format::abgr8888: stream << "abgr8888"; break;
+            case pixel_format::bgra8888: stream << "bgra8888"; break;
+            case pixel_format::argb2101010: stream << "argb2101010"; break;
+            case pixel_format::yv12: stream << "yv12"; break;
+            case pixel_format::iyuv: stream << "iyuv"; break;
+            case pixel_format::yuy2: stream << "yuy2"; break;
+            case pixel_format::uyvy: stream << "uyvy"; break;
+            case pixel_format::yvyu: stream << "yvyu"; break;
+            case pixel_format::nv12: stream << "nv12"; break;
+            case pixel_format::nv21: stream << "nv21"; break;
+            case pixel_format::external_oes: stream << "external_oes"; break;
+        }
+        return stream;
+    }
 }

@@ -176,6 +176,13 @@ namespace sdl3
         return _value;
     }
 
+    template<typename CharT, typename Traits, typename Tag, typename T>
+    std::basic_ostream<CharT, Traits>&
+    operator<<(std::basic_ostream<CharT, Traits>& stream, primary_color<Tag, T> const& value)
+    {
+        return stream << static_cast<T>(value);
+    }
+
 #define SDL3PP_PRIMARY_COLOR(NAME, BASE_TYPE)                   \
     struct NAME##_tag {};                                       \
                                                                 \
