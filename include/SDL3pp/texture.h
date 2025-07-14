@@ -34,11 +34,11 @@ namespace sdl3
 #include <SDL3/SDL_render.h>
 
 #include "error.h"
-#include "image.h"
 #include "pixel_format_traits.h"
 #include "pixel_format.h"
 #include "renderer.h"
 #include "size.h"
+#include "surface.h"
 #include "texture_access.h"
 
 namespace sdl3
@@ -75,7 +75,7 @@ namespace sdl3
 
         texture<TPixelFormat>& operator=(texture<TPixelFormat> const& other) = delete;
 
-        void update(image<TPixelFormat> const& pixels);
+        void update(surface<TPixelFormat> const& pixels);
 
         template<typename CallbackFunction>
         void with_lock(CallbackFunction callback);
@@ -98,10 +98,15 @@ namespace sdl3
 
     template<typename TPixelFormat>
     void
-    texture<TPixelFormat>::update(image<TPixelFormat> const& pixels)
+    texture<TPixelFormat>::update(surface<TPixelFormat> const& pixels)
     {
         throw_last_error(
-            SDL_UpdateTexture(_native_handle, nullptr, pixels.pixels(), pixels.pitch() * sizeof(TPixelFormat))
+            SDL_UpdateTexture(
+                _native_handle,
+                nullptr,
+                pixels.pixels(),
+                pixels.pitch() * sizeof(TPixelFormat)
+            )
         );
     }
 
@@ -115,14 +120,14 @@ namespace sdl3
             SDL_LockTexture(_native_handle, nullptr, &pixels, &pitch)
         );
 
-        image<TPixelFormat> locked_texture(
-            static_cast<TPixelFormat*>(pixels),
+        surface<TPixelFormat> surface(
             _native_handle->w * px,
             _native_handle->h * px,
+            static_cast<TPixelFormat*>(pixels),
             pitch / sizeof(TPixelFormat)
         );
 
-        callback(locked_texture);
+        callback(surface);
 
         SDL_UnlockTexture(_native_handle);
     }

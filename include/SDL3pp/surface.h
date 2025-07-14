@@ -28,7 +28,6 @@
 #include <SDL3/SDL_surface.h>
 
 #include "error.h"
-#include "image.h"
 #include "length.h"
 #include "pixel_format.h"
 #include "pixel_format_traits.h"
@@ -40,9 +39,11 @@ namespace sdl3
     class surface_base
     {
     protected:
-        surface_base(length<std::int32_t> width, length<std::int32_t> height, pixel_format format);
+        surface_base(length<std::int32_t> const& width, length<std::int32_t> const& height, pixel_format format);
 
         surface_base(size_2d<std::int32_t> const& size, pixel_format format);
+
+        surface_base(length<std::int32_t> const& width, length<std::int32_t> const& height, pixel_format format, void* pixels, std::int32_t pitch);
 
         surface_base(window & owner);
 
@@ -55,11 +56,15 @@ namespace sdl3
 
         surface_base& operator=(surface_base const& other) = delete;
 
+        length<std::int32_t> width() const;
+
+        length<std::int32_t> height() const;
+
         SDL_Surface* native_handle();
 
         void blit(surface_base & source);
 
-    private:
+    protected:
         SDL_Surface* _native_handle;
 
         bool _free_handle;
@@ -69,9 +74,11 @@ namespace sdl3
     class surface : public surface_base
     {
     public:
-        surface(length<std::int32_t> width, length<std::int32_t> height);
+        surface(length<std::int32_t> const& width, length<std::int32_t> const& height);
 
         surface(size_2d<std::int32_t> const& size);
+
+        surface(length<std::int32_t> const& width, length<std::int32_t> const& height, TPixelFormat* pixels, std::int32_t pitch);
 
         surface(window & owner);
 
@@ -79,18 +86,31 @@ namespace sdl3
 
         surface<TPixelFormat>& operator=(surface<TPixelFormat> const& other) = delete;
 
+        std::int32_t pitch() const;
+
+        TPixelFormat const* pixels() const;
+
+        TPixelFormat& operator()(offset<int32_t> x, offset<int32_t> y);
+
+        TPixelFormat const& operator()(offset<int32_t> x, offset<int32_t> y) const;
+
         template<typename CallbackFunction>
         void with_lock(CallbackFunction callback);
     };
 
     template<typename TPixelFormat>
-    surface<TPixelFormat>::surface(length<std::int32_t> width, length<std::int32_t> height)
+    surface<TPixelFormat>::surface(length<std::int32_t> const& width, length<std::int32_t> const& height)
     : surface_base(width, height, pixel_format_traits<TPixelFormat>::format)
     { }
 
     template<typename TPixelFormat>
     surface<TPixelFormat>::surface(size_2d<std::int32_t> const& size)
     : surface_base(size, pixel_format_traits<TPixelFormat>::format)
+    { }
+
+    template<typename TPixelFormat>
+    surface<TPixelFormat>::surface(length<std::int32_t> const& width, length<std::int32_t> const& height, TPixelFormat* pixels, std::int32_t pitch)
+    : surface_base(width, height, pixel_format_traits<TPixelFormat>::format, pixels, pitch * sizeof(TPixelFormat))
     { }
 
     template<typename TPixelFormat>
@@ -103,33 +123,60 @@ namespace sdl3
     : surface_base(other)
     { }
 
+    template<typename TPixelFormat>
+    std::int32_t
+    surface<TPixelFormat>::pitch() const
+    {
+        return _native_handle->pitch / sizeof(TPixelFormat);
+    }
+
+    template<typename TPixelFormat>
+    TPixelFormat const*
+    surface<TPixelFormat>::pixels() const
+    {
+        return reinterpret_cast<TPixelFormat const*>(_native_handle->pixels);
+    }
+
+    template<typename TPixelFormat>
+    TPixelFormat&
+    surface<TPixelFormat>::operator()(offset<std::int32_t> x, offset<std::int32_t> y)
+    {
+        TPixelFormat * pixels = reinterpret_cast<TPixelFormat*>(_native_handle->pixels);
+        auto const pitch = _native_handle->pitch / sizeof(TPixelFormat);
+        auto const sx = boost::units::quantity_cast<std::size_t>(x);
+        auto const sy = boost::units::quantity_cast<std::size_t>(y);
+        return pixels[sy * pitch + sx];
+    }
+
+    template<typename TPixelFormat>
+    TPixelFormat const&
+    surface<TPixelFormat>::operator()(offset<std::int32_t> x, offset<std::int32_t> y) const
+    {
+        TPixelFormat const* pixels = reinterpret_cast<TPixelFormat const*>(_native_handle->pixels);
+        auto const pitch = _native_handle->pitch / sizeof(TPixelFormat);
+        auto const sx = boost::units::quantity_cast<std::size_t>(x);
+        auto const sy = boost::units::quantity_cast<std::size_t>(y);
+        return pixels[sy * pitch + sx];
+    }
+
     template<typename TPixelFormat> template <typename CallbackFunction>
     void
     surface<TPixelFormat>::with_lock(CallbackFunction callback)
     {
-        auto native_handle = this->native_handle();
-
-        const bool must_lock = SDL_MUSTLOCK(native_handle);
+        const bool must_lock = SDL_MUSTLOCK(_native_handle);
 
         if (must_lock)
         {
             throw_last_error(
-                SDL_LockSurface(native_handle)
+                SDL_LockSurface(_native_handle)
             );
         }
 
-        image<TPixelFormat> locked_texture(
-            static_cast<TPixelFormat*>(native_handle->pixels),
-            native_handle->w * px,
-            native_handle->h * px,
-            native_handle->pitch / sizeof(TPixelFormat)
-        );
-
-        callback(locked_texture);
+        callback(*this);
 
         if (must_lock)
         {
-            SDL_UnlockSurface(native_handle);
+            SDL_UnlockSurface(_native_handle);
         }
     }
 }
