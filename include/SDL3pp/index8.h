@@ -29,7 +29,11 @@
 namespace sdl3
 {
     class alignas(alignof(std::uint8_t)) index8
-    : public boost::operators<index8>
+    : boost::totally_ordered<index8
+    , boost::additive<index8
+    , boost::multiplicative<index8
+    , boost::unit_steppable<index8
+    > > > >
     {
     public:
         static constexpr pixel_format format = pixel_format::index8;

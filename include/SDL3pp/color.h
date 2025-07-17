@@ -27,12 +27,16 @@
 
 #include <SDL3/SDL_pixels.h>
 
-#include "primary_color.h"
+#include "base_color.h"
 
 namespace sdl3
 {
     class alignas(alignof(SDL_Color)) color
-    : boost::equality_comparable<color>
+    : boost::equality_comparable<color
+    , boost::additive<color
+    , boost::multiplicative<color
+    , boost::multiplicative<color, std::uint8_t
+    > > > >
     {
     public:
         static const color black;
@@ -52,7 +56,19 @@ namespace sdl3
 
         color(color const& other);
 
-        color& operator=(color const& other);
+        color & operator=(color const& other);
+
+        color & operator*=(color const& other);
+
+        color & operator/=(color const& other);
+
+        color & operator+=(color const& other);
+
+        color & operator-=(color const& other);
+
+        color & operator*=(std::uint8_t scalar);
+
+        color & operator/=(std::uint8_t scalar);
 
         bool operator==(color const& other) const;
 

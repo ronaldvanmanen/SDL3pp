@@ -26,13 +26,16 @@
 
 #include "color_space.h"
 #include "pixel_format.h"
-#include "primary_color.h"
+#include "base_color.h"
 
 namespace sdl3
 {
     template<color_space ColorSpace>
     class alignas(alignof(std::uint32_t)) argb8888
-    : public boost::equality_comparable<argb8888<ColorSpace> >
+    : boost::equality_comparable<argb8888<ColorSpace>
+    , boost::additive<argb8888<ColorSpace>
+    , boost::multiplicative<argb8888<ColorSpace>
+    > > >
     {
     public:
         static constexpr pixel_format format = pixel_format::argb8888;
@@ -48,9 +51,17 @@ namespace sdl3
 
         argb8888(a8 a, r8 r, g8 g, b8 b);
 
-        argb8888(argb8888 const& other);
+        argb8888(argb8888<ColorSpace> const& other);
 
-        argb8888 & operator=(argb8888 const& other);
+        argb8888<ColorSpace> & operator=(argb8888<ColorSpace> const& other);
+
+        argb8888<ColorSpace> & operator*=(argb8888<ColorSpace> const& other);
+
+        argb8888<ColorSpace> & operator/=(argb8888<ColorSpace> const& other);
+
+        argb8888<ColorSpace> & operator+=(argb8888<ColorSpace> const& other);
+
+        argb8888<ColorSpace> & operator-=(argb8888<ColorSpace> const& other);
 
         bool operator==(argb8888 const& other) const;
 
@@ -64,14 +75,29 @@ namespace sdl3
     using sargb8888 = argb8888<color_space::srgb>;
 
     template<color_space ColorSpace>
-    const argb8888<ColorSpace> argb8888<ColorSpace>::black(255_a8, 0_r8, 0_g8, 0_b8);
+    const argb8888<ColorSpace> argb8888<ColorSpace>::black(
+        base_color_traits<a8>::max(),
+        base_color_traits<r8>::min(),
+        base_color_traits<g8>::min(),
+        base_color_traits<b8>::min()
+    );
 
     template<color_space ColorSpace>
-    const argb8888<ColorSpace> argb8888<ColorSpace>::white(255_a8, 255_r8, 255_g8, 255_b8);
+    const argb8888<ColorSpace> argb8888<ColorSpace>::white(
+        base_color_traits<a8>::max(),
+        base_color_traits<r8>::max(),
+        base_color_traits<g8>::max(),
+        base_color_traits<b8>::max()
+    );
 
     template<color_space ColorSpace>
     argb8888<ColorSpace>::argb8888()
-    : argb8888(0_a8, 0_r8, 0_g8, 0_b8)
+    : argb8888(
+        base_color_traits<a8>::min(),
+        base_color_traits<r8>::min(),
+        base_color_traits<g8>::min(),
+        base_color_traits<b8>::min()
+    )
     { }
 
     template<color_space ColorSpace>
@@ -103,6 +129,46 @@ namespace sdl3
     argb8888<ColorSpace>::operator==(argb8888<ColorSpace> const& other) const
     {
         return b == other.b && r == other.r && g == other.g && a == other.a;
+    }
+
+    template<color_space ColorSpace>
+    argb8888<ColorSpace> &
+    argb8888<ColorSpace>::operator*=(argb8888<ColorSpace> const& other)
+    {
+        r *= other.r;
+        g *= other.g;
+        b *= other.b;
+        return *this;
+    }
+
+    template<color_space ColorSpace>
+    argb8888<ColorSpace> &
+    argb8888<ColorSpace>::operator/=(argb8888<ColorSpace> const& other)
+    {
+        r /= other.r;
+        g /= other.g;
+        b /= other.b;
+        return *this;
+    }
+
+    template<color_space ColorSpace>
+    argb8888<ColorSpace> &
+    argb8888<ColorSpace>::operator+=(argb8888<ColorSpace> const& other)
+    {
+        r += other.r;
+        g += other.g;
+        b += other.b;
+        return *this;
+    }
+
+    template<color_space ColorSpace>
+    argb8888<ColorSpace> &
+    argb8888<ColorSpace>::operator-=(argb8888<ColorSpace> const& other)
+    {
+        r -= other.r;
+        g -= other.g;
+        b -= other.b;
+        return *this;
     }
 
     template<class CharT, class Traits, color_space ColorSpace>

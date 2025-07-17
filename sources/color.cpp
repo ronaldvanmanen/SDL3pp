@@ -45,7 +45,7 @@ sdl3::color::color(sdl3::color const& other)
 { }
 
 sdl3::color &
-sdl3::color::operator=(color const& other)
+sdl3::color::operator=(sdl3::color const& other)
 {
     if (*this != other)
     {
@@ -57,8 +57,68 @@ sdl3::color::operator=(color const& other)
     return *this;
 }
 
+sdl3::color &
+sdl3::color::operator*=(sdl3::color const& other)
+{
+    r *= other.r;
+    g *= other.g;
+    b *= other.b;
+    a *= other.a;
+    return *this;
+}
+
+sdl3::color &
+sdl3::color::operator/=(sdl3::color const& other)
+{
+    r /= other.r;
+    g /= other.g;
+    b /= other.b;
+    a /= other.a;
+    return *this;
+}
+
+sdl3::color &
+sdl3::color::operator+=(sdl3::color const& other)
+{
+    r += other.r;
+    g += other.g;
+    b += other.b;
+    a += other.a;
+    return *this;
+}
+
+sdl3::color &
+sdl3::color::operator-=(sdl3::color const& other)
+{
+    r -= other.r;
+    g -= other.g;
+    b -= other.b;
+    a -= other.a;
+    return *this;
+}
+
+sdl3::color &
+sdl3::color::operator*=(std::uint8_t scalar)
+{
+    r *= scalar;
+    g *= scalar;
+    b *= scalar;
+    a *= scalar;
+    return *this;
+}
+
+sdl3::color &
+sdl3::color::operator/=(std::uint8_t scalar)
+{
+    r /= scalar;
+    g /= scalar;
+    b /= scalar;
+    a /= scalar;
+    return *this;
+}
+
 bool
-sdl3::color::operator==(color const& other) const
+sdl3::color::operator==(sdl3::color const& other) const
 {
     return r == other.r && g == other.g && b == other.b && a == other.a;
 }
