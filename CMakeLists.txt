@@ -31,7 +31,7 @@ add_library("${PROJECT_NAME}"
   "sources/error.cpp"
   "sources/event_queue.cpp"
   "sources/event.cpp"
-  "sources/index8.cpp"
+  "sources/indexed_color.cpp"
   "sources/key_modifier.cpp"
   "sources/keyboard_event.cpp"
   "sources/keyboard_state.cpp"
@@ -40,13 +40,13 @@ add_library("${PROJECT_NAME}"
   "sources/mouse.cpp"
   "sources/palette.cpp"
   "sources/pixel_format_details.cpp"
-  "sources/pixel_format.cpp"
   "sources/renderer.cpp"
   "sources/surface.cpp"
   "sources/texture.cpp"
   "sources/window.cpp"
 )
 
+find_package(boost_core REQUIRED CONFIG)
 find_package(boost_optional REQUIRED CONFIG)
 find_package(boost_qvm REQUIRED CONFIG)
 find_package(boost_units REQUIRED CONFIG)
@@ -54,6 +54,7 @@ find_package(boost_utility CONFIG REQUIRED)
 
 target_link_libraries("${PROJECT_NAME}"
   PRIVATE
+  Boost::core
   Boost::optional
   Boost::qvm
   Boost::units

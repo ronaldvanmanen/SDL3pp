@@ -29,7 +29,7 @@
 #include "SDL3pp/color.h"
 #include "SDL3pp/event_queue.h"
 #include "SDL3pp/event.h"
-#include "SDL3pp/index8.h"
+#include "SDL3pp/indexed_color.h"
 #include "SDL3pp/keyboard_event.h"
 #include "SDL3pp/packed_color.h"
 #include "SDL3pp/palette.h"
@@ -50,7 +50,7 @@ using sdl3::operator""_a8;
 
 void
 diamond_step(
-    sdl3::surface<sdl3::index8> & map,
+    sdl3::surface<sdl3::pixel_format::index8, sdl3::color_space::srgb> & map,
     std::default_random_engine & random_number_engine,
     sdl3::offset<std::int32_t> center_x,
     sdl3::offset<std::int32_t> center_y,
@@ -106,7 +106,7 @@ diamond_step(
 
 void
 square_step(
-    sdl3::surface<sdl3::index8> & map,
+    sdl3::surface<sdl3::pixel_format::index8, sdl3::color_space::srgb> & map,
     std::default_random_engine & random_number_engine,
     sdl3::offset<std::int32_t> center_x,
     sdl3::offset<std::int32_t> center_y,
@@ -152,15 +152,15 @@ square_step(
     map(center_x, center_y) = static_cast<sdl3::index8>(value);
 }
 
-sdl3::surface<sdl3::index8>
+sdl3::surface<sdl3::pixel_format::index8, sdl3::color_space::srgb>
 generate_diamond_square_image(
     std::default_random_engine & random_number_engine,
     sdl3::length<std::int32_t> square_size
 )
 {
     auto actual_size = sdl3::size_2d<std::int32_t>(1*px + sdl3::next_power_of_two(square_size));
-    auto actual_surface = sdl3::surface<sdl3::index8>(actual_size);
-    actual_surface.with_lock([&random_number_engine](sdl3::surface<sdl3::index8> & image)
+    auto actual_surface = sdl3::surface<sdl3::pixel_format::index8, sdl3::color_space::srgb>(actual_size);
+    actual_surface.with_lock([&random_number_engine](sdl3::surface<sdl3::pixel_format::index8, sdl3::color_space::srgb> & image)
     {
         const auto image_width = image.width();
         const auto image_height = image.height();
@@ -202,7 +202,7 @@ generate_diamond_square_image(
     return actual_surface;
 }
 
-sdl3::surface<sdl3::index8>
+sdl3::surface<sdl3::pixel_format::index8, sdl3::color_space::srgb>
 generate_diamond_square_image(
     std::default_random_engine &random_number_engine,
     sdl3::length<std::int32_t> width,
@@ -212,7 +212,7 @@ generate_diamond_square_image(
     return generate_diamond_square_image(random_number_engine, std::max(width, height));
 }
 
-sdl3::surface<sdl3::index8>
+sdl3::surface<sdl3::pixel_format::index8, sdl3::color_space::srgb>
 generate_diamond_square_image(std::default_random_engine &random_number_engine, sdl3::size_2d<std::int32_t> size)
 {
     return generate_diamond_square_image(random_number_engine, size.width, size.height);

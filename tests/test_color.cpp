@@ -33,10 +33,10 @@ BOOST_AUTO_TEST_CASE(test_color_default_constructor)
 {
     sdl3::color test_color;
 
-    BOOST_TEST(test_color.r == 0);
-    BOOST_TEST(test_color.g == 0);
-    BOOST_TEST(test_color.b == 0);
-    BOOST_TEST(test_color.a == 0);
+    BOOST_TEST(test_color.r == 0_r8);
+    BOOST_TEST(test_color.g == 0_g8);
+    BOOST_TEST(test_color.b == 0_b8);
+    BOOST_TEST(test_color.a == 0_a8);
 }
 
 BOOST_AUTO_TEST_CASE(test_color_component_constructor)

@@ -24,7 +24,7 @@
 
 #include <SDL3/SDL_pixels.h>
 
-#include "pixel_format.h"
+#include "pixels.h"
 
 namespace sdl3
 {
@@ -35,6 +35,38 @@ namespace sdl3
 
         pixel_format_details(SDL_PixelFormatDetails const* native_handle);
 
+        pixel_format_details(pixel_format_details const& other);
+
+        pixel_format_details(pixel_format_details && other);
+
+        std::uint8_t bits_per_pixel() const;
+
+        std::uint8_t bytes_per_pixel() const;
+
+        std::uint32_t r_mask() const;
+
+        std::uint32_t g_mask() const;
+
+        std::uint32_t b_mask() const;
+
+        std::uint32_t a_mask() const;
+
+        std::uint8_t g_bits() const;
+
+        std::uint8_t r_bits() const;
+
+        std::uint8_t b_bits() const;
+
+        std::uint8_t a_bits() const;
+
+        std::uint8_t r_shift() const;
+
+        std::uint8_t g_shift() const;
+
+        std::uint8_t b_shift() const;
+
+        std::uint8_t a_shift() const;
+        
         SDL_PixelFormatDetails const* native_handle();
 
     private:

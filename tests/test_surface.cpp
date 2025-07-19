@@ -20,14 +20,17 @@
 
 #include <boost/test/unit_test.hpp>
 
-#include "SDL3pp/index8.h"
+#include "SDL3pp/indexed_color.h"
+#include "SDL3pp/packed_color.h"
 #include "SDL3pp/surface.h"
 
 using namespace sdl3;
 
 BOOST_AUTO_TEST_CASE(test_surface_constructors)
 {
-    BOOST_REQUIRE_NO_THROW(
-        surface<index8> test_surface(512*px, 384*px)
-    );
+    auto test_case = []() {
+        surface<pixel_format::index8, color_space::srgb> test_surface(512*px, 384*px);
+    };
+
+    BOOST_REQUIRE_NO_THROW(test_case());
 }

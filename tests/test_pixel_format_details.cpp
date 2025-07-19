@@ -18,18 +18,13 @@
 //    misrepresented as being the original software.
 // 3. This notice may not be removed or altered from any source distribution.
 
-#pragma once
+#include <boost/test/unit_test.hpp>
 
-#include <cstdint>
+#include "SDL3pp/pixel_format_details.h"
 
-#include <SDL3/SDL_render.h>
-
-namespace sdl3
+BOOST_AUTO_TEST_CASE(test_constructor)
 {
-    enum class texture_access : std::int32_t
-    {
-        static_access = SDL_TEXTUREACCESS_STATIC,
-        streaming_access = SDL_TEXTUREACCESS_STREAMING,
-        target_access = SDL_TEXTUREACCESS_TARGET
-    };
+    BOOST_REQUIRE_NO_THROW(
+        auto instance = sdl3::pixel_format_details(sdl3::pixel_format::argb8888)
+    );
 }

@@ -434,14 +434,14 @@ get_focal_length(perspective_camera const& camera, sdl3::length<int32_t> width, 
 class point_light
 {
 public:
-    point_light(vector3 const& position, sdl3::srgb96f const& color);
+    point_light(vector3 const& position, sdl3::s_rgb96f const& color);
 
     vector3 position;
 
-    sdl3::srgb96f color;
+    sdl3::s_rgb96f color;
 };
 
-point_light::point_light(vector3 const& position, sdl3::srgb96f const& color)
+point_light::point_light(vector3 const& position, sdl3::s_rgb96f const& color)
 : position(position), color(color)
 { }
 
@@ -451,7 +451,7 @@ struct surface_info
 
     float diffuse_coefficient = 1.0f;
 
-    sdl3::srgb96f color = sdl3::srgb96f::black;
+    sdl3::s_rgb96f color = sdl3::s_rgb96f::black;
 
     float index_of_refraction = 0.0f;
 
@@ -478,7 +478,7 @@ public:
 
     float diffuse_coefficient;
 
-    sdl3::srgb96f surface_color;
+    sdl3::s_rgb96f surface_color;
 
     float index_of_refraction;
 
@@ -605,15 +605,15 @@ plane::hit_test(ray const& ray) const
 
 struct world
 {
-    sdl3::srgb96f ambient;
+    sdl3::s_rgb96f ambient;
 
     float min_depth;
 
     float max_depth;
 
-    sdl3::srgb96f depth_color;
+    sdl3::s_rgb96f depth_color;
 
-    sdl3::srgb96f environment;
+    sdl3::s_rgb96f environment;
 
     boost::base_collection<solid> objects;
 
@@ -652,10 +652,16 @@ find_nearest_hit(ray const& ray, world const& world)
     return hit { ray, nearest_object_distance, *nearest_object };
 }
 
-sdl3::srgb96f
+sdl3::s_rgb96f
+mix(sdl3::s_rgb96f const& color0, sdl3::s_rgb96f const& color1, float value)
+{
+    return (1.0f - value) * color0 + value * color1;
+}    
+
+sdl3::s_rgb96f
 shade(hit const& hit, world const& world, int level, float weight);
 
-sdl3::srgb96f
+sdl3::s_rgb96f
 trace(ray const& ray, world const& world, int level, float weight)
 {
     auto const nearest_hit = find_nearest_hit(ray, world);
@@ -666,7 +672,7 @@ trace(ray const& ray, world const& world, int level, float weight)
     return world.environment;
 }
 
-sdl3::srgb96f
+sdl3::s_rgb96f
 trace(ray const& ray, world const& world)
 {
     return trace(ray, world, 0, 1.0f);
@@ -675,7 +681,7 @@ trace(ray const& ray, world const& world)
 float
 shadow(ray const& ray, world const& world, float max_distance);
 
-sdl3::srgb96f
+sdl3::s_rgb96f
 shade(hit const& hit, world const& world, int level, float weight)
 {
     auto const surface_position = hit.ray.origin + hit.ray.direction * hit.distance;
@@ -736,7 +742,7 @@ shade(hit const& hit, world const& world, int level, float weight)
     return color;
 }
 
-sdl3::srgb96f
+sdl3::s_rgb96f
 shade(hit const& hit, world const& world)
 {
     return shade(hit, world, 0, 1.0f);
@@ -757,26 +763,26 @@ int main()
 {
     auto window = sdl3::window("Software Ray Tracer", 640*px, 480*px, sdl3::window_flags::resizable);
     auto renderer = sdl3::renderer(window);
-    auto texture = sdl3::texture<sdl3::srgb96f>(renderer, sdl3::texture_access::streaming_access, renderer.output_size());
-    auto raster = sdl3::surface<sdl3::srgb96f>(renderer.output_size());
+    auto texture = sdl3::texture<sdl3::pixel_format::rgb96f, sdl3::color_space::srgb, sdl3::texture_access::streaming_access>(renderer, renderer.output_size());
+    auto raster = sdl3::surface<sdl3::pixel_format::rgb96f, sdl3::color_space::srgb>(renderer.output_size());
 
     auto event_queue = sdl3::event_queue();
 
     // Scene
     auto world = ::world
     {
-        .ambient = sdl3::srgb96f(0.55_r32f, 0.44_g32f, 0.47_b32f),
+        .ambient = sdl3::s_rgb96f(0.55_r32f, 0.44_g32f, 0.47_b32f),
         .min_depth = 1.0f,
         .max_depth = 298.0f,
-        .depth_color = sdl3::srgb96f(0.86_r32f, 0.88_g32f, 0.95_b32f),
-        .environment = sdl3::srgb96f(0.62_r32f, 0.69_g32f, 0.96_b32f)
+        .depth_color = sdl3::s_rgb96f(0.86_r32f, 0.88_g32f, 0.95_b32f),
+        .environment = sdl3::s_rgb96f(0.62_r32f, 0.69_g32f, 0.96_b32f)
     };
 
     // Key light
     world.lights.push_back(
         point_light(
             vector3 { -300.0f, 350.0f, 10.0f },
-            sdl3::srgb96f(0.70_r32f, 0.689_g32f, 0.6885_b32f)
+            sdl3::s_rgb96f(0.70_r32f, 0.689_g32f, 0.6885_b32f)
         )
     );
 
@@ -786,7 +792,7 @@ int main()
             vector3 { 0.0f, 0.0f, 0.0f },
             vector3 { 0.0f, 1.0f, 0.0f },
             surface_info {
-                .color = sdl3::srgb96f(1.0_r32f, 1.0_g32f, 1.0_b32f),
+                .color = sdl3::s_rgb96f(1.0_r32f, 1.0_g32f, 1.0_b32f),
                 .reflective_coefficient = 0.0f,
                 .specular_coefficient = 0.5f,
                 .specular_exponent = 0.8f,
@@ -800,7 +806,7 @@ int main()
             vector3 { 0.0f, 5.25f, 0.0f },
             5.25f,
             surface_info {
-                .color = sdl3::srgb96f(0.89_r32f, 0.48_g32f, 0.42_b32f),
+                .color = sdl3::s_rgb96f(0.89_r32f, 0.48_g32f, 0.42_b32f),
                 .reflective_coefficient = 0.15f,
                 .specular_coefficient = 1.0f,
                 .specular_exponent = 165.0f,
@@ -814,7 +820,7 @@ int main()
             vector3 { -3.5f, 1.6f, -6.7f },
             1.6f,
             surface_info {
-                .color = sdl3::srgb96f(0.95_r32f, 0.93_g32f, 0.31_b32f),
+                .color = sdl3::s_rgb96f(0.95_r32f, 0.93_g32f, 0.31_b32f),
                 .reflective_coefficient = 0.15f,
                 .specular_coefficient = 1.0f,
                 .specular_exponent = 165.0f,
@@ -828,7 +834,7 @@ int main()
             vector3 { 14.0f, 7.0f, 6.5f },
             7.0f,
             surface_info {
-                .color = sdl3::srgb96f(1.0_r32f, 0.44_g32f, 0.64_b32f),
+                .color = sdl3::s_rgb96f(1.0_r32f, 0.44_g32f, 0.64_b32f),
                 .reflective_coefficient = 0.15f,
                 .specular_coefficient = 1.0f,
                 .specular_exponent = 165.0f,
@@ -842,7 +848,7 @@ int main()
             vector3 { 8.2f, 3.5f, -6.5f },
             3.5f,
             surface_info {
-                .color = sdl3::srgb96f(0.89_r32f, 0.48_g32f, 0.42_b32f),
+                .color = sdl3::s_rgb96f(0.89_r32f, 0.48_g32f, 0.42_b32f),
                 .reflective_coefficient = 0.15f,
                 .specular_coefficient = 1.0f,
                 .specular_exponent = 165.0f,
@@ -856,7 +862,7 @@ int main()
             vector3 { -16.6f, 6.5f, 0.0f },
             6.5f,
             surface_info {
-                .color = sdl3::srgb96f(1.0_r32f, 0.44_g32f, 0.64_b32f),
+                .color = sdl3::s_rgb96f(1.0_r32f, 0.44_g32f, 0.64_b32f),
                 .reflective_coefficient = 0.15f,
                 .specular_coefficient = 1.0f,
                 .specular_exponent = 165.0f,
@@ -870,7 +876,7 @@ int main()
             vector3 { -9.5f, 3.0f, -6.0f },
             3.0f,
             surface_info {
-                .color = sdl3::srgb96f(1.0_r32f, 0.44_g32f, 0.64_b32f),
+                .color = sdl3::s_rgb96f(1.0_r32f, 0.44_g32f, 0.64_b32f),
                 .reflective_coefficient = 0.15f,
                 .specular_coefficient = 1.0f,
                 .specular_exponent = 165.0f,
@@ -884,7 +890,7 @@ int main()
             vector3 { -15.0f, 3.0f, 12.0f },
             3.0f,
             surface_info {
-                .color = sdl3::srgb96f(0.95_r32f, 0.93_g32f, 0.31_b32f),
+                .color = sdl3::s_rgb96f(0.95_r32f, 0.93_g32f, 0.31_b32f),
                 .reflective_coefficient = 0.15f,
                 .specular_coefficient = 1.0f,
                 .specular_exponent = 165.0f,
@@ -898,7 +904,7 @@ int main()
             vector3 { 40.0f, 10.0f, 175.0f },
             10.0f,
             surface_info {
-                .color = sdl3::srgb96f(0.18_r32f, 0.31_g32f, 0.68_b32f),
+                .color = sdl3::s_rgb96f(0.18_r32f, 0.31_g32f, 0.68_b32f),
                 .reflective_coefficient = 0.15f,
                 .specular_coefficient = 1.0f,
                 .specular_exponent = 165.0f,

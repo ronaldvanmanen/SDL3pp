@@ -24,7 +24,7 @@
 
 #include <boost/operators.hpp>
 
-#include "pixel_format.h"
+#include "pixels.h"
 
 namespace sdl3
 {
@@ -63,5 +63,11 @@ namespace sdl3
 
     private:
         std::uint8_t _value;
+    };
+
+    template<color_space C>
+    struct pixel_color<pixel_format::index8, C, typename boost::enable_if_c<is_indexed<pixel_format::index8>()>::type>
+    {
+        using type = index8;
     };
 }

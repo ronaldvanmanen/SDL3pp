@@ -28,7 +28,7 @@
 #include <SDL3/SDL_video.h>
 
 #include "length.h"
-#include "pixel_format.h"
+#include "pixels.h"
 
 namespace sdl3
 {

@@ -34,16 +34,21 @@ namespace sdl3
 #include <SDL3/SDL_render.h>
 
 #include "error.h"
-#include "pixel_format_traits.h"
-#include "pixel_format.h"
+#include "pixels.h"
 #include "properties.h"
 #include "renderer.h"
 #include "size.h"
 #include "surface.h"
-#include "texture_access.h"
 
 namespace sdl3
 {
+    enum class texture_access : std::int32_t
+    {
+        static_access = SDL_TEXTUREACCESS_STATIC,
+        streaming_access = SDL_TEXTUREACCESS_STREAMING,
+        target_access = SDL_TEXTUREACCESS_TARGET
+    };
+
     class texture_base
     {
     protected:
@@ -68,21 +73,30 @@ namespace sdl3
         SDL_Texture* _native_handle;
     };
 
-    template<typename TPixelFormat>
+    template<pixel_format P, color_space C, texture_access A>
     class texture : public texture_base
     {
     public:
-        texture(renderer & owner, texture_access access, length<std::int32_t> width, length<std::int32_t> height);
+        static const pixel_format format = P;
 
-        texture(renderer & owner, texture_access access, size_2d<std::int32_t> const& size);
+        static const color_space color_space = C;
 
-        texture(texture<TPixelFormat> const& other) = delete;
+        static const texture_access access = A;
 
-        texture(texture<TPixelFormat>&& other);
+        using pixel_type = typename pixel_color<P, C>::type;
 
-        texture<TPixelFormat> & operator=(texture<TPixelFormat> const& other) = delete;
+    public:
+        texture(renderer & owner, length<std::int32_t> width, length<std::int32_t> height);
 
-        void update(surface<TPixelFormat> const& pixels);
+        texture(renderer & owner, size_2d<std::int32_t> const& size);
+
+        texture(texture<P, C, A> const& other) = delete;
+
+        texture(texture<P, C, A> && other);
+
+        texture<P, C, A> & operator=(texture<P, C, A> const& other) = delete;
+
+        void update(surface<P, C> const& pixels);
 
         template<typename CallbackFunction>
         void with_lock(CallbackFunction callback);
@@ -103,50 +117,53 @@ namespace sdl3
         }
     }
 
-    template<typename TPixelFormat>
-    texture<TPixelFormat>::texture(renderer & owner, texture_access access, length<std::int32_t> width, length<std::int32_t> height)
-    : texture_base(owner, details::make_texture_properties(TPixelFormat::format, TPixelFormat::color_space, access, width, height))
+    template<pixel_format P, color_space C, texture_access A>
+    texture<P, C, A>::texture(renderer & owner, length<std::int32_t> width, length<std::int32_t> height)
+    : texture_base(owner, details::make_texture_properties(format, color_space, access, width, height))
     { }
 
-    template<typename TPixelFormat>
-    texture<TPixelFormat>::texture(renderer & owner, texture_access access, size_2d<std::int32_t> const& size)
-    : texture_base(owner, details::make_texture_properties(TPixelFormat::format, TPixelFormat::color_space, access, size.width, size.height))
+    template<pixel_format P, color_space C, texture_access A>
+    texture<P, C, A>::texture(renderer & owner, size_2d<std::int32_t> const& size)
+    : texture_base(owner, details::make_texture_properties(format, color_space, access, size.width, size.height))
     { }
 
-    template<typename TPixelFormat>
-    texture<TPixelFormat>::texture(texture<TPixelFormat>&& other)
+    template<pixel_format P, color_space C, texture_access A>
+    texture<P, C, A>::texture(texture<P, C, A> && other)
     : _native_handle(std::exchange(other._native_handle, nullptr))
     { }
 
-    template<typename TPixelFormat>
+    template<pixel_format P, color_space C, texture_access A>
     void
-    texture<TPixelFormat>::update(surface<TPixelFormat> const& pixels)
+    texture<P, C, A>::update(surface<P, C> const& pixels)
     {
         throw_last_error(
             SDL_UpdateTexture(
                 _native_handle,
                 nullptr,
                 pixels.pixels(),
-                pixels.pitch() * sizeof(TPixelFormat)
+                pixels.pitch()
             )
         );
     }
 
-    template<typename TPixelFormat> template <typename CallbackFunction>
+    template<pixel_format P, color_space C, texture_access A>
+    template<typename CallbackFunction>
     void
-    texture<TPixelFormat>::with_lock(CallbackFunction callback)
+    texture<P, C, A>::with_lock(CallbackFunction callback)
     {
+        using pixel_type = surface<format>::type;
+
         void* pixels;
         std::int32_t pitch;
         throw_last_error(
             SDL_LockTexture(_native_handle, nullptr, &pixels, &pitch)
         );
 
-        surface<TPixelFormat> surface(
+        surface<format> surface(
             _native_handle->w * px,
             _native_handle->h * px,
-            static_cast<TPixelFormat*>(pixels),
-            pitch / sizeof(TPixelFormat)
+            static_cast<pixel_type*>(pixels),
+            pitch
         );
 
         callback(surface);

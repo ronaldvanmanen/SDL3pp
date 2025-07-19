@@ -1,0 +1,399 @@
+// SDL3++
+//
+// Copyright (C) 2025 Ronald van Manen <rvanmanen@gmail.com>
+//
+// This software is provided 'as-is', without any express or implied
+// warranty.  In no event will the authors be held liable for any damages
+// arising from the use of this software.
+// 
+// Permission is granted to anyone to use this software for any purpose,
+// including commercial applications, and to alter it and redistribute it
+// freely, subject to the following restrictions:
+//
+// 1. The origin of this software must not be misrepresented; you must not
+//    claim that you wrote the original software. If you use this software
+//    in a product, an acknowledgment in the product documentation would be
+//    appreciated but is not required.
+// 2. Altered source versions must be plainly marked as such, and must not be
+//    misrepresented as being the original software.
+// 3. This notice may not be removed or altered from any source distribution.
+
+#pragma once
+
+#include <cstdint>
+#include <iostream>
+
+#include <boost/core/enable_if.hpp>
+
+#include <SDL3/SDL_pixels.h>
+
+#include "integer.h"
+
+namespace sdl3
+{
+    enum class pixel_type : std::uint32_t
+    {
+        unknown = SDL_PIXELTYPE_UNKNOWN,
+        index1 = SDL_PIXELTYPE_INDEX1,
+        index2 = SDL_PIXELTYPE_INDEX2,
+        index4 = SDL_PIXELTYPE_INDEX4,
+        index8 = SDL_PIXELTYPE_INDEX8,
+        packed8 = SDL_PIXELTYPE_PACKED8,
+        packed16 = SDL_PIXELTYPE_PACKED16,
+        packed32 = SDL_PIXELTYPE_PACKED32,
+        array_u8 = SDL_PIXELTYPE_ARRAYU8,
+        array_u16 = SDL_PIXELTYPE_ARRAYU16,
+        array_u32 = SDL_PIXELTYPE_ARRAYU32,
+        array_f16 = SDL_PIXELTYPE_ARRAYF16,
+        array_f32 = SDL_PIXELTYPE_ARRAYF32,
+    };
+
+    enum class bitmap_order
+    {
+        none = SDL_BITMAPORDER_NONE,
+        b4321 = SDL_BITMAPORDER_4321,
+        b1234 = SDL_BITMAPORDER_1234
+    };
+
+    enum class packed_order
+    {
+        none = SDL_PACKEDORDER_NONE,
+        xrgb = SDL_PACKEDORDER_XRGB,
+        rgbx = SDL_PACKEDORDER_RGBX,
+        argb = SDL_PACKEDORDER_ARGB,
+        rgba = SDL_PACKEDORDER_RGBA,
+        xbgr = SDL_PACKEDORDER_XBGR,
+        bgrx = SDL_PACKEDORDER_BGRX,
+        abgr = SDL_PACKEDORDER_ABGR,
+        bgra = SDL_PACKEDORDER_BGRA
+    };
+
+    enum class array_order
+    {
+        none = SDL_ARRAYORDER_NONE,
+        rgb = SDL_ARRAYORDER_RGB,
+        rgba = SDL_ARRAYORDER_RGBA,
+        argb = SDL_ARRAYORDER_ARGB,
+        bgr = SDL_ARRAYORDER_BGR,
+        bgra = SDL_ARRAYORDER_BGRA,
+        abgr = SDL_ARRAYORDER_ABGR
+    };
+
+    enum class packed_layout
+    {
+        none = SDL_PACKEDLAYOUT_NONE,
+        p332 = SDL_PACKEDLAYOUT_332,
+        p4444 = SDL_PACKEDLAYOUT_4444,
+        p1555 = SDL_PACKEDLAYOUT_1555,
+        p5551 = SDL_PACKEDLAYOUT_5551,
+        p565 = SDL_PACKEDLAYOUT_565,
+        p8888 = SDL_PACKEDLAYOUT_8888,
+        p2101010 = SDL_PACKEDLAYOUT_2101010,
+        p1010102 = SDL_PACKEDLAYOUT_1010102
+    };
+
+    enum class pixel_format : std::uint32_t
+    {
+        unknown = SDL_PIXELFORMAT_UNKNOWN,
+        index1lsb = SDL_PIXELFORMAT_INDEX1LSB,
+        index1msb = SDL_PIXELFORMAT_INDEX1MSB,
+        index2lsb = SDL_PIXELFORMAT_INDEX2LSB,
+        index2msb = SDL_PIXELFORMAT_INDEX2MSB,
+        index4lsb = SDL_PIXELFORMAT_INDEX4LSB,
+        index4msb = SDL_PIXELFORMAT_INDEX4MSB,
+        index8 = SDL_PIXELFORMAT_INDEX8,
+        rgb332 = SDL_PIXELFORMAT_RGB332,
+        xrgb4444 = SDL_PIXELFORMAT_XRGB4444,
+        xbgr4444 = SDL_PIXELFORMAT_XBGR4444,
+        xrgb1555 = SDL_PIXELFORMAT_XRGB1555,
+        xbgr1555 = SDL_PIXELFORMAT_XBGR1555,
+        argb4444 = SDL_PIXELFORMAT_ARGB4444,
+        rgba4444 = SDL_PIXELFORMAT_RGBA4444,
+        abgr4444 = SDL_PIXELFORMAT_ABGR4444,
+        bgra4444 = SDL_PIXELFORMAT_BGRA4444,
+        argb1555 = SDL_PIXELFORMAT_ARGB1555,
+        rgba5551 = SDL_PIXELFORMAT_RGBA5551,
+        abgr1555 = SDL_PIXELFORMAT_ABGR1555,
+        bgra5551 = SDL_PIXELFORMAT_BGRA5551,
+        rgb565 = SDL_PIXELFORMAT_RGB565,
+        bgr565 = SDL_PIXELFORMAT_BGR565,
+        rgb24 = SDL_PIXELFORMAT_RGB24,
+        bgr24 = SDL_PIXELFORMAT_BGR24,
+        xrgb8888 = SDL_PIXELFORMAT_XRGB8888,
+        rgbx8888 = SDL_PIXELFORMAT_RGBX8888,
+        xbgr8888 = SDL_PIXELFORMAT_XBGR8888,
+        bgrx8888 = SDL_PIXELFORMAT_BGRX8888,
+        argb8888 = SDL_PIXELFORMAT_ARGB8888,
+        rgba8888 = SDL_PIXELFORMAT_RGBA8888,
+        abgr8888 = SDL_PIXELFORMAT_ABGR8888,
+        bgra8888 = SDL_PIXELFORMAT_BGRA8888,
+        xrgb2101010 = SDL_PIXELFORMAT_XRGB2101010,
+        xbgr2101010 = SDL_PIXELFORMAT_XBGR2101010,
+        argb2101010 = SDL_PIXELFORMAT_ARGB2101010,
+        abgr2101010 = SDL_PIXELFORMAT_ABGR2101010,
+        rgb48 = SDL_PIXELFORMAT_RGB48,
+        bgr48 = SDL_PIXELFORMAT_BGR48,
+        rgba64 = SDL_PIXELFORMAT_RGBA64,
+        argb64 = SDL_PIXELFORMAT_ARGB64,
+        bgra64 = SDL_PIXELFORMAT_BGRA64,
+        abgr64 = SDL_PIXELFORMAT_ABGR64,
+        rgb48f = SDL_PIXELFORMAT_RGB48_FLOAT,
+        bgr48f = SDL_PIXELFORMAT_BGR48_FLOAT,
+        rgba64f = SDL_PIXELFORMAT_RGBA64_FLOAT,
+        argb64f = SDL_PIXELFORMAT_ARGB64_FLOAT,
+        bgra64f = SDL_PIXELFORMAT_BGRA64_FLOAT,
+        abgr64f = SDL_PIXELFORMAT_ABGR64_FLOAT,
+        rgb96f = SDL_PIXELFORMAT_RGB96_FLOAT,
+        bgr96f = SDL_PIXELFORMAT_BGR96_FLOAT,
+        rgba128f = SDL_PIXELFORMAT_RGBA128_FLOAT,
+        argb128f = SDL_PIXELFORMAT_ARGB128_FLOAT,
+        bgra128f = SDL_PIXELFORMAT_BGRA128_FLOAT,
+        abgr128f = SDL_PIXELFORMAT_ABGR128_FLOAT,
+
+        yv12 = SDL_PIXELFORMAT_YV12,
+        iyuv = SDL_PIXELFORMAT_IYUV,
+        yuy2 = SDL_PIXELFORMAT_YUY2,
+        uyvy = SDL_PIXELFORMAT_UYVY,
+        yvyu = SDL_PIXELFORMAT_YVYU,
+        nv12 = SDL_PIXELFORMAT_NV12,
+        nv21 = SDL_PIXELFORMAT_NV21,
+        p010 = SDL_PIXELFORMAT_P010,
+        external_oes = SDL_PIXELFORMAT_EXTERNAL_OES,
+
+        mjpg = SDL_PIXELFORMAT_MJPG,
+    };
+
+    template<class CharT, class Traits>
+    std::basic_ostream<CharT, Traits> &
+    operator<<(std::basic_ostream<CharT, Traits>& stream, pixel_format const& value)
+    {
+        switch (value)
+        {
+            case pixel_format::unknown: stream << "unknown"; break;
+            case pixel_format::index1lsb: stream << "index1lsb"; break;
+            case pixel_format::index1msb: stream << "index1msb"; break;
+            case pixel_format::index4lsb: stream << "index4lsb"; break;
+            case pixel_format::index4msb: stream << "index4msb"; break;
+            case pixel_format::index8: stream << "index8"; break;
+            case pixel_format::rgb332: stream << "rgb332"; break;
+            case pixel_format::xrgb4444: stream << "xrgb4444"; break;
+            case pixel_format::xbgr4444: stream << "xbgr4444"; break;
+            case pixel_format::xrgb1555: stream << "xrgb1555"; break;
+            case pixel_format::xbgr1555: stream << "xbgr1555"; break;
+            case pixel_format::argb4444: stream << "argb4444"; break;
+            case pixel_format::rgba4444: stream << "rgba4444"; break;
+            case pixel_format::abgr4444: stream << "abgr4444"; break;
+            case pixel_format::bgra4444: stream << "bgra4444"; break;
+            case pixel_format::argb1555: stream << "argb1555"; break;
+            case pixel_format::rgba5551: stream << "rgba5551"; break;
+            case pixel_format::abgr1555: stream << "abgr1555"; break;
+            case pixel_format::bgra5551: stream << "bgra5551"; break;
+            case pixel_format::rgb565: stream << "rgb565"; break;
+            case pixel_format::bgr565: stream << "bgr565"; break;
+            case pixel_format::rgb24: stream << "rgb24"; break;
+            case pixel_format::bgr24: stream << "bgr24"; break;
+            case pixel_format::xrgb8888: stream << "xrgb8888"; break;
+            case pixel_format::rgbx8888: stream << "rgbx8888"; break;
+            case pixel_format::xbgr8888: stream << "xbgr8888"; break;
+            case pixel_format::bgrx8888: stream << "bgrx8888"; break;
+            case pixel_format::argb8888: stream << "argb8888"; break;
+            case pixel_format::rgba8888: stream << "rgba8888"; break;
+            case pixel_format::abgr8888: stream << "abgr8888"; break;
+            case pixel_format::bgra8888: stream << "bgra8888"; break;
+            case pixel_format::xrgb2101010: stream << "xrgb2101010"; break;
+            case pixel_format::xbgr2101010: stream << "xbgr2101010"; break;
+            case pixel_format::argb2101010: stream << "argb2101010"; break;
+            case pixel_format::abgr2101010: stream << "abgr2101010"; break;
+            case pixel_format::rgb48: stream << "rgb48"; break;
+            case pixel_format::bgr48: stream << "bgr48"; break;
+            case pixel_format::rgba64: stream << "rgba64"; break;
+            case pixel_format::argb64: stream << "argb64"; break;
+            case pixel_format::bgra64: stream << "bgra64"; break;
+            case pixel_format::abgr64: stream << "abgr64"; break;
+            case pixel_format::rgb48f: stream << "rgb48f"; break;
+            case pixel_format::bgr48f: stream << "bgr48f"; break;
+            case pixel_format::rgba64f: stream << "rgba64f"; break;
+            case pixel_format::argb64f: stream << "argb64f"; break;
+            case pixel_format::bgra64f: stream << "bgra64f"; break;
+            case pixel_format::abgr64f: stream << "abgr64f"; break;
+            case pixel_format::rgb96f: stream << "rgb96f"; break;
+            case pixel_format::bgr96f: stream << "bgr96f"; break;
+            case pixel_format::rgba128f: stream << "rgba128f"; break;
+            case pixel_format::argb128f: stream << "argb128f"; break;
+            case pixel_format::bgra128f: stream << "bgra128f"; break;
+            case pixel_format::abgr128f: stream << "abgr128f"; break;
+
+            case pixel_format::yv12: stream << "yv12"; break;
+            case pixel_format::iyuv: stream << "iyuv"; break;
+            case pixel_format::yuy2: stream << "yuy2"; break;
+            case pixel_format::uyvy: stream << "uyvy"; break;
+            case pixel_format::yvyu: stream << "yvyu"; break;
+            case pixel_format::nv12: stream << "nv12"; break;
+            case pixel_format::nv21: stream << "nv21"; break;
+            case pixel_format::p010: stream << "p010"; break;
+            case pixel_format::external_oes: stream << "external_oes"; break;
+
+            case pixel_format::mjpg: stream << "mjpg"; break;
+        }
+        return stream;
+    }
+
+    enum class color_space : std::uint32_t
+    {
+        unknown = SDL_COLORSPACE_UNKNOWN,
+        srgb = SDL_COLORSPACE_SRGB,
+        srgb_linear = SDL_COLORSPACE_SRGB_LINEAR,
+        hdr10 = SDL_COLORSPACE_HDR10,
+        jpeg = SDL_COLORSPACE_JPEG,
+        bt601_limited = SDL_COLORSPACE_BT601_LIMITED,
+        bt601_full = SDL_COLORSPACE_BT601_FULL,
+        bt709_limited = SDL_COLORSPACE_BT709_LIMITED,
+        bt709_full = SDL_COLORSPACE_BT709_FULL,
+        bt2020_limited = SDL_COLORSPACE_BT2020_LIMITED,
+        bt2020_full = SDL_COLORSPACE_BT2020_FULL,
+    };
+
+    template<class CharT, class Traits>
+    std::basic_ostream<CharT, Traits>&
+    operator<<(std::basic_ostream<CharT, Traits>& stream, color_space const& value)
+    {
+        switch(value)
+        {
+            case color_space::unknown: stream << "unknown";
+            case color_space::srgb: stream << "srgb";
+            case color_space::srgb_linear: stream << "srgb_linear";
+            case color_space::hdr10: stream << "hdr10";
+            case color_space::jpeg: stream << "jpeg";
+            case color_space::bt601_limited: stream << "bt601_limited";
+            case color_space::bt601_full: stream << "bt601_full";
+            case color_space::bt709_limited: stream << "bt709_limited";
+            case color_space::bt709_full: stream << "bt709_full";
+            case color_space::bt2020_limited: stream << "bt2020_limited";
+            case color_space::bt2020_full: stream << "bt2020_full";
+        }
+        return stream;
+    }
+
+    using pixel_bit_depth = integer<std::size_t, struct pixel_bit_depth_tag>;    
+
+    using pixel_byte_depth = integer<std::size_t, struct pixel_byte_depth_tag>;    
+
+    template<pixel_format P>
+    static constexpr pixel_type get_pixel_type() noexcept
+    {
+        return static_cast<pixel_type>(
+            SDL_PIXELTYPE(static_cast<SDL_PixelFormat>(P))
+        );
+    }
+
+    template<pixel_format P>
+    static constexpr pixel_bit_depth bits_per_pixel() noexcept
+    {
+        return static_cast<pixel_bit_depth>(
+            SDL_BITSPERPIXEL(static_cast<SDL_PixelFormat>(P))
+        );
+    }
+
+    template<pixel_format P>
+    static constexpr pixel_byte_depth bytes_per_pixel() noexcept
+    {
+        return static_cast<pixel_byte_depth>(
+            SDL_BYTESPERPIXEL(static_cast<SDL_PixelFormat>(P))
+        );
+    }
+
+    template<pixel_format P>
+    static constexpr bool is_indexed() noexcept
+    {
+        return SDL_ISPIXELFORMAT_INDEXED(
+            static_cast<SDL_PixelFormat>(P)
+        );
+    }
+
+    template<pixel_format P>
+    static constexpr bool is_packed() noexcept
+    {
+        return SDL_ISPIXELFORMAT_PACKED(
+            static_cast<SDL_PixelFormat>(P)
+        );
+    }
+
+    template<pixel_format P>
+    static constexpr bool is_array() noexcept
+    {
+        return SDL_ISPIXELFORMAT_ARRAY(
+            static_cast<SDL_PixelFormat>(P)
+        );
+    }
+
+    template<pixel_format P>
+    static constexpr bool is_10bit() noexcept
+    {
+        return SDL_ISPIXELFORMAT_10BIT(
+            static_cast<SDL_PixelFormat>(P)
+        );
+    }
+
+    template<pixel_format P>
+    static constexpr bool is_float() noexcept
+    {
+        return SDL_ISPIXELFORMAT_FLOAT(
+            static_cast<SDL_PixelFormat>(P)
+        );
+    }
+
+    template<pixel_format P>
+    static constexpr bool has_alpha() noexcept
+    {
+        return SDL_ISPIXELFORMAT_ALPHA(
+            static_cast<SDL_PixelFormat>(P)
+        );
+    }
+
+    template<pixel_format P>
+    static constexpr bool is_four_cc() noexcept
+    {
+        return SDL_ISPIXELFORMAT_FOURCC(
+            static_cast<SDL_PixelFormat>(P)
+        );
+    }
+
+    template<pixel_format P>
+    static constexpr
+    typename boost::enable_if_c<is_indexed<P>(), bitmap_order>::type pixel_order() noexcept
+    {
+        return static_cast<bitmap_order>(
+            SDL_PIXELORDER(static_cast<SDL_PixelFormat>(P))
+        );
+    }
+
+    template<pixel_format P>
+    static constexpr
+    typename boost::enable_if_c<is_packed<P>(), packed_order>::type pixel_order() noexcept
+    {
+        return static_cast<packed_order>(
+            SDL_PIXELORDER(static_cast<SDL_PixelFormat>(P))
+        );
+    }
+
+    template<pixel_format P>
+    static constexpr
+    typename boost::enable_if_c<is_array<P>(), array_order>::type pixel_order() noexcept
+    {
+        return static_cast<array_order>(
+            SDL_PIXELORDER(static_cast<SDL_PixelFormat>(P))
+        );
+    }
+
+    template<pixel_format P>
+    static constexpr
+    typename boost::enable_if_c<is_packed<P>(), packed_layout>::type pixel_layout() noexcept
+    {
+        return static_cast<packed_layout>(
+            SDL_PIXELLAYOUT(static_cast<SDL_PixelFormat>(P))
+        );
+    }
+
+    template<pixel_format P, color_space C, typename Enabled = void>
+    struct pixel_color { };
+}

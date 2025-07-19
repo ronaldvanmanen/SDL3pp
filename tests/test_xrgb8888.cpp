@@ -24,57 +24,52 @@
 
 #include "SDL3pp/packed_color.h"
 
-using sdl3::operator""_a8;
 using sdl3::operator""_r8;
 using sdl3::operator""_g8;
 using sdl3::operator""_b8;
 
-BOOST_AUTO_TEST_CASE(test_argb8888_traits)
+BOOST_AUTO_TEST_CASE(test_xrgb8888_traits)
 {
-    BOOST_TEST(sdl3::s_argb8888::color_space == sdl3::color_space::srgb);
-    BOOST_TEST(sdl3::s_argb8888::format == sdl3::pixel_format::argb8888);
+    BOOST_TEST(sdl3::s_xrgb8888::color_space == sdl3::color_space::srgb);
+    BOOST_TEST(sdl3::s_xrgb8888::format == sdl3::pixel_format::xrgb8888);
 }
 
-BOOST_AUTO_TEST_CASE(test_argb8888_default_constructor)
+BOOST_AUTO_TEST_CASE(test_xrgb8888_default_constructor)
 {
-    sdl3::s_argb8888 test_color;
+    sdl3::s_xrgb8888 test_color;
 
-    BOOST_TEST(test_color.r() == 0);
-    BOOST_TEST(test_color.g() == 0);
-    BOOST_TEST(test_color.b() == 0);
-    BOOST_TEST(test_color.a() == 0);
+    BOOST_TEST(test_color.r() == 0_r8);
+    BOOST_TEST(test_color.g() == 0_g8);
+    BOOST_TEST(test_color.b() == 0_b8);
 }
 
-BOOST_AUTO_TEST_CASE(test_argb8888_component_constructor)
+BOOST_AUTO_TEST_CASE(test_xrgb8888_component_constructor)
 {
-    sdl3::s_argb8888 test_color(0xDE_r8, 0xAD_g8, 0xBE_b8, 0xEF_a8);
+    sdl3::s_xrgb8888 test_color(0xDE_r8, 0xAD_g8, 0xBE_b8);
 
     BOOST_TEST(test_color.r() == 0xDE_r8);
     BOOST_TEST(test_color.g() == 0xAD_g8);
     BOOST_TEST(test_color.b() == 0xBE_b8);
-    BOOST_TEST(test_color.a() == 0xEF_a8);
 }
 
-BOOST_AUTO_TEST_CASE(test_argb8888_copy_constructor)
+BOOST_AUTO_TEST_CASE(test_xrgb8888_copy_constructor)
 {
-    sdl3::s_argb8888 temp_color(0xDE_r8, 0xAD_g8, 0xBE_b8, 0xEF_a8);
+    sdl3::s_xrgb8888 temp_color(0xDE_r8, 0xAD_g8, 0xBE_b8);
 
-    sdl3::s_argb8888 test_color(temp_color);
+    sdl3::s_xrgb8888 test_color(temp_color);
 
     BOOST_TEST(test_color.r() == 0xDE_r8);
     BOOST_TEST(test_color.g() == 0xAD_g8);
     BOOST_TEST(test_color.b() == 0xBE_b8);
-    BOOST_TEST(test_color.a() == 0xEF_a8);
 }
 
-BOOST_AUTO_TEST_CASE(test_argb8888_assignment_operator)
+BOOST_AUTO_TEST_CASE(test_xrgb8888_assignment_operator)
 {
-    sdl3::s_argb8888 test_color;
+    sdl3::s_xrgb8888 test_color;
     
-    test_color = sdl3::s_argb8888(0xDE_r8, 0xAD_g8, 0xBE_b8, 0xEF_a8);
+    test_color = sdl3::s_xrgb8888(0xDE_r8, 0xAD_g8, 0xBE_b8);
 
     BOOST_TEST(test_color.r() == 0xDE_r8);
     BOOST_TEST(test_color.g() == 0xAD_g8);
     BOOST_TEST(test_color.b() == 0xBE_b8);
-    BOOST_TEST(test_color.a() == 0xEF_a8);
 }

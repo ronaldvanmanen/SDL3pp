@@ -35,7 +35,7 @@ namespace sdl3
 
         mouse_wheel_event(mouse_wheel_event const&) = delete;
         
-        mouse_wheel_event& operator=(mouse_wheel_event const&) = delete;
+        mouse_wheel_event & operator=(mouse_wheel_event const&) = delete;
 
         std::uint64_t timestamp() const;
         

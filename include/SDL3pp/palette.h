@@ -25,9 +25,12 @@
 #include <optional>
 #include <vector>
 
+#include <boost/core/enable_if.hpp>
+
 #include <SDL3/SDL_pixels.h>
 
 #include "color.h"
+#include "pixels.h"
 #include "surface.h"
 
 namespace sdl3
@@ -54,11 +57,11 @@ namespace sdl3
 
         ~palette();
 
-        palette& operator=(std::initializer_list<color> colors);
+        palette & operator=(std::initializer_list<color> colors);
 
-        palette& operator=(std::vector<color> const& colors);
+        palette & operator=(std::vector<color> const& colors);
 
-        palette& operator=(palette const& other) = delete;
+        palette & operator=(palette const& other) = delete;
 
         indexed_color operator[](std::size_t index);
 
@@ -74,18 +77,18 @@ namespace sdl3
         bool _free_handle;
     };
 
-    template<typename TPixelFormat>
-    palette
-    create_palette(surface<TPixelFormat> & owner)
+    template<pixel_format P, color_space C>
+    typename boost::enable_if_c<is_indexed<P>(), palette>::type
+    create_palette(surface<P, C> & owner)
     {
         auto result = SDL_CreateSurfacePalette(owner.native_handle());
         sdl3::throw_last_error(result != nullptr);
         return sdl3::palette(result, false);
     }
 
-    template<typename TPixelFormat>
-    std::optional<palette>
-    get_palette(surface<TPixelFormat> & owner)
+    template<pixel_format P, color_space C>
+    typename boost::enable_if_c<is_indexed<P>(), std::optional<palette> >::type
+    get_palette(surface<P, C> & owner)
     {
         auto native_handle = SDL_GetSurfacePalette(owner.native_handle());
         if (native_handle == nullptr)

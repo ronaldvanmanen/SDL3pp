@@ -29,20 +29,20 @@ using namespace sdl3;
 
 BOOST_AUTO_TEST_CASE(test_texture_constructors)
 {
-    window test_window(
-        "test_renderer_constructors",
-        640*px,
-        480*px,
-        window_flags::hidden
-    );
+    auto test_case = []() {
+        auto test_window = window(
+            "test_renderer_constructors",
+            640*px,
+            480*px,
+            window_flags::hidden
+        );
 
-    renderer test_renderer(test_window);
+        auto test_renderer = renderer(test_window);
 
-    BOOST_REQUIRE_NO_THROW(
-        texture<sargb8888> test_texture(
-            test_renderer,
-            texture_access::streaming_access,
-            test_renderer.output_size()
-        )
-    );
+        auto test_texture = texture<pixel_format::argb8888, color_space::srgb, texture_access::streaming_access>(
+            test_renderer, test_renderer.output_size()
+        );
+    };
+
+    BOOST_REQUIRE_NO_THROW(test_case());
 }

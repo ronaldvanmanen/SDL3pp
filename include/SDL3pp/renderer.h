@@ -35,7 +35,7 @@ namespace sdl3
 #include "blend_mode.h"
 #include "color.h"
 #include "error.h"
-#include "pixel_format.h"
+#include "pixels.h"
 #include "properties.h"
 #include "size.h"
 #include "texture.h"

@@ -185,19 +185,18 @@ generate_displacement_table(sdl3::size_2d<std::int32_t> size)
     return generate_displacement_image(size.width, size.height);
 }
 
-sdl3::surface<sdl3::sargb8888>
+sdl3::surface<sdl3::pixel_format::xrgb8888, sdl3::color_space::srgb>
 generate_xor_image(sdl3::length<std::int32_t> square_size)
 {
     sdl3::length<std::int32_t> actual_size = next_power_of_two(square_size);
 
-    sdl3::surface<sdl3::sargb8888> xor_image(actual_size, actual_size);
+    sdl3::surface<sdl3::pixel_format::xrgb8888, sdl3::color_space::srgb> xor_image(actual_size, actual_size);
 
     for (sdl3::offset<int32_t> y = 0; y < actual_size; y += 1*px)
     {
         for (sdl3::offset<int32_t> x = 0; x < actual_size; x += 1*px)
         {
-            xor_image(x, y) = sdl3::sargb8888(
-                sdl3::a8(0xFF),
+            xor_image(x, y) = sdl3::s_xrgb8888(
                 sdl3::r8(0x00),
                 sdl3::g8(0x00),
                 sdl3::b8((x * 256 / actual_size) ^ (y * 256 / actual_size))
@@ -208,13 +207,13 @@ generate_xor_image(sdl3::length<std::int32_t> square_size)
     return xor_image;
 }
 
-sdl3::surface<sdl3::sargb8888>
+sdl3::surface<sdl3::pixel_format::xrgb8888, sdl3::color_space::srgb>
 generate_xor_image(sdl3::length<std::int32_t> width, sdl3::length<std::int32_t> height)
 {
     return generate_xor_image(std::max(width, height));
 }
 
-sdl3::surface<sdl3::sargb8888>
+sdl3::surface<sdl3::pixel_format::xrgb8888, sdl3::color_space::srgb>
 generate_xor_image(sdl3::size_2d<std::int32_t> const& size)
 {
     return generate_xor_image(size.width, size.height);
@@ -232,13 +231,13 @@ int main()
 {
     auto window = sdl3::window("Tunnel Effect", 800*px, 600*px, sdl3::window_flags::resizable);
     auto renderer = sdl3::renderer(window);
-    auto texture = sdl3::texture<sdl3::sargb8888>(renderer, sdl3::texture_access::streaming_access, renderer.output_size());
+    auto texture = sdl3::texture<sdl3::pixel_format::xrgb8888, sdl3::color_space::srgb, sdl3::texture_access::streaming_access>(renderer, renderer.output_size());
 
     auto event_queue = sdl3::event_queue();
 
     auto source_image = generate_xor_image(renderer.output_size());
     auto displacement_table = generate_displacement_table(renderer.output_size());
-    auto target_image = sdl3::surface<sdl3::sargb8888>(renderer.output_size());
+    auto target_image = sdl3::surface<sdl3::pixel_format::xrgb8888, sdl3::color_space::srgb>(renderer.output_size());
     
     auto stopwatch = sdl3::stopwatch::start_now();
     auto running = true;

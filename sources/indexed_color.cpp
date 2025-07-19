@@ -20,7 +20,7 @@
 
 #pragma once
 
-#include "SDL3pp/index8.h"
+#include "SDL3pp/indexed_color.h"
 
 sdl3::index8::index8() { }
 

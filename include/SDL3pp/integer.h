@@ -24,10 +24,6 @@
 
 #include <boost/operators.hpp>
 
-#define SDL3PP_INTEGER_DECL(NAME, BASE_TYPE)            \
-    struct NAME##_tag {};                               \
-    using NAME = sdl3::integer<NAME##_tag, BASE_TYPE>;
-
 namespace sdl3
 {
     template<typename Tag, typename T>
