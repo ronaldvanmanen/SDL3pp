@@ -24,16 +24,18 @@
 
 #include <SDL3/SDL_events.h>
 
-#include "SDL3pp/event_type.h"
-
 namespace sdl3
 {
     class mouse_wheel_event
     {
     public:
-        mouse_wheel_event(SDL_Event const& native_handle);
+        mouse_wheel_event() = delete;
 
-        event_type type() const;
+        mouse_wheel_event(SDL_Event && native_handle);
+
+        mouse_wheel_event(mouse_wheel_event const&) = delete;
+        
+        mouse_wheel_event& operator=(mouse_wheel_event const&) = delete;
 
         std::uint64_t timestamp() const;
         

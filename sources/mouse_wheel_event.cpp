@@ -20,15 +20,9 @@
 
 #include "SDL3pp/mouse_wheel_event.h"
 
-sdl3::mouse_wheel_event::mouse_wheel_event(SDL_Event const& native_handle)
+sdl3::mouse_wheel_event::mouse_wheel_event(SDL_Event && native_handle)
 : _native_handle(native_handle)
 { }
-
-sdl3::event_type
-sdl3::mouse_wheel_event::type() const
-{
-    return static_cast<sdl3::event_type>(_native_handle.wheel.type);
-}
 
 std::uint64_t
 sdl3::mouse_wheel_event::timestamp() const

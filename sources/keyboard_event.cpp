@@ -20,15 +20,9 @@
 
 #include "SDL3pp/keyboard_event.h"
 
-sdl3::keyboard_event::keyboard_event(SDL_Event const& native_handle)
+sdl3::keyboard_event::keyboard_event(SDL_Event && native_handle)
 : _native_handle(native_handle)
 { }
-
-sdl3::key_event_type
-sdl3::keyboard_event::type() const
-{
-    return static_cast<sdl3::key_event_type>(_native_handle.key.type);
-}
 
 std::uint64_t
 sdl3::keyboard_event::timestamp() const
@@ -77,3 +71,11 @@ sdl3::keyboard_event::key_modifiers() const
 {
     return key_modifier_set(static_cast<sdl3::key_modifier>(_native_handle.key.mod));
 }
+
+sdl3::key_up_event::key_up_event(SDL_Event && native_handle)
+: sdl3::keyboard_event(std::move(native_handle))
+{ }
+
+sdl3::key_down_event::key_down_event(SDL_Event && native_handle)
+: sdl3::keyboard_event(std::move(native_handle))
+{ }

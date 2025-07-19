@@ -262,22 +262,24 @@ int main()
         sdl3::event polled_event;
         if (event_queue.poll(polled_event))
         {
-            switch (polled_event.type())
+            polled_event.handle(sdl3::event_handler
             {
-                case sdl3::event_type::quit:
+                [&running](sdl3::quit_event &&)
+                {
                     running = false;
-                    break;
+                },
 
-                case sdl3::event_type::key_up:
-                    auto key_event = polled_event.as<sdl3::keyboard_event>();
-                    switch (key_event.scan_code())
+                [&reverse_rotation](sdl3::key_up_event && key_event)
+                {
+                    auto const scan_code = key_event.scan_code();
+                    if (scan_code == sdl3::scan_code::r)
                     {
-                        case sdl3::scan_code::r:
-                            reverse_rotation = !reverse_rotation;
-                            break;
+                        reverse_rotation = !reverse_rotation;
                     }
-                    break;
-            }
+                },
+
+                [](auto &&) { }
+            });
         }
         else
         {

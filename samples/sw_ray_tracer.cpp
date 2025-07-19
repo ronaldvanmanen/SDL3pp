@@ -926,17 +926,15 @@ int main()
         sdl3::event event;
         if (event_queue.poll(event))
         {
-            switch (event.type())
+            event.handle(sdl3::event_handler
             {
-                case sdl3::event_type::quit:
+                [&running](sdl3::quit_event &&)
                 {
                     running = false;
-                }
-                break;
+                },
 
-                case sdl3::event_type::key_up:
+                [&window](sdl3::key_up_event && key_event)
                 {
-                    auto const key_event = event.as<sdl3::keyboard_event>();
                     auto const symbol = key_event.scan_code();
                     auto const modifiers = key_event.key_modifiers();
                     if (symbol == sdl3::scan_code::m && modifiers == (sdl3::key_modifier::left_ctrl | sdl3::key_modifier::left_alt))
@@ -945,17 +943,15 @@ int main()
                             !window.relative_mouse_mode()
                         );
                     }
-                }
-                break;
+                },
 
-                case sdl3::event_type::mouse_wheel:
+                [&camera](sdl3::mouse_wheel_event && wheel_event)
                 {
-                    auto const wheel_event = event.as<sdl3::mouse_wheel_event>();
-                    auto const amount = wheel_event.y();
-                    camera.zoom(static_cast<float>(amount));
-                }
-                break;
-            }
+                    camera.zoom(static_cast<float>(wheel_event.y()));
+                },
+
+                [](auto &&) {},
+            });
         }
         else
         {

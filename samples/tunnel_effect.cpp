@@ -244,15 +244,18 @@ int main()
     auto running = true;
     while (running)
     {
-        sdl3::event poll_event;
-        if (event_queue.poll(poll_event))
+        sdl3::event event;
+        if (event_queue.poll(event))
         {
-            switch (poll_event.type())
+            event.handle(sdl3::event_handler
             {
-                case sdl3::event_type::quit:
+                [&running](sdl3::quit_event &&)
+                {
                     running = false;
-                    break;
-            }
+                },
+
+                [](auto &&) { }
+            });
         }
         else
         {

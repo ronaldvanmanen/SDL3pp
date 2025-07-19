@@ -34,10 +34,16 @@ namespace sdl3
     class keyboard_event
     {
     public:
-        keyboard_event(SDL_Event const& native_handle);
+        keyboard_event() = delete;
 
-        key_event_type type() const;
+        keyboard_event(keyboard_event const&) = delete;
 
+        keyboard_event& operator=(keyboard_event const&) = delete;
+
+    protected:
+        keyboard_event(SDL_Event && native_handle);
+
+    public:
         std::uint64_t timestamp() const;
         
         std::uint32_t window_id() const;
@@ -56,5 +62,29 @@ namespace sdl3
     
     private:
         SDL_Event _native_handle;
+    };
+
+    class key_up_event : public keyboard_event
+    {
+    public:
+        key_up_event() = delete;
+
+        key_up_event(key_up_event const&) = delete;
+
+        key_up_event(SDL_Event && native_handle);
+
+        key_up_event& operator=(key_up_event const&) = delete;
+    };
+
+    class key_down_event : public keyboard_event
+    {
+    public:
+        key_down_event() = delete;
+
+        key_down_event(key_down_event const&) = delete;
+
+        key_down_event(SDL_Event && native_handle);
+
+        key_down_event& operator=(key_down_event const&) = delete;
     };
 }

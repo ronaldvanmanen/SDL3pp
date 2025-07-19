@@ -24,19 +24,27 @@
 
 #include <SDL3/SDL_events.h>
 
-#include "event_type.h"
+#include "keyboard_event.h"
+#include "mouse_wheel_event.h"
 
 namespace sdl3
 {
+    template<class... Ts>
+    struct event_handler : Ts...
+    {
+        using Ts::operator()...;
+    };
+
+    template<class... Ts>
+    event_handler(Ts...) -> event_handler<Ts...>;
+
     class event
     {
     public:
         event();
 
-        event_type type() const;
-
-        template<class Event>
-        Event as();
+        template<class Self, class EventHandler>
+        void handle(this Self&& self, EventHandler&& handler);
 
         SDL_Event * native_handle();
 
@@ -44,9 +52,29 @@ namespace sdl3
         SDL_Event _native_handle;
     };
 
-    template<class Event>
-    Event event::as()
+    struct quit_event {};
+
+    template<class Self, class EventHandler>
+    void
+    event::handle(this Self && self, EventHandler && handler)
     {
-        return Event(_native_handle);
+        switch (self._native_handle.type)
+        {
+            case SDL_EVENT_QUIT:
+                handler(quit_event());
+                break;
+
+            case SDL_EVENT_KEY_DOWN:
+                handler(key_down_event(std::move(self._native_handle)));
+                break;
+
+            case SDL_EVENT_KEY_UP:
+                handler(key_up_event(std::move(self._native_handle)));
+                break;
+
+            case SDL_EVENT_MOUSE_WHEEL:
+                handler(mouse_wheel_event(std::move(self._native_handle)));
+                break;
+        }
     }
 }
