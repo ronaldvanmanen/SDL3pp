@@ -42,20 +42,23 @@
 #include "shared/math.h"
 #include "shared/stopwatch.h"
 
-using namespace std;
-using namespace sdl3;
+using sdl3::px;
+using sdl3::operator""_r8;
+using sdl3::operator""_g8;
+using sdl3::operator""_b8;
+using sdl3::operator""_a8;
 
 void
 diamond_step(
-    surface<index8> &map,
-    default_random_engine &random_number_engine,
-    offset<int32_t> center_x,
-    offset<int32_t> center_y,
-    length<int32_t> distance,
+    sdl3::surface<sdl3::index8> & map,
+    std::default_random_engine & random_number_engine,
+    sdl3::offset<std::int32_t> center_x,
+    sdl3::offset<std::int32_t> center_y,
+    sdl3::length<std::int32_t> distance,
     int randomness
 )
 {
-    auto random_number_distribution = uniform_int_distribution<int>(-randomness, randomness);
+    auto random_number_distribution = std::uniform_int_distribution<int>(-randomness, randomness);
     auto sum = 0;
     auto count = 0;
     auto top = center_y - distance;
@@ -96,22 +99,22 @@ diamond_step(
 
     int average = sum / count;
     int random = random_number_distribution(random_number_engine);
-    int value = clamp(average + random, 0, 255);
+    int value = std::clamp(average + random, 0, 255);
 
-    map(center_x, center_y) = static_cast<index8>(value);
+    map(center_x, center_y) = static_cast<sdl3::index8>(value);
 }
 
 void
 square_step(
-    surface<index8> &map,
-    default_random_engine &random_number_engine,
-    offset<int32_t> center_x,
-    offset<int32_t> center_y,
-    length<int32_t> distance,
+    sdl3::surface<sdl3::index8> & map,
+    std::default_random_engine & random_number_engine,
+    sdl3::offset<std::int32_t> center_x,
+    sdl3::offset<std::int32_t> center_y,
+    sdl3::length<std::int32_t> distance,
     int randomness
 )
 {
-    auto random_number_distribution = uniform_int_distribution<int>(-randomness, randomness);
+    auto random_number_distribution = std::uniform_int_distribution<int>(-randomness, randomness);
     auto sum = 0;
     auto count = 0;
     auto top = center_y - distance;
@@ -144,28 +147,31 @@ square_step(
 
     int average = sum / count;
     int random = random_number_distribution(random_number_engine);
-    int value = clamp(average + random, 0, 255);
+    int value = std::clamp(average + random, 0, 255);
 
-    map(center_x, center_y) = static_cast<index8>(value);
+    map(center_x, center_y) = static_cast<sdl3::index8>(value);
 }
 
-surface<index8>
-generate_diamond_square_image(default_random_engine &random_number_engine, length<int32_t> square_size)
+sdl3::surface<sdl3::index8>
+generate_diamond_square_image(
+    std::default_random_engine & random_number_engine,
+    sdl3::length<std::int32_t> square_size
+)
 {
-    auto actual_size = size_2d<int32_t>(1*px + next_power_of_two(square_size));
-    auto actual_surface = surface<index8>(actual_size);
-    actual_surface.with_lock([&random_number_engine](surface<index8> & image)
+    auto actual_size = sdl3::size_2d<std::int32_t>(1*px + sdl3::next_power_of_two(square_size));
+    auto actual_surface = sdl3::surface<sdl3::index8>(actual_size);
+    actual_surface.with_lock([&random_number_engine](sdl3::surface<sdl3::index8> & image)
     {
         const auto image_width = image.width();
         const auto image_height = image.height();
         const auto initial_randomness = 256;
         
-        auto random_number_distribution = uniform_int_distribution<int>(0, initial_randomness - 1);
+        auto random_number_distribution = std::uniform_int_distribution<int>(0, initial_randomness - 1);
 
-        image(0*px,                 0*px)                   = index8(random_number_distribution(random_number_engine));
-        image(image_width - 1*px,   0*px)                   = index8(random_number_distribution(random_number_engine));
-        image(0*px,                 image_height - 1*px)    = index8(random_number_distribution(random_number_engine));
-        image(image_width - 1*px,   image_height - 1*px)    = index8(random_number_distribution(random_number_engine));
+        image(0*px,                 0*px)                   = sdl3::index8(random_number_distribution(random_number_engine));
+        image(image_width - 1*px,   0*px)                   = sdl3::index8(random_number_distribution(random_number_engine));
+        image(0*px,                 image_height - 1*px)    = sdl3::index8(random_number_distribution(random_number_engine));
+        image(image_width - 1*px,   image_height - 1*px)    = sdl3::index8(random_number_distribution(random_number_engine));
 
         auto randomness = initial_randomness / 2;
 
@@ -196,73 +202,77 @@ generate_diamond_square_image(default_random_engine &random_number_engine, lengt
     return actual_surface;
 }
 
-surface<index8>
-generate_diamond_square_image(default_random_engine &random_number_engine, length<int32_t> width, length<int32_t> height)
+sdl3::surface<sdl3::index8>
+generate_diamond_square_image(
+    std::default_random_engine &random_number_engine,
+    sdl3::length<std::int32_t> width,
+    sdl3::length<std::int32_t> height
+)
 {
-    return generate_diamond_square_image(random_number_engine, max(width, height));
+    return generate_diamond_square_image(random_number_engine, std::max(width, height));
 }
 
-surface<index8>
-generate_diamond_square_image(default_random_engine &random_number_engine, size_2d<int32_t> size)
+sdl3::surface<sdl3::index8>
+generate_diamond_square_image(std::default_random_engine &random_number_engine, sdl3::size_2d<std::int32_t> size)
 {
     return generate_diamond_square_image(random_number_engine, size.width, size.height);
 }
 
-void rotate_left(vector<color> & palette)
+void rotate_left(std::vector<sdl3::color> & palette)
 {
     rotate(palette.begin(), palette.begin() + 1, palette.end());
 }
 
-void rotate_right(vector<color> & palette)
+void rotate_right(std::vector<sdl3::color> & palette)
 {
     rotate(palette.begin(), palette.end() - 1, palette.end());
 }
 
 int main()
 {
-    auto main_window = window("Plasma Fractal", 640*px, 480*px);
-    auto main_event_queue = event_queue();
+    auto window = sdl3::window("Plasma Fractal", 640*px, 480*px);
+    auto event_queue = sdl3::event_queue();
 
-    auto random_number_engine = default_random_engine(0);
-    auto plasma_surface = generate_diamond_square_image(random_number_engine, main_window.size());
-    auto plasma_palette = palette(plasma_surface);
-    auto plasma_colors = vector<color>(256);
+    auto random_number_engine = std::default_random_engine(0);
+    auto plasma_surface = generate_diamond_square_image(random_number_engine, window.size());
+    auto plasma_palette = create_palette(plasma_surface);
+    auto plasma_colors = std::vector<sdl3::color>(256);
 
-    for (uint8_t i = 0; i < 32; ++i)
+    for (std::uint8_t i = 0; i < 32; ++i)
     {
-        uint8_t lo = i * 255 / 31;
-        uint8_t hi = 255 - lo;
-        plasma_colors[i] = color(lo, 0, 0, 255);
-        plasma_colors[i + 32] = color(hi, 0, 0, 255);
-        plasma_colors[i + 64] = color(0, lo, 0, 255);
-        plasma_colors[i + 96] = color(0, hi, 0, 255);
-        plasma_colors[i + 128] = color(0, 0, lo, 255);
-        plasma_colors[i + 160] = color(0, 0, hi, 255);
-        plasma_colors[i + 192] = color(lo, 0, lo, 255);
-        plasma_colors[i + 224] = color(hi, 0, hi, 255);
+        std::uint8_t lo = i * 255 / 31;
+        std::uint8_t hi = 255 - lo;
+        plasma_colors[i]        = sdl3::color(sdl3::r8(lo), sdl3::g8(0),  sdl3::b8(0),  sdl3::a8(255));
+        plasma_colors[i + 32]   = sdl3::color(sdl3::r8(hi), sdl3::g8(0),  sdl3::b8(0),  sdl3::a8(255));
+        plasma_colors[i + 64]   = sdl3::color(sdl3::r8(0),  sdl3::g8(lo), sdl3::b8(0),  sdl3::a8(255));
+        plasma_colors[i + 96]   = sdl3::color(sdl3::r8(0),  sdl3::g8(hi), sdl3::b8(0),  sdl3::a8(255));
+        plasma_colors[i + 128]  = sdl3::color(sdl3::r8(0),  sdl3::g8(0),  sdl3::b8(lo), sdl3::a8(255));
+        plasma_colors[i + 160]  = sdl3::color(sdl3::r8(0),  sdl3::g8(0),  sdl3::b8(hi), sdl3::a8(255));
+        plasma_colors[i + 192]  = sdl3::color(sdl3::r8(lo), sdl3::g8(0),  sdl3::b8(lo), sdl3::a8(255));
+        plasma_colors[i + 224]  = sdl3::color(sdl3::r8(hi), sdl3::g8(0),  sdl3::b8(hi), sdl3::a8(255));
     }
 
     plasma_palette = plasma_colors;
 
-    auto stopwatch = stopwatch::start_now();
+    auto stopwatch = sdl3::stopwatch::start_now();
     auto reverse_rotation = false;
     auto running = true;
     while (running)
     {
-        event polled_event;
-        if (main_event_queue.poll(polled_event))
+        sdl3::event polled_event;
+        if (event_queue.poll(polled_event))
         {
             switch (polled_event.type())
             {
-                case event_type::quit:
+                case sdl3::event_type::quit:
                     running = false;
                     break;
 
-                case event_type::key_up:
-                    auto key_event = polled_event.as<keyboard_event>();
+                case sdl3::event_type::key_up:
+                    auto key_event = polled_event.as<sdl3::keyboard_event>();
                     switch (key_event.scan_code())
                     {
-                        case scan_code::r:
+                        case sdl3::scan_code::r:
                             reverse_rotation = !reverse_rotation;
                             break;
                     }
@@ -271,11 +281,11 @@ int main()
         }
         else
         {
-            auto main_surface = surface<sargb8888>(main_window);
-            main_surface.blit(plasma_surface);
-            main_window.update_surface();
+            auto window_surface = window.surface();
+            window_surface.blit(plasma_surface);
+            window.update_surface();
 
-            static const auto refresh_rate = fractional_seconds(1.0 / 60.0);
+            static const auto refresh_rate = sdl3::fractional_seconds(1.0 / 60.0);
             const auto elapsed = elapsed_seconds(stopwatch);
             if (elapsed < refresh_rate)
             {

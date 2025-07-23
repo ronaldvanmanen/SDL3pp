@@ -48,8 +48,10 @@
 
 #include "shared/stopwatch.h"
 
-using namespace std;
-using namespace sdl3;
+using sdl3::px;
+using sdl3::operator""_r32f;
+using sdl3::operator""_g32f;
+using sdl3::operator""_b32f;
 
 static int const max_level = 5;
 static float const min_weight = 0.01f;
@@ -264,8 +266,8 @@ public:
         .right = 4.0f / 3.0f,
         .bottom = -1.0f,
         .top = 1.0f,
-        .near = numeric_limits<float>::epsilon(),
-        .far = numeric_limits<float>::infinity()
+        .near = std::numeric_limits<float>::epsilon(),
+        .far = std::numeric_limits<float>::infinity()
     };
 
     float field_of_view = 90.0f;
@@ -344,7 +346,7 @@ perspective_camera::roll(float degrees)
 void
 perspective_camera::rotate(vector3 const& axis, float degrees)
 {
-    orientation = rot_quat(axis, -degrees_to_radians(degrees)) * orientation;
+    orientation = rot_quat(axis, -sdl3::degrees_to_radians(degrees)) * orientation;
 }
 
 void
@@ -422,24 +424,24 @@ perspective_camera::view_matrix() const
 }
 
 float
-get_focal_length(perspective_camera const& camera, length<int32_t> width, length<int32_t> height)
+get_focal_length(perspective_camera const& camera, sdl3::length<int32_t> width, sdl3::length<int32_t> height)
 {
     return quantity_cast<float>(width)
          / quantity_cast<float>(height)
-         / tan(degrees_to_radians(camera.field_of_view / 2.0f));
+         / tan(sdl3::degrees_to_radians(camera.field_of_view / 2.0f));
 }
 
 class point_light
 {
 public:
-    point_light(vector3 const& position, srgb96f const& color);
+    point_light(vector3 const& position, sdl3::srgb96f const& color);
 
     vector3 position;
 
-    srgb96f color;
+    sdl3::srgb96f color;
 };
 
-point_light::point_light(vector3 const& position, srgb96f const& color)
+point_light::point_light(vector3 const& position, sdl3::srgb96f const& color)
 : position(position), color(color)
 { }
 
@@ -449,7 +451,7 @@ struct surface_info
 
     float diffuse_coefficient = 1.0f;
 
-    srgb96f color = srgb96f::black;
+    sdl3::srgb96f color = sdl3::srgb96f::black;
 
     float index_of_refraction = 0.0f;
 
@@ -470,13 +472,13 @@ protected:
 public:
     virtual vector3 normal_at(vector3 const& point) const = 0;
 
-    virtual optional<float> hit_test(ray const& ray) const = 0;
+    virtual std::optional<float> hit_test(ray const& ray) const = 0;
 
     float ambient_coefficient;
 
     float diffuse_coefficient;
 
-    srgb96f surface_color;
+    sdl3::srgb96f surface_color;
 
     float index_of_refraction;
 
@@ -507,7 +509,7 @@ public:
 
     vector3 normal_at(vector3 const& point) const;
 
-    optional<float> hit_test(ray const& ray) const;
+    std::optional<float> hit_test(ray const& ray) const;
 
 public:
     vector3 position;
@@ -527,7 +529,7 @@ sphere::normal_at(vector3 const& point) const
     return normalized((point - position) / radius);
 }
 
-optional<float>
+std::optional<float>
 sphere::hit_test(ray const& ray) const
 {
     auto const v = position - ray.origin;
@@ -535,7 +537,7 @@ sphere::hit_test(ray const& ray) const
     auto const d = b * b - dot(v, v) + radius * radius;
     if (d <= 0.0)
     {
-        return nullopt;
+        return std::nullopt;
     }
 
     auto const discriminant = sqrt(d);
@@ -543,7 +545,7 @@ sphere::hit_test(ray const& ray) const
     auto const t2 = b + discriminant;
     if (t2 <= ray::epsilon)
     {
-        return nullopt;
+        return std::nullopt;
     }
 
     auto const t1 = b - discriminant;
@@ -562,7 +564,7 @@ public:
 
     vector3 normal_at(vector3 const& point) const;
 
-    optional<float> hit_test(ray const& ray) const;
+    std::optional<float> hit_test(ray const& ray) const;
 
 public:
     vector3 position;
@@ -582,20 +584,20 @@ plane::normal_at(vector3 const& point) const
     return normal;
 }
 
-optional<float>
+std::optional<float>
 plane::hit_test(ray const& ray) const
 {
     auto const denominator = dot(normal, ray.direction);
     if (denominator == 0.0)
     {
-        return nullopt;
+        return std::nullopt;
     }
 
     auto const numerator = -dot(normal, ray.origin + position);
     auto const t = numerator / denominator;
     if (t <= ray::epsilon)
     {
-        return nullopt;
+        return std::nullopt;
     }
 
     return t;
@@ -603,19 +605,19 @@ plane::hit_test(ray const& ray) const
 
 struct world
 {
-    srgb96f ambient;
+    sdl3::srgb96f ambient;
 
     float min_depth;
 
     float max_depth;
 
-    srgb96f depth_color;
+    sdl3::srgb96f depth_color;
 
-    srgb96f environment;
+    sdl3::srgb96f environment;
 
     boost::base_collection<solid> objects;
 
-    vector<point_light> lights;
+    std::vector<point_light> lights;
 };
 
 struct hit
@@ -627,10 +629,10 @@ struct hit
     ::solid const& object;
 };
 
-optional<hit>
+std::optional<hit>
 find_nearest_hit(ray const& ray, world const& world)
 {
-    auto nearest_object_distance = numeric_limits<float>::infinity();
+    auto nearest_object_distance = std::numeric_limits<float>::infinity();
     auto nearest_object = world.objects.end();
     for (auto object_iterator = world.objects.begin(); object_iterator != world.objects.end(); ++object_iterator)
     {
@@ -644,16 +646,16 @@ find_nearest_hit(ray const& ray, world const& world)
 
     if (nearest_object == world.objects.end())
     {
-        return nullopt;
+        return std::nullopt;
     }
 
     return hit { ray, nearest_object_distance, *nearest_object };
 }
 
-srgb96f
+sdl3::srgb96f
 shade(hit const& hit, world const& world, int level, float weight);
 
-srgb96f
+sdl3::srgb96f
 trace(ray const& ray, world const& world, int level, float weight)
 {
     auto const nearest_hit = find_nearest_hit(ray, world);
@@ -664,7 +666,7 @@ trace(ray const& ray, world const& world, int level, float weight)
     return world.environment;
 }
 
-srgb96f
+sdl3::srgb96f
 trace(ray const& ray, world const& world)
 {
     return trace(ray, world, 0, 1.0f);
@@ -673,7 +675,7 @@ trace(ray const& ray, world const& world)
 float
 shadow(ray const& ray, world const& world, float max_distance);
 
-srgb96f
+sdl3::srgb96f
 shade(hit const& hit, world const& world, int level, float weight)
 {
     auto const surface_position = hit.ray.origin + hit.ray.direction * hit.distance;
@@ -698,7 +700,7 @@ shade(hit const& hit, world const& world, int level, float weight)
             // Specular
             auto const half_vector = normalized(light_vector + viewing_vector);
             color += hit.object.specular_coefficient * light.color * powf(
-                max(0.0f, dot(shading_normal, half_vector)), hit.object.specular_exponent
+                std::max(0.0f, dot(shading_normal, half_vector)), hit.object.specular_exponent
             );
         }
     }
@@ -734,7 +736,7 @@ shade(hit const& hit, world const& world, int level, float weight)
     return color;
 }
 
-srgb96f
+sdl3::srgb96f
 shade(hit const& hit, world const& world)
 {
     return shade(hit, world, 0, 1.0f);
@@ -753,28 +755,28 @@ shadow(ray const& ray, world const& world, float max_distance)
 
 int main()
 {
-    auto window = ::window("Software Ray Tracer", 640*px, 480*px, window_flags::resizable);
-    auto renderer = ::renderer(window);
-    auto texture = ::texture<srgb96f>(renderer, texture_access::streaming_access, renderer.output_size());
-    auto raster = ::surface<srgb96f>(renderer.output_size());
+    auto window = sdl3::window("Software Ray Tracer", 640*px, 480*px, sdl3::window_flags::resizable);
+    auto renderer = sdl3::renderer(window);
+    auto texture = sdl3::texture<sdl3::srgb96f>(renderer, sdl3::texture_access::streaming_access, renderer.output_size());
+    auto raster = sdl3::surface<sdl3::srgb96f>(renderer.output_size());
 
-    auto event_queue = ::event_queue();
+    auto event_queue = sdl3::event_queue();
 
     // Scene
     auto world = ::world
     {
-        .ambient = srgb96f(0.55_r32f, 0.44_g32f, 0.47_b32f),
+        .ambient = sdl3::srgb96f(0.55_r32f, 0.44_g32f, 0.47_b32f),
         .min_depth = 1.0f,
         .max_depth = 298.0f,
-        .depth_color = srgb96f(0.86_r32f, 0.88_g32f, 0.95_b32f),
-        .environment = srgb96f(0.62_r32f, 0.69_g32f, 0.96_b32f)
+        .depth_color = sdl3::srgb96f(0.86_r32f, 0.88_g32f, 0.95_b32f),
+        .environment = sdl3::srgb96f(0.62_r32f, 0.69_g32f, 0.96_b32f)
     };
 
     // Key light
     world.lights.push_back(
         point_light(
             vector3 { -300.0f, 350.0f, 10.0f },
-            srgb96f(0.70_r32f, 0.689_g32f, 0.6885_b32f)
+            sdl3::srgb96f(0.70_r32f, 0.689_g32f, 0.6885_b32f)
         )
     );
 
@@ -784,7 +786,7 @@ int main()
             vector3 { 0.0f, 0.0f, 0.0f },
             vector3 { 0.0f, 1.0f, 0.0f },
             surface_info {
-                .color = srgb96f(1.0_r32f, 1.0_g32f, 1.0_b32f),
+                .color = sdl3::srgb96f(1.0_r32f, 1.0_g32f, 1.0_b32f),
                 .reflective_coefficient = 0.0f,
                 .specular_coefficient = 0.5f,
                 .specular_exponent = 0.8f,
@@ -798,7 +800,7 @@ int main()
             vector3 { 0.0f, 5.25f, 0.0f },
             5.25f,
             surface_info {
-                .color = srgb96f(0.89_r32f, 0.48_g32f, 0.42_b32f),
+                .color = sdl3::srgb96f(0.89_r32f, 0.48_g32f, 0.42_b32f),
                 .reflective_coefficient = 0.15f,
                 .specular_coefficient = 1.0f,
                 .specular_exponent = 165.0f,
@@ -812,7 +814,7 @@ int main()
             vector3 { -3.5f, 1.6f, -6.7f },
             1.6f,
             surface_info {
-                .color = srgb96f(0.95_r32f, 0.93_g32f, 0.31_b32f),
+                .color = sdl3::srgb96f(0.95_r32f, 0.93_g32f, 0.31_b32f),
                 .reflective_coefficient = 0.15f,
                 .specular_coefficient = 1.0f,
                 .specular_exponent = 165.0f,
@@ -826,7 +828,7 @@ int main()
             vector3 { 14.0f, 7.0f, 6.5f },
             7.0f,
             surface_info {
-                .color = srgb96f(1.0_r32f, 0.44_g32f, 0.64_b32f),
+                .color = sdl3::srgb96f(1.0_r32f, 0.44_g32f, 0.64_b32f),
                 .reflective_coefficient = 0.15f,
                 .specular_coefficient = 1.0f,
                 .specular_exponent = 165.0f,
@@ -840,7 +842,7 @@ int main()
             vector3 { 8.2f, 3.5f, -6.5f },
             3.5f,
             surface_info {
-                .color = srgb96f(0.89_r32f, 0.48_g32f, 0.42_b32f),
+                .color = sdl3::srgb96f(0.89_r32f, 0.48_g32f, 0.42_b32f),
                 .reflective_coefficient = 0.15f,
                 .specular_coefficient = 1.0f,
                 .specular_exponent = 165.0f,
@@ -854,7 +856,7 @@ int main()
             vector3 { -16.6f, 6.5f, 0.0f },
             6.5f,
             surface_info {
-                .color = srgb96f(1.0_r32f, 0.44_g32f, 0.64_b32f),
+                .color = sdl3::srgb96f(1.0_r32f, 0.44_g32f, 0.64_b32f),
                 .reflective_coefficient = 0.15f,
                 .specular_coefficient = 1.0f,
                 .specular_exponent = 165.0f,
@@ -868,7 +870,7 @@ int main()
             vector3 { -9.5f, 3.0f, -6.0f },
             3.0f,
             surface_info {
-                .color = srgb96f(1.0_r32f, 0.44_g32f, 0.64_b32f),
+                .color = sdl3::srgb96f(1.0_r32f, 0.44_g32f, 0.64_b32f),
                 .reflective_coefficient = 0.15f,
                 .specular_coefficient = 1.0f,
                 .specular_exponent = 165.0f,
@@ -882,7 +884,7 @@ int main()
             vector3 { -15.0f, 3.0f, 12.0f },
             3.0f,
             surface_info {
-                .color = srgb96f(0.95_r32f, 0.93_g32f, 0.31_b32f),
+                .color = sdl3::srgb96f(0.95_r32f, 0.93_g32f, 0.31_b32f),
                 .reflective_coefficient = 0.15f,
                 .specular_coefficient = 1.0f,
                 .specular_exponent = 165.0f,
@@ -896,7 +898,7 @@ int main()
             vector3 { 40.0f, 10.0f, 175.0f },
             10.0f,
             surface_info {
-                .color = srgb96f(0.18_r32f, 0.31_g32f, 0.68_b32f),
+                .color = sdl3::srgb96f(0.18_r32f, 0.31_g32f, 0.68_b32f),
                 .reflective_coefficient = 0.15f,
                 .specular_coefficient = 1.0f,
                 .specular_exponent = 165.0f,
@@ -918,27 +920,26 @@ int main()
 
     camera.pitch(6);
 
-    auto stopwatch = stopwatch::start_now();
     auto running = true;
     while (running)
     {
-        ::event event;
+        sdl3::event event;
         if (event_queue.poll(event))
         {
             switch (event.type())
             {
-                case event_type::quit:
+                case sdl3::event_type::quit:
                 {
                     running = false;
                 }
                 break;
 
-                case event_type::key_up:
+                case sdl3::event_type::key_up:
                 {
-                    auto const key_event = event.as<keyboard_event>();
+                    auto const key_event = event.as<sdl3::keyboard_event>();
                     auto const symbol = key_event.scan_code();
                     auto const modifiers = key_event.key_modifiers();
-                    if (symbol == scan_code::m && modifiers == (key_modifier::left_ctrl | key_modifier::left_alt))
+                    if (symbol == sdl3::scan_code::m && modifiers == (sdl3::key_modifier::left_ctrl | sdl3::key_modifier::left_alt))
                     {
                         window.relative_mouse_mode(
                             !window.relative_mouse_mode()
@@ -947,9 +948,9 @@ int main()
                 }
                 break;
 
-                case event_type::mouse_wheel:
+                case sdl3::event_type::mouse_wheel:
                 {
-                    auto const wheel_event = event.as<mouse_wheel_event>();
+                    auto const wheel_event = event.as<sdl3::mouse_wheel_event>();
                     auto const amount = wheel_event.y();
                     camera.zoom(static_cast<float>(amount));
                 }
@@ -958,14 +959,12 @@ int main()
         }
         else
         {
-            auto const keys = keyboard::state();
-            auto const key_modifiers = keyboard::modifier_state();
-            auto const num_lock = key_modifiers.test(key_modifier::num_lock);
-            auto const left_alt = key_modifiers.test(key_modifier::left_alt);
-            auto const left_ctrl = key_modifiers.test(key_modifier::left_ctrl);
-            auto const left_shift = key_modifiers.test(key_modifier::left_shift);
+            auto const keys = sdl3::keyboard::state();
+            auto const key_modifiers = sdl3::keyboard::modifier_state();
+            auto const left_alt = key_modifiers.test(sdl3::key_modifier::left_alt);
+            auto const left_shift = key_modifiers.test(sdl3::key_modifier::left_shift);
 
-            if (keys.pressed(scan_code::w))
+            if (keys.pressed(sdl3::scan_code::w))
             {
                 if (left_alt)
                 {
@@ -977,7 +976,7 @@ int main()
                 }
             }
             
-            if (keys.pressed(scan_code::s))
+            if (keys.pressed(sdl3::scan_code::s))
             {
                 if (left_alt)
                 {
@@ -989,49 +988,49 @@ int main()
                 }
             }
 
-            if (keys.pressed(scan_code::a))
+            if (keys.pressed(sdl3::scan_code::a))
             {
                 camera.move_left(left_shift ? 2.0f : 1.0f);
             }
             
-            if (keys.pressed(scan_code::d))
+            if (keys.pressed(sdl3::scan_code::d))
             {
                 camera.move_right(left_shift ? 2.0f : 1.0f);
             }
 
-            if (keys.pressed(scan_code::up) || keys.pressed(scan_code::keypad_8))
+            if (keys.pressed(sdl3::scan_code::up) || keys.pressed(sdl3::scan_code::keypad_8))
             {
                 camera.pitch(left_shift ? 2.0f : 1.0f);
             }
             
-            if (keys.pressed(scan_code::down) || keys.pressed(scan_code::keypad_2))
+            if (keys.pressed(sdl3::scan_code::down) || keys.pressed(sdl3::scan_code::keypad_2))
             {
                 camera.pitch(left_shift ? -2.0f : -1.0f);
             }
 
-            if (keys.pressed(scan_code::left) || keys.pressed(scan_code::keypad_4))
+            if (keys.pressed(sdl3::scan_code::left) || keys.pressed(sdl3::scan_code::keypad_4))
             {
                 camera.yaw(left_shift ? -2.0f : -1.0f);
             }
 
-            if (keys.pressed(scan_code::right) || keys.pressed(scan_code::keypad_6))
+            if (keys.pressed(sdl3::scan_code::right) || keys.pressed(sdl3::scan_code::keypad_6))
             {
                 camera.yaw(left_shift ? 2.0f : 1.0f);
             }
 
-            if (keys.pressed(scan_code::keypad_plus))
+            if (keys.pressed(sdl3::scan_code::keypad_plus))
             {
                 camera.zoom_in(left_shift ? 2.0f : 1.0f);
             }
 
-            if (keys.pressed(scan_code::keypad_minus))
+            if (keys.pressed(sdl3::scan_code::keypad_minus))
             {
                 camera.zoom_out(left_shift ? 2.0f : 1.0f);
             }
 
             if (window.relative_mouse_mode())
             {
-                auto const mouse_state = mouse::relative_state();
+                auto const mouse_state = sdl3::mouse::relative_state();
                 camera.yaw(mouse_state.x * 0.1f);
                 camera.pitch(mouse_state.y * 0.1f);
             }
@@ -1061,7 +1060,7 @@ int main()
 
                     auto const nearest_hit = find_nearest_hit(primary_ray, world);
                     auto const shading_color = (nearest_hit) ? shade(*nearest_hit, world) : world.environment;
-                    auto const depth = (nearest_hit) ? clamp((nearest_hit->distance - world.min_depth) / (world.max_depth - world.min_depth), 0.0f, 1.0f) : 1.0f;
+                    auto const depth = (nearest_hit) ? std::clamp((nearest_hit->distance - world.min_depth) / (world.max_depth - world.min_depth), 0.0f, 1.0f) : 1.0f;
                     auto const apparent_color = mix(shading_color, world.depth_color, depth);
 
                     raster(raster_x, raster_y) = apparent_color;
@@ -1070,8 +1069,8 @@ int main()
 
             texture.update(raster);
 
-            renderer.draw_blend_mode(blend_mode::none);
-            renderer.draw_color(color::black);
+            renderer.draw_blend_mode(sdl3::blend_mode::none);
+            renderer.draw_color(sdl3::color::black);
             renderer.clear();
             renderer.copy(texture);
             renderer.present();
