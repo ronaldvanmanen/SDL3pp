@@ -29,7 +29,6 @@
 
 #include "length.h"
 #include "pixel_format.h"
-#include "window.h"
 
 namespace sdl3
 {
@@ -40,8 +39,8 @@ namespace sdl3
     class display_mode
     {
     public:
-        display_mode(window & target);
-        
+        display_mode(SDL_DisplayMode const* native_handle);
+       
         pixel_format format() const;
         
         length<std::int32_t> width() const;

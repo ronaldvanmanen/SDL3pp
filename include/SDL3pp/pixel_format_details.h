@@ -24,14 +24,16 @@
 
 #include <SDL3/SDL_pixels.h>
 
-#include "surface.h"
+#include "pixel_format.h"
 
 namespace sdl3
 {
     class pixel_format_details
     {
     public:
-        pixel_format_details(surface_base & owner);
+        pixel_format_details(pixel_format format);
+
+        pixel_format_details(SDL_PixelFormatDetails const* native_handle);
 
         SDL_PixelFormatDetails const* native_handle();
 

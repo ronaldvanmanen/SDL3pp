@@ -22,6 +22,7 @@
 
 #include <cstdint>
 #include <iostream>
+#include <optional>
 #include <vector>
 
 #include <SDL3/SDL_pixels.h>
@@ -40,8 +41,6 @@ namespace sdl3
 
     public:
         palette(std::size_t size);
-
-        palette(sdl3::surface_base & owner);
 
         palette(std::initializer_list<color> colors);
 
@@ -74,6 +73,27 @@ namespace sdl3
 
         bool _free_handle;
     };
+
+    template<typename TPixelFormat>
+    palette
+    create_palette(surface<TPixelFormat> & owner)
+    {
+        auto result = SDL_CreateSurfacePalette(owner.native_handle());
+        sdl3::throw_last_error(result != nullptr);
+        return sdl3::palette(result, false);
+    }
+
+    template<typename TPixelFormat>
+    std::optional<palette>
+    get_palette(surface<TPixelFormat> & owner)
+    {
+        auto native_handle = SDL_GetSurfacePalette(owner.native_handle());
+        if (native_handle == nullptr)
+        {
+            return std::nullopt;
+        }
+        return sdl3::palette(native_handle, false);
+    }
 
     class palette::indexed_color
     {

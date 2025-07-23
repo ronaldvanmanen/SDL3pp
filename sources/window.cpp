@@ -58,33 +58,6 @@ sdl3::window::~window()
     }
 }
 
-sdl3::size_2d<std::int32_t>
-sdl3::window::size() const
-{
-    int width, height;
-    SDL_GetWindowSize(_native_handle, &width, &height);
-    return sdl3::size_2d<std::int32_t>(
-        width * px,
-        height * px
-    );
-}
-
-void
-sdl3::window::raise()
-{
-    throw_last_error(
-        SDL_RaiseWindow(_native_handle)
-    );
-}
-
-void
-sdl3::window::update_surface()
-{
-    throw_last_error(
-        SDL_UpdateWindowSurface(_native_handle)
-    );
-}
-
 void
 sdl3::window::relative_mouse_mode(bool enabled)
 {
@@ -97,6 +70,57 @@ bool
 sdl3::window::relative_mouse_mode() const
 {
     return SDL_GetWindowRelativeMouseMode(_native_handle);
+}
+
+std::optional<sdl3::display_mode>
+sdl3::window::fullscreen_mode() const
+{ 
+    auto native_handle = SDL_GetWindowFullscreenMode(_native_handle);
+    if (native_handle == nullptr)
+    {
+        return std::nullopt;
+    }
+    return sdl3::display_mode(native_handle);
+}
+
+sdl3::size_2d<std::int32_t>
+sdl3::window::size() const
+{
+    int width, height;
+    sdl3::throw_last_error(
+        SDL_GetWindowSize(_native_handle, &width, &height)
+    );
+    return sdl3::size_2d<std::int32_t>(width * px, height * px);
+}
+
+void
+sdl3::window::raise()
+{
+    sdl3::throw_last_error(
+        SDL_RaiseWindow(_native_handle)
+    );
+}
+
+bool
+sdl3::window::has_surface() const
+{
+    return SDL_WindowHasSurface(_native_handle);
+}
+
+sdl3::surface_base
+sdl3::window::surface()
+{
+    auto native_handle = SDL_GetWindowSurface(_native_handle);
+    sdl3::throw_last_error(native_handle != nullptr);
+    return sdl3::surface_base(native_handle, false);
+}
+
+void
+sdl3::window::update_surface()
+{
+    sdl3::throw_last_error(
+        SDL_UpdateWindowSurface(_native_handle)
+    );
 }
 
 SDL_Window*

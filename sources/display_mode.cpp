@@ -20,16 +20,8 @@
 
 #include "SDL3pp/display_mode.h"
 
-namespace sdl3
-{
-    SDL_DisplayMode const* get_window_display_mode(window & window)
-    { 
-        return SDL_GetWindowFullscreenMode(window.native_handle());
-    }
-}
-
-sdl3::display_mode::display_mode(sdl3::window & window)
-: _native_handle(get_window_display_mode(window))
+sdl3::display_mode::display_mode(SDL_DisplayMode const* native_handle)
+: _native_handle(native_handle)
 {}
 
 sdl3::pixel_format

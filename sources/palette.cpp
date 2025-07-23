@@ -48,11 +48,6 @@ sdl3::palette::palette(std::size_t size)
 , _free_handle(true)
 { }
 
-sdl3::palette::palette(sdl3::surface_base & owner)
-: _native_handle(SDL_CreateSurfacePalette(owner.native_handle()))
-, _free_handle(false)
-{ }
-
 sdl3::palette::palette(std::initializer_list<color> colors)
 : _native_handle(SDL_CreatePalette(static_cast<int>(colors.size())))
 , _free_handle(true)

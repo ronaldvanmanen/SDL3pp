@@ -21,12 +21,15 @@
 #pragma once
 
 #include <cstdint>
+#include <optional>
 #include <string>
 
 #include <SDL3/SDL_video.h>
 
+#include "display_mode.h"
 #include "length.h"
 #include "size.h"
+#include "surface.h"
 #include "window_flags.h"
 
 namespace sdl3
@@ -46,13 +49,19 @@ namespace sdl3
 
         window& operator=(window const& other) = delete;
 
-        size_2d<std::int32_t> size() const;
+        bool relative_mouse_mode() const;
 
         void relative_mouse_mode(bool enable);
 
-        bool relative_mouse_mode() const;
+        std::optional<display_mode> fullscreen_mode() const;
+
+        size_2d<std::int32_t> size() const;
 
         void raise();
+
+        bool has_surface() const;
+
+        surface_base surface();
 
         void update_surface();
 

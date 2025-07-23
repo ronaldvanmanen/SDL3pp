@@ -33,26 +33,22 @@
 #include "pixel_format.h"
 #include "pixel_format_traits.h"
 #include "size.h"
-#include "window.h"
 
 namespace sdl3
 {
     class surface_base
     {
-    protected:
+    public:
         surface_base(length<std::int32_t> const& width, length<std::int32_t> const& height, pixel_format format);
 
         surface_base(size_2d<std::int32_t> const& size, pixel_format format);
 
         surface_base(length<std::int32_t> const& width, length<std::int32_t> const& height, pixel_format format, void* pixels, std::int32_t pitch);
 
-        surface_base(window & owner);
-
         surface_base(surface_base const& other);
 
         surface_base(SDL_Surface * native_handle, bool free_handle);
 
-    public:
         ~surface_base();
 
         surface_base& operator=(surface_base const& other) = delete;
@@ -85,8 +81,6 @@ namespace sdl3
 
         surface(length<std::int32_t> const& width, length<std::int32_t> const& height, TPixelFormat* pixels, std::int32_t pitch);
 
-        surface(window & owner);
-
         surface(surface<TPixelFormat> const& other);
 
         surface<TPixelFormat>& operator=(surface<TPixelFormat> const& other) = delete;
@@ -116,11 +110,6 @@ namespace sdl3
     template<typename TPixelFormat>
     surface<TPixelFormat>::surface(length<std::int32_t> const& width, length<std::int32_t> const& height, TPixelFormat* pixels, std::int32_t pitch)
     : surface_base(width, height, pixel_format_traits<TPixelFormat>::format, pixels, pitch * sizeof(TPixelFormat))
-    { }
-
-    template<typename TPixelFormat>
-    surface<TPixelFormat>::surface(window & owner)
-    : surface_base(owner)
     { }
 
     template<typename TPixelFormat>

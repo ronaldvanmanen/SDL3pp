@@ -18,10 +18,26 @@
 //    misrepresented as being the original software.
 // 3. This notice may not be removed or altered from any source distribution.
 
+#include "SDL3pp/error.h"
 #include "SDL3pp/pixel_format_details.h"
 
-sdl3::pixel_format_details::pixel_format_details(sdl3::surface_base & owner)
-: _native_handle(SDL_GetPixelFormatDetails(owner.native_handle()->format))
+namespace sdl3
+{
+    SDL_PixelFormatDetails const*
+    get_pixel_format_details(sdl3::pixel_format format)
+    {
+        auto native_handle = SDL_GetPixelFormatDetails(static_cast<SDL_PixelFormat>(format));
+        sdl3::throw_last_error(native_handle != nullptr);
+        return native_handle;
+    }
+}
+
+sdl3::pixel_format_details::pixel_format_details(sdl3::pixel_format format)
+: _native_handle(sdl3::get_pixel_format_details(format))
+{ }
+
+sdl3::pixel_format_details::pixel_format_details(SDL_PixelFormatDetails const* native_handle)
+: _native_handle(native_handle)
 { }
 
 SDL_PixelFormatDetails const*
