@@ -38,19 +38,19 @@ namespace sdl3
 
         real(real<Tag, T> const& other);
 
-        real<Tag, T>& operator=(real<Tag, T> const& other);
+        real<Tag, T> & operator=(real<Tag, T> const& other);
 
-        real<Tag, T>& operator*=(real<Tag, T> const& other);
+        real<Tag, T> & operator*=(real<Tag, T> const& other);
 
-        real<Tag, T>& operator/=(real<Tag, T> const& other);
+        real<Tag, T> & operator/=(real<Tag, T> const& other);
 
-        real<Tag, T>& operator+=(real<Tag, T> const& other);
+        real<Tag, T> & operator+=(real<Tag, T> const& other);
 
-        real<Tag, T>& operator-=(real<Tag, T> const& other);
+        real<Tag, T> & operator-=(real<Tag, T> const& other);
 
-        real<Tag, T>& operator++();
+        real<Tag, T> & operator++();
 
-        real<Tag, T>& operator--();
+        real<Tag, T> & operator--();
 
         bool operator==(real<Tag, T> const& other) const;
 

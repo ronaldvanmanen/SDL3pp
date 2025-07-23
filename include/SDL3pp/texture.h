@@ -57,7 +57,7 @@ namespace sdl3
 
         ~texture_base();
 
-        texture_base& operator=(texture_base const& other) = delete;
+        texture_base & operator=(texture_base const& other) = delete;
 
     public:
         property_group properties() const;
@@ -80,7 +80,7 @@ namespace sdl3
 
         texture(texture<TPixelFormat>&& other);
 
-        texture<TPixelFormat>& operator=(texture<TPixelFormat> const& other) = delete;
+        texture<TPixelFormat> & operator=(texture<TPixelFormat> const& other) = delete;
 
         void update(surface<TPixelFormat> const& pixels);
 

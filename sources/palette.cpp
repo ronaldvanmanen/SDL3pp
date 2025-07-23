@@ -87,7 +87,7 @@ sdl3::palette::~palette()
     }
 } 
 
-sdl3::palette&
+sdl3::palette &
 sdl3::palette::operator=(std::initializer_list<sdl3::color> colors)
 {
     set_palette_colors(_native_handle, colors.begin(), 0, colors.size());
@@ -95,7 +95,7 @@ sdl3::palette::operator=(std::initializer_list<sdl3::color> colors)
     return *this;
 }
 
-sdl3::palette&
+sdl3::palette &
 sdl3::palette::operator=(std::vector<sdl3::color> const& colors)
 {
     set_palette_colors(_native_handle, &colors[0], 0, colors.size());
@@ -226,8 +226,8 @@ sdl3::operator!=(sdl3::color const& left, sdl3::palette::indexed_color const& ri
     return !(left == right);
 }
 
-std::ostream&
-sdl3::operator<<(std::ostream& stream, sdl3::palette::indexed_color const& value)
+std::ostream &
+sdl3::operator<<(std::ostream & stream, sdl3::palette::indexed_color const& value)
 {
     return stream << value.get();
 }

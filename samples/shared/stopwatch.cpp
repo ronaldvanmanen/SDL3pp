@@ -74,7 +74,7 @@ sdl3::stopwatch::elapsed()
 }
 
 sdl3::fractional_seconds
-sdl3::elapsed_seconds(sdl3::stopwatch &stopwatch)
+sdl3::elapsed_seconds(sdl3::stopwatch & stopwatch)
 {
     return std::chrono::duration_cast<
         sdl3::fractional_seconds
@@ -82,7 +82,7 @@ sdl3::elapsed_seconds(sdl3::stopwatch &stopwatch)
 }
 
 sdl3::time<double>
-sdl3::elapsed_time(sdl3::stopwatch &s)
+sdl3::elapsed_time(sdl3::stopwatch & s)
 {
     return sdl3::time<double>(sdl3::elapsed_seconds(s).count() * sdl3::seconds);
 }

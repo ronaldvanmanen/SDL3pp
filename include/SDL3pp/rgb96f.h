@@ -55,15 +55,15 @@ namespace sdl3
 
         bool operator==(rgb96f<ColorSpace> const& other) const;
 
-        rgb96f<ColorSpace>& operator=(rgb96f<ColorSpace> const& other);
+        rgb96f<ColorSpace> & operator=(rgb96f<ColorSpace> const& other);
 
-        rgb96f<ColorSpace>& operator+=(rgb96f<ColorSpace> const& other);
+        rgb96f<ColorSpace> & operator+=(rgb96f<ColorSpace> const& other);
         
-        rgb96f<ColorSpace>& operator*=(rgb96f<ColorSpace> const& other);
+        rgb96f<ColorSpace> & operator*=(rgb96f<ColorSpace> const& other);
 
-        rgb96f<ColorSpace>& operator*=(float scalar);
+        rgb96f<ColorSpace> & operator*=(float scalar);
 
-        rgb96f<ColorSpace>& operator/=(float scalar);
+        rgb96f<ColorSpace> & operator/=(float scalar);
 
     public:
         r32f r;

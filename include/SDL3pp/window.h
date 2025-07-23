@@ -43,11 +43,11 @@ namespace sdl3
 
         window(window const& other) = delete;
 
-        window(window&& other);
+        window(window && other);
 
         ~window();
 
-        window& operator=(window const& other) = delete;
+        window & operator=(window const& other) = delete;
 
         bool relative_mouse_mode() const;
 

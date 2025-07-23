@@ -33,7 +33,7 @@ namespace sdl3
 
         error(error const& other);
 
-        error& operator=(error const& other);
+        error & operator=(error const& other);
     };
 
     void throw_last_error(bool condition);

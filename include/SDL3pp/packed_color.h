@@ -50,7 +50,7 @@ namespace sdl3
 
         argb8888(argb8888 const& other);
 
-        argb8888& operator=(argb8888 const& other);
+        argb8888 & operator=(argb8888 const& other);
 
         bool operator==(argb8888 const& other) const;
 
@@ -85,7 +85,7 @@ namespace sdl3
     { }
 
     template<color_space ColorSpace>
-    argb8888<ColorSpace>&
+    argb8888<ColorSpace> &
     argb8888<ColorSpace>::operator=(argb8888<ColorSpace> const& other)
     {
         if (this != &other)
@@ -106,8 +106,8 @@ namespace sdl3
     }
 
     template<color_space ColorSpace>
-    std::ostream&
-    operator<<(std::ostream& stream, argb8888<ColorSpace> const& value)
+    std::ostream &
+    operator<<(std::ostream & stream, argb8888<ColorSpace> const& value)
     {
         return stream
             << static_cast<unsigned int>(value.a)

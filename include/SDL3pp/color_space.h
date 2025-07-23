@@ -43,7 +43,8 @@ namespace sdl3
     };
 
     inline
-    std::ostream& operator<<(std::ostream& stream, color_space const& value)
+    std::ostream &
+    operator<<(std::ostream & stream, color_space const& value)
     {
         switch(value)
         {

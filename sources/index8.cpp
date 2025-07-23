@@ -32,7 +32,7 @@ sdl3::index8::index8(sdl3::index8 const& other)
 : _value(other._value)
 { }
 
-sdl3::index8&
+sdl3::index8 &
 sdl3::index8::operator=(sdl3::index8 const& other)
 {
     if (this != &other)
@@ -42,28 +42,28 @@ sdl3::index8::operator=(sdl3::index8 const& other)
     return *this;    
 }
 
-sdl3::index8&
+sdl3::index8 &
 sdl3::index8::operator+=(sdl3::index8 const& other)
 {
     _value += other._value;
     return *this;    
 }
 
-sdl3::index8&
+sdl3::index8 &
 sdl3::index8::operator-=(sdl3::index8 const& other)
 {
     _value += other._value;
     return *this;    
 }
 
-sdl3::index8&
+sdl3::index8 &
 sdl3::index8::operator++()
 {
     ++_value;
     return *this;
 }
 
-sdl3::index8&
+sdl3::index8 &
 sdl3::index8::operator--()
 {
     --_value;

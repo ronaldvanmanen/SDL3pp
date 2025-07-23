@@ -44,7 +44,7 @@ sdl3::color::color(sdl3::color const& other)
 : r(other.r), g(other.g), b(other.b), a(other.a)
 { }
 
-sdl3::color&
+sdl3::color &
 sdl3::color::operator=(color const& other)
 {
     if (*this != other)
@@ -63,8 +63,8 @@ sdl3::color::operator==(color const& other) const
     return r == other.r && g == other.g && b == other.b && a == other.a;
 }
 
-std::ostream&
-sdl3::operator<<(std::ostream& stream, color const& value)
+std::ostream &
+sdl3::operator<<(std::ostream & stream, color const& value)
 {
     return stream
         << static_cast<unsigned int>(value.r)

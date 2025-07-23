@@ -36,7 +36,7 @@ sdl3::event_queue::~event_queue()
 }
 
 bool
-sdl3::event_queue::poll(sdl3::event& event)
+sdl3::event_queue::poll(sdl3::event & event)
 {
     return 1 == SDL_PollEvent(event.native_handle());
 }

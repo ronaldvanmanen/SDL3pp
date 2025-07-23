@@ -56,7 +56,7 @@ namespace sdl3
 
         ~renderer();
 
-        renderer& operator=(renderer const& other) = delete;
+        renderer & operator=(renderer const& other) = delete;
 
         std::string name() const;
 

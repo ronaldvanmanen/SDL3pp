@@ -22,8 +22,8 @@
 
 #include "SDL3pp/pixel_format.h"
 
-std::ostream&
-sdl3::operator<<(std::ostream& stream, sdl3::pixel_format const& value)
+std::ostream &
+sdl3::operator<<(std::ostream & stream, sdl3::pixel_format const& value)
 {
     #define RETURN(X) return stream << #X;
     #define CASE(X) case X: RETURN(X)

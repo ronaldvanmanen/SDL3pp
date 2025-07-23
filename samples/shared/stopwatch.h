@@ -55,7 +55,7 @@ namespace sdl3
 
     using fractional_seconds = std::chrono::duration<double>;
 
-    fractional_seconds elapsed_seconds(stopwatch &s);
+    fractional_seconds elapsed_seconds(stopwatch & s);
 
-    time<double> elapsed_time(stopwatch &s);
+    time<double> elapsed_time(stopwatch & s);
 }

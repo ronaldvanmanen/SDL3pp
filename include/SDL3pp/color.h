@@ -54,5 +54,5 @@ namespace sdl3
         std::uint8_t r, g, b, a;
     };
 
-    std::ostream& operator<<(std::ostream& stream, color const& value);
+    std::ostream & operator<<(std::ostream & stream, color const& value);
 }

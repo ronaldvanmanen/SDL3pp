@@ -145,5 +145,5 @@ namespace sdl3
 
     bool operator!=(color const& left, palette::indexed_color const& right);
 
-    std::ostream& operator<<(std::ostream& stream, palette::indexed_color const& value);
+    std::ostream & operator<<(std::ostream & stream, palette::indexed_color const& value);
 }

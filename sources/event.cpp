@@ -32,7 +32,7 @@ sdl3::event::type() const
     return static_cast<sdl3::event_type>(_native_handle.type);
 }
 
-SDL_Event*
+SDL_Event *
 sdl3::event::native_handle()
 {
     return &_native_handle;

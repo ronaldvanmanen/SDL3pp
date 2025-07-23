@@ -43,23 +43,23 @@ namespace sdl3
 
         primary_color(primary_color<Tag, T> const& other);
 
-        primary_color<Tag, T>& operator=(primary_color<Tag, T> const& other);
+        primary_color<Tag, T> & operator=(primary_color<Tag, T> const& other);
 
-        primary_color<Tag, T>& operator*=(primary_color<Tag, T> const& other);
+        primary_color<Tag, T> & operator*=(primary_color<Tag, T> const& other);
 
-        primary_color<Tag, T>& operator/=(primary_color<Tag, T> const& other);
+        primary_color<Tag, T> & operator/=(primary_color<Tag, T> const& other);
 
-        primary_color<Tag, T>& operator+=(primary_color<Tag, T> const& other);
+        primary_color<Tag, T> & operator+=(primary_color<Tag, T> const& other);
 
-        primary_color<Tag, T>& operator-=(primary_color<Tag, T> const& other);
+        primary_color<Tag, T> & operator-=(primary_color<Tag, T> const& other);
 
-        primary_color<Tag, T>& operator*=(T scalar);
+        primary_color<Tag, T> & operator*=(T scalar);
 
-        primary_color<Tag, T>& operator/=(T scalar);
+        primary_color<Tag, T> & operator/=(T scalar);
 
-        primary_color<Tag, T>& operator++();
+        primary_color<Tag, T> & operator++();
 
-        primary_color<Tag, T>& operator--();
+        primary_color<Tag, T> & operator--();
 
         bool operator==(primary_color<Tag, T> const& other) const;
 

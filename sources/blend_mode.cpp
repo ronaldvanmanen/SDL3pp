@@ -22,8 +22,8 @@
 
 #include "SDL3pp/blend_mode.h"
 
-std::ostream&
-sdl3::operator<<(std::ostream& stream, sdl3::blend_mode const& value)
+std::ostream &
+sdl3::operator<<(std::ostream & stream, sdl3::blend_mode const& value)
 {
     #define RETURN(X) return stream << #X;
     #define CASE(X) case X: RETURN(X)

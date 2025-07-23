@@ -51,7 +51,7 @@ namespace sdl3
 
         ~surface_base();
 
-        surface_base& operator=(surface_base const& other) = delete;
+        surface_base & operator=(surface_base const& other) = delete;
 
         void color_space(sdl3::color_space const& value);
 
@@ -83,13 +83,13 @@ namespace sdl3
 
         surface(surface<TPixelFormat> const& other);
 
-        surface<TPixelFormat>& operator=(surface<TPixelFormat> const& other) = delete;
+        surface<TPixelFormat> & operator=(surface<TPixelFormat> const& other) = delete;
 
         std::int32_t pitch() const;
 
         TPixelFormat const* pixels() const;
 
-        TPixelFormat& operator()(offset<int32_t> x, offset<int32_t> y);
+        TPixelFormat & operator()(offset<int32_t> x, offset<int32_t> y);
 
         TPixelFormat const& operator()(offset<int32_t> x, offset<int32_t> y) const;
 
@@ -132,7 +132,7 @@ namespace sdl3
     }
 
     template<typename TPixelFormat>
-    TPixelFormat&
+    TPixelFormat &
     surface<TPixelFormat>::operator()(offset<std::int32_t> x, offset<std::int32_t> y)
     {
         TPixelFormat * pixels = reinterpret_cast<TPixelFormat*>(_native_handle->pixels);

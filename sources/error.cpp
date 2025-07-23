@@ -34,7 +34,7 @@ sdl3::error::error(sdl3::error const& other)
 : std::runtime_error(other)
 { }
 
-sdl3::error&
+sdl3::error &
 sdl3::error::operator=(error const& other)
 {
     if (this != &other)

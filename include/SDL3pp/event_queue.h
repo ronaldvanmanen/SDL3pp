@@ -31,7 +31,7 @@ namespace sdl3
 
         ~event_queue();
 
-        bool poll(sdl3::event& event);
+        bool poll(sdl3::event & event);
 
         bool pending() const;
     };

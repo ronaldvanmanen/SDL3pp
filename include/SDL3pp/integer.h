@@ -38,19 +38,19 @@ namespace sdl3
 
         integer(integer<Tag, T> const& other);
 
-        integer<Tag, T>& operator=(integer<Tag, T> const& other);
+        integer<Tag, T> & operator=(integer<Tag, T> const& other);
 
-        integer<Tag, T>& operator*=(integer<Tag, T> const& other);
+        integer<Tag, T> & operator*=(integer<Tag, T> const& other);
 
-        integer<Tag, T>& operator/=(integer<Tag, T> const& other);
+        integer<Tag, T> & operator/=(integer<Tag, T> const& other);
 
-        integer<Tag, T>& operator+=(integer<Tag, T> const& other);
+        integer<Tag, T> & operator+=(integer<Tag, T> const& other);
 
-        integer<Tag, T>& operator-=(integer<Tag, T> const& other);
+        integer<Tag, T> & operator-=(integer<Tag, T> const& other);
 
-        integer<Tag, T>& operator++();
+        integer<Tag, T> & operator++();
 
-        integer<Tag, T>& operator--();
+        integer<Tag, T> & operator--();
 
         bool operator==(integer<Tag, T> const& other) const;
 

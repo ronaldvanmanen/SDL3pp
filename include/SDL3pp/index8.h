@@ -41,15 +41,15 @@ namespace sdl3
 
         index8(index8 const& other);
 
-        index8& operator=(index8 const& other);
+        index8 & operator=(index8 const& other);
 
-        index8& operator+=(index8 const& other);
+        index8 & operator+=(index8 const& other);
 
-        index8& operator-=(index8 const& other);
+        index8 & operator-=(index8 const& other);
 
-        index8& operator++();
+        index8 & operator++();
 
-        index8& operator--();
+        index8 & operator--();
 
         bool operator==(index8 const& other) const;
 

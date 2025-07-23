@@ -84,5 +84,5 @@ namespace sdl3
         external_oes = SDL_PIXELFORMAT_EXTERNAL_OES
     };
 
-    std::ostream& operator<<(std::ostream& stream, pixel_format const& value);
+    std::ostream & operator<<(std::ostream & stream, pixel_format const& value);
 }
