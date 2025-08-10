@@ -23,17 +23,48 @@
 #include <cstdint>
 #include <optional>
 #include <string>
+#include <type_traits>
 
 #include <SDL3/SDL_video.h>
 
 #include "display_mode.h"
+#include "flags.h"
 #include "length.h"
 #include "size.h"
 #include "surface.h"
-#include "window_flags.h"
 
 namespace sdl3
 {
+    enum class window_flags : std::uint32_t
+    {
+        none = 0,
+        fullscreen = SDL_WINDOW_FULLSCREEN,
+        opengl = SDL_WINDOW_OPENGL,
+        hidden = SDL_WINDOW_HIDDEN,
+        borderless = SDL_WINDOW_BORDERLESS,
+        resizable = SDL_WINDOW_RESIZABLE,
+        minimized = SDL_WINDOW_MINIMIZED,
+        maximized = SDL_WINDOW_MAXIMIZED,
+        input_grabbed = SDL_WINDOW_MOUSE_GRABBED,
+        input_focus = SDL_WINDOW_INPUT_FOCUS,
+        mouse_focus = SDL_WINDOW_MOUSE_FOCUS,
+        allow_high_dpi = SDL_WINDOW_HIGH_PIXEL_DENSITY,
+        mouse_capture = SDL_WINDOW_MOUSE_CAPTURE,
+        always_on_top = SDL_WINDOW_ALWAYS_ON_TOP,
+        skip_taskbar = SDL_WINDOW_UTILITY,
+        utility = SDL_WINDOW_UTILITY,
+        tooltip = SDL_WINDOW_TOOLTIP,
+        popup_menu = SDL_WINDOW_POPUP_MENU,
+        vulkan = SDL_WINDOW_VULKAN,
+        metal = SDL_WINDOW_METAL,
+    };
+
+    template<>
+    struct is_flags_enum<window_flags>
+    {
+        static const bool value = true;
+    };
+
     class window
     {
     public:

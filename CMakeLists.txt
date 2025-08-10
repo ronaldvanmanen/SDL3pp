@@ -44,7 +44,6 @@ add_library("${PROJECT_NAME}"
   "sources/renderer.cpp"
   "sources/surface.cpp"
   "sources/texture.cpp"
-  "sources/window_flags.cpp"
   "sources/window.cpp"
 )
 
