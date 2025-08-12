@@ -22,7 +22,6 @@
 
 #include <cstdint>
 
-#include <boost/core/enable_if.hpp>
 #include <boost/operators.hpp>
 
 #include "base_color.h"
@@ -32,6 +31,7 @@
 namespace sdl3
 {
     template<pixel_format P>
+    requires (is_packed<P>() && !has_alpha<P>())
     struct rgb_packed_color_traits { };
 
 #define RGB_PACKED_COLOR_TRAITS(PIXEL_FORMAT, PACKED_SIZE, R_BITS, G_BITS, B_BITS) \
@@ -58,6 +58,7 @@ namespace sdl3
 #undef RGB_PACKED_COLOR_TRAITS
 
     template<pixel_format P, color_space C>
+    requires (is_packed<P>() && !has_alpha<P>() && is_rgb_color_space<C>())
     class alignas(alignof(typename rgb_packed_color_traits<P>::packed_type)) rgb_packed_color
     : boost::equality_comparable<rgb_packed_color<P, C>
     , boost::additive<rgb_packed_color<P, C>
@@ -117,12 +118,14 @@ namespace sdl3
     };
 
     template<pixel_format P, color_space C>
-    struct pixel_color<P, C, typename boost::enable_if_c<is_packed<P>() && !has_alpha<P>()>::type>
+    requires (is_packed<P>() && !has_alpha<P>() && is_rgb_color_space<C>())
+    struct pixel_color<P, C>
     {
         using type = rgb_packed_color<P, C>;
     };
 
     template<pixel_format P, color_space C>
+    requires (is_packed<P>() && !has_alpha<P>() && is_rgb_color_space<C>())
     const rgb_packed_color<P, C> rgb_packed_color<P, C>::black(
         base_color_limits<r_type>::min(),
         base_color_limits<g_type>::min(),
@@ -130,6 +133,7 @@ namespace sdl3
     );
 
     template<pixel_format P, color_space C>
+    requires (is_packed<P>() && !has_alpha<P>() && is_rgb_color_space<C>())
     const rgb_packed_color<P, C> rgb_packed_color<P, C>::white(
         base_color_limits<r_type>::max(),
         base_color_limits<g_type>::max(),
@@ -137,6 +141,7 @@ namespace sdl3
     );
 
     template<pixel_format P, color_space C>
+    requires (is_packed<P>() && !has_alpha<P>() && is_rgb_color_space<C>())
     rgb_packed_color<P, C>::rgb_packed_color()
     : rgb_packed_color(
         base_color_limits<r_type>::min(),
@@ -146,16 +151,19 @@ namespace sdl3
     { }
 
     template<pixel_format P, color_space C>
+    requires (is_packed<P>() && !has_alpha<P>() && is_rgb_color_space<C>())
     rgb_packed_color<P, C>::rgb_packed_color(r_type r, g_type g, b_type b)
     : _value(pack(r, g, b))
     { }
 
     template<pixel_format P, color_space C>
+    requires (is_packed<P>() && !has_alpha<P>() && is_rgb_color_space<C>())
     rgb_packed_color<P, C>::rgb_packed_color(rgb_packed_color<P, C> const& other)
     : _value(other._value)
     { }
 
     template<pixel_format P, color_space C>
+    requires (is_packed<P>() && !has_alpha<P>() && is_rgb_color_space<C>())
     rgb_packed_color<P, C> &
     rgb_packed_color<P, C>::operator=(rgb_packed_color<P, C> const& other)
     {
@@ -167,6 +175,7 @@ namespace sdl3
     }
 
     template<pixel_format P, color_space C>
+    requires (is_packed<P>() && !has_alpha<P>() && is_rgb_color_space<C>())
     bool
     rgb_packed_color<P, C>::operator==(rgb_packed_color<P, C> const& other) const
     {
@@ -174,6 +183,7 @@ namespace sdl3
     }
 
     template<pixel_format P, color_space C>
+    requires (is_packed<P>() && !has_alpha<P>() && is_rgb_color_space<C>())
     rgb_packed_color<P, C> &
     rgb_packed_color<P, C>::operator*=(rgb_packed_color<P, C> const& other)
     {
@@ -186,6 +196,7 @@ namespace sdl3
     }
 
     template<pixel_format P, color_space C>
+    requires (is_packed<P>() && !has_alpha<P>() && is_rgb_color_space<C>())
     rgb_packed_color<P, C> &
     rgb_packed_color<P, C>::operator/=(rgb_packed_color<P, C> const& other)
     {
@@ -198,6 +209,7 @@ namespace sdl3
     }
 
     template<pixel_format P, color_space C>
+    requires (is_packed<P>() && !has_alpha<P>() && is_rgb_color_space<C>())
     rgb_packed_color<P, C> &
     rgb_packed_color<P, C>::operator+=(rgb_packed_color<P, C> const& other)
     {
@@ -210,6 +222,7 @@ namespace sdl3
     }
 
     template<pixel_format P, color_space C>
+    requires (is_packed<P>() && !has_alpha<P>() && is_rgb_color_space<C>())
     rgb_packed_color<P, C> &
     rgb_packed_color<P, C>::operator-=(rgb_packed_color<P, C> const& other)
     {
@@ -222,6 +235,7 @@ namespace sdl3
     }
 
     template<pixel_format P, color_space C>
+    requires (is_packed<P>() && !has_alpha<P>() && is_rgb_color_space<C>())
     typename rgb_packed_color<P, C>::r_type
     rgb_packed_color<P, C>::r() const
     {
@@ -229,6 +243,7 @@ namespace sdl3
     }
 
     template<pixel_format P, color_space C>
+    requires (is_packed<P>() && !has_alpha<P>() && is_rgb_color_space<C>())
     typename rgb_packed_color<P, C>::g_type
     rgb_packed_color<P, C>::g() const
     {
@@ -236,6 +251,7 @@ namespace sdl3
     }
 
     template<pixel_format P, color_space C>
+    requires (is_packed<P>() && !has_alpha<P>() && is_rgb_color_space<C>())
     typename rgb_packed_color<P, C>::b_type
     rgb_packed_color<P, C>::b() const
     {
@@ -243,6 +259,7 @@ namespace sdl3
     }
     
     template<pixel_format P, color_space C>
+    requires (is_packed<P>() && !has_alpha<P>() && is_rgb_color_space<C>())
     typename rgb_packed_color<P, C>::packed_type
     rgb_packed_color<P, C>::pack(r_type r, g_type g, b_type b)
     {
@@ -269,6 +286,7 @@ namespace sdl3
     using s_bgr565 = rgb_packed_color<pixel_format::bgr565, color_space::srgb>;
 
     template<pixel_format P>
+    requires (is_packed<P>() && has_alpha<P>())
     struct rgba_packed_color_traits { };
     
 #define RGBA_PACKED_COLOR_TRAITS(PIXEL_FORMAT, PACKED_SIZE, R_BITS, G_BITS, B_BITS, A_BITS) \
@@ -299,6 +317,7 @@ namespace sdl3
 #undef RGBA_PACKED_COLOR_TRAITS
 
     template<pixel_format P, color_space C>
+    requires (is_packed<P>() && has_alpha<P>() && is_rgb_color_space<C>())
     class alignas(alignof(typename rgba_packed_color_traits<P>::packed_type)) rgba_packed_color
     : boost::equality_comparable<rgba_packed_color<P, C>
     , boost::additive<rgba_packed_color<P, C>
@@ -362,12 +381,14 @@ namespace sdl3
     };
 
     template<pixel_format P, color_space C>
-    struct pixel_color<P, C, typename boost::enable_if_c<is_packed<P>() && has_alpha<P>()>::type>
+    requires (is_packed<P>() && has_alpha<P>() && is_rgb_color_space<C>())
+    struct pixel_color<P, C>
     {
         using type = rgba_packed_color<P, C>;
     };
 
     template<pixel_format P, color_space C>
+    requires (is_packed<P>() && has_alpha<P>() && is_rgb_color_space<C>())
     const rgba_packed_color<P, C> rgba_packed_color<P, C>::black(
         base_color_limits<r_type>::min(),
         base_color_limits<g_type>::min(),
@@ -376,6 +397,7 @@ namespace sdl3
     );
 
     template<pixel_format P, color_space C>
+    requires (is_packed<P>() && has_alpha<P>() && is_rgb_color_space<C>())
     const rgba_packed_color<P, C> rgba_packed_color<P, C>::white(
         base_color_limits<r_type>::max(),
         base_color_limits<g_type>::max(),
@@ -384,6 +406,7 @@ namespace sdl3
     );
 
     template<pixel_format P, color_space C>
+    requires (is_packed<P>() && has_alpha<P>() && is_rgb_color_space<C>())
     rgba_packed_color<P, C>::rgba_packed_color()
     : rgba_packed_color(
         base_color_limits<r_type>::min(),
@@ -394,16 +417,19 @@ namespace sdl3
     { }
 
     template<pixel_format P, color_space C>
+    requires (is_packed<P>() && has_alpha<P>() && is_rgb_color_space<C>())
     rgba_packed_color<P, C>::rgba_packed_color(r_type r, g_type g, b_type b, a_type a)
     : _value(pack(r, g, b, a))
     { }
 
     template<pixel_format P, color_space C>
+    requires (is_packed<P>() && has_alpha<P>() && is_rgb_color_space<C>())
     rgba_packed_color<P, C>::rgba_packed_color(rgba_packed_color<P, C> const& other)
     : _value(other._value)
     { }
 
     template<pixel_format P, color_space C>
+    requires (is_packed<P>() && has_alpha<P>() && is_rgb_color_space<C>())
     rgba_packed_color<P, C> &
     rgba_packed_color<P, C>::operator=(rgba_packed_color<P, C> const& other)
     {
@@ -415,6 +441,7 @@ namespace sdl3
     }
 
     template<pixel_format P, color_space C>
+    requires (is_packed<P>() && has_alpha<P>() && is_rgb_color_space<C>())
     bool
     rgba_packed_color<P, C>::operator==(rgba_packed_color<P, C> const& other) const
     {
@@ -422,6 +449,7 @@ namespace sdl3
     }
 
     template<pixel_format P, color_space C>
+    requires (is_packed<P>() && has_alpha<P>() && is_rgb_color_space<C>())
     rgba_packed_color<P, C> &
     rgba_packed_color<P, C>::operator*=(rgba_packed_color<P, C> const& other)
     {
@@ -435,6 +463,7 @@ namespace sdl3
     }
 
     template<pixel_format P, color_space C>
+    requires (is_packed<P>() && has_alpha<P>() && is_rgb_color_space<C>())
     rgba_packed_color<P, C> &
     rgba_packed_color<P, C>::operator/=(rgba_packed_color<P, C> const& other)
     {
@@ -448,6 +477,7 @@ namespace sdl3
     }
 
     template<pixel_format P, color_space C>
+    requires (is_packed<P>() && has_alpha<P>() && is_rgb_color_space<C>())
     rgba_packed_color<P, C> &
     rgba_packed_color<P, C>::operator+=(rgba_packed_color<P, C> const& other)
     {
@@ -461,6 +491,7 @@ namespace sdl3
     }
 
     template<pixel_format P, color_space C>
+    requires (is_packed<P>() && has_alpha<P>() && is_rgb_color_space<C>())
     rgba_packed_color<P, C> &
     rgba_packed_color<P, C>::operator-=(rgba_packed_color<P, C> const& other)
     {
@@ -474,6 +505,7 @@ namespace sdl3
     }
 
     template<pixel_format P, color_space C>
+    requires (is_packed<P>() && has_alpha<P>() && is_rgb_color_space<C>())
     typename rgba_packed_color<P, C>::r_type
     rgba_packed_color<P, C>::r() const
     {
@@ -481,6 +513,7 @@ namespace sdl3
     }
 
     template<pixel_format P, color_space C>
+    requires (is_packed<P>() && has_alpha<P>() && is_rgb_color_space<C>())
     typename rgba_packed_color<P, C>::g_type
     rgba_packed_color<P, C>::g() const
     {
@@ -488,6 +521,7 @@ namespace sdl3
     }
 
     template<pixel_format P, color_space C>
+    requires (is_packed<P>() && has_alpha<P>() && is_rgb_color_space<C>())
     typename rgba_packed_color<P, C>::b_type
     rgba_packed_color<P, C>::b() const
     {
@@ -495,6 +529,7 @@ namespace sdl3
     }
 
     template<pixel_format P, color_space C>
+    requires (is_packed<P>() && has_alpha<P>() && is_rgb_color_space<C>())
     typename rgba_packed_color<P, C>::a_type
     rgba_packed_color<P, C>::a() const
     {
@@ -502,6 +537,7 @@ namespace sdl3
     }
     
     template<pixel_format P, color_space C>
+    requires (is_packed<P>() && has_alpha<P>() && is_rgb_color_space<C>())
     typename rgba_packed_color<P, C>::packed_type
     rgba_packed_color<P, C>::pack(r_type r, g_type g, b_type b, a_type a)
     {
@@ -512,6 +548,7 @@ namespace sdl3
     }
 
     template<class CharT, class Traits, pixel_format P, color_space C>
+    requires (is_packed<P>() && has_alpha<P>() && is_rgb_color_space<C>())
     std::basic_ostream<CharT, Traits> &
     operator<<(std::basic_ostream<CharT, Traits> & stream, rgba_packed_color<P, C> const& value)
     {

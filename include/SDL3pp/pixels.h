@@ -23,8 +23,6 @@
 #include <cstdint>
 #include <iostream>
 
-#include <boost/core/enable_if.hpp>
-
 #include <SDL3/SDL_pixels.h>
 
 #include "integer.h"
@@ -238,6 +236,13 @@ namespace sdl3
         return stream;
     }
 
+    enum class color_type
+    {
+        unknown = SDL_COLOR_TYPE_UNKNOWN,
+        rgb = SDL_COLOR_TYPE_RGB,
+        ycbcr = SDL_COLOR_TYPE_YCBCR
+    };
+
     enum class color_space : std::uint32_t
     {
         unknown = SDL_COLORSPACE_UNKNOWN,
@@ -360,7 +365,7 @@ namespace sdl3
 
     template<pixel_format P>
     static constexpr
-    typename boost::enable_if_c<is_indexed<P>(), bitmap_order>::type pixel_order() noexcept
+    bitmap_order pixel_order() noexcept requires (is_indexed<P>())
     {
         return static_cast<bitmap_order>(
             SDL_PIXELORDER(static_cast<SDL_PixelFormat>(P))
@@ -369,7 +374,7 @@ namespace sdl3
 
     template<pixel_format P>
     static constexpr
-    typename boost::enable_if_c<is_packed<P>(), packed_order>::type pixel_order() noexcept
+    packed_order pixel_order() noexcept requires (is_packed<P>())
     {
         return static_cast<packed_order>(
             SDL_PIXELORDER(static_cast<SDL_PixelFormat>(P))
@@ -378,7 +383,7 @@ namespace sdl3
 
     template<pixel_format P>
     static constexpr
-    typename boost::enable_if_c<is_array<P>(), array_order>::type pixel_order() noexcept
+    array_order pixel_order() noexcept requires (is_array<P>())
     {
         return static_cast<array_order>(
             SDL_PIXELORDER(static_cast<SDL_PixelFormat>(P))
@@ -387,13 +392,27 @@ namespace sdl3
 
     template<pixel_format P>
     static constexpr
-    typename boost::enable_if_c<is_packed<P>(), packed_layout>::type pixel_layout() noexcept
+    packed_layout pixel_layout() noexcept requires (is_packed<P>())
     {
         return static_cast<packed_layout>(
             SDL_PIXELLAYOUT(static_cast<SDL_PixelFormat>(P))
         );
     }
 
-    template<pixel_format P, color_space C, typename Enabled = void>
+    template<color_space C>
+    static constexpr color_type color_space_type() noexcept
+    {
+        return static_cast<color_type>(
+            SDL_COLORSPACETYPE(static_cast<SDL_ColorType>(C))
+        );
+    }
+
+    template<color_space C>
+    static constexpr bool is_rgb_color_space() noexcept
+    {
+        return color_type::rgb == color_space_type<C>();
+    }
+
+    template<pixel_format P, color_space C>
     struct pixel_color { };
 }

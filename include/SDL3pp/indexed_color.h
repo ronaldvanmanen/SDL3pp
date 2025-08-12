@@ -66,7 +66,8 @@ namespace sdl3
     };
 
     template<color_space C>
-    struct pixel_color<pixel_format::index8, C, typename boost::enable_if_c<is_indexed<pixel_format::index8>()>::type>
+    requires (is_rgb_color_space<C>())
+    struct pixel_color<pixel_format::index8, C>
     {
         using type = index8;
     };

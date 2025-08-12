@@ -25,8 +25,6 @@
 #include <optional>
 #include <vector>
 
-#include <boost/core/enable_if.hpp>
-
 #include <SDL3/SDL_pixels.h>
 
 #include "color.h"
@@ -78,8 +76,8 @@ namespace sdl3
     };
 
     template<pixel_format P, color_space C>
-    typename boost::enable_if_c<is_indexed<P>(), palette>::type
-    create_palette(surface<P, C> & owner)
+    palette create_palette(surface<P, C> & owner)
+    requires (is_indexed<P>())
     {
         auto result = SDL_CreateSurfacePalette(owner.native_handle());
         sdl3::throw_last_error(result != nullptr);
@@ -87,8 +85,8 @@ namespace sdl3
     }
 
     template<pixel_format P, color_space C>
-    typename boost::enable_if_c<is_indexed<P>(), std::optional<palette> >::type
-    get_palette(surface<P, C> & owner)
+    std::optional<palette> get_palette(surface<P, C> & owner)
+    requires (is_indexed<P>())
     {
         auto native_handle = SDL_GetSurfacePalette(owner.native_handle());
         if (native_handle == nullptr)

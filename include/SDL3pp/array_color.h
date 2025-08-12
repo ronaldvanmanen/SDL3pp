@@ -20,7 +20,6 @@
 
 #include <algorithm>
 
-#include <boost/core/enable_if.hpp>
 #include <boost/operators.hpp>
 
 #include "color.h"
@@ -29,7 +28,9 @@
 namespace sdl3
 {
     template<pixel_format P>
-    struct rgb_array_color_traits { };
+    requires (is_array<P>() && !has_alpha<P>())
+    struct rgb_array_color_traits
+    { };
 
 #define RGB_ARRAY_COLOR_TRAITS(PIXEL_FORMAT, SCALAR_TYPE, R_INDEX, G_INDEX, B_INDEX) \
     template<> \
@@ -54,6 +55,7 @@ namespace sdl3
 #undef RGB_ARRAY_COLOR_TRAITS
 
     template<pixel_format P, color_space C>
+    requires (is_array<P>() && !has_alpha<P>() && is_rgb_color_space<C>())
     class alignas(alignof(typename rgb_array_color_traits<P>::scalar_type)) rgb_array_color
     : boost::equality_comparable<rgb_array_color<P, C>
     , boost::additive<rgb_array_color<P, C>
@@ -120,12 +122,14 @@ namespace sdl3
     };
 
     template<pixel_format P, color_space C>
-    struct pixel_color<P, C, typename boost::enable_if_c<is_array<P>() && !has_alpha<P>()>::type>
+    requires (is_array<P>() && !has_alpha<P>() && is_rgb_color_space<C>())
+    struct pixel_color<P, C>
     {
         using type = rgb_array_color<P, C>;
     };
 
     template<pixel_format P, color_space C>
+    requires (is_array<P>() && !has_alpha<P>() && is_rgb_color_space<C>())
     rgb_array_color<P, C> const rgb_array_color<P, C>::black(
         base_color_limits<r_type>::min(),
         base_color_limits<g_type>::min(),
@@ -133,6 +137,7 @@ namespace sdl3
     );
 
     template<pixel_format P, color_space C>
+    requires (is_array<P>() && !has_alpha<P>() && is_rgb_color_space<C>())
     rgb_array_color<P, C> const rgb_array_color<P, C>::white(
         base_color_limits<r_type>::max(),
         base_color_limits<g_type>::max(),
@@ -140,6 +145,7 @@ namespace sdl3
     );
 
     template<pixel_format P, color_space C>
+    requires (is_array<P>() && !has_alpha<P>() && is_rgb_color_space<C>())
     rgb_array_color<P, C>::rgb_array_color()
     {
         _components[r_index] = base_color_limits<r_type>::min();
@@ -148,6 +154,7 @@ namespace sdl3
     }
 
     template<pixel_format P, color_space C>
+    requires (is_array<P>() && !has_alpha<P>() && is_rgb_color_space<C>())
     rgb_array_color<P, C>::rgb_array_color(r_type r, g_type g, b_type b)
     {
         _components[r_index] = r;
@@ -156,6 +163,7 @@ namespace sdl3
     }
 
     template<pixel_format P, color_space C>
+    requires (is_array<P>() && !has_alpha<P>() && is_rgb_color_space<C>())
     rgb_array_color<P, C>::rgb_array_color(rgb_array_color<P, C> const& other)
     {
         for (size_t i = 0; i < size; ++i)
@@ -165,6 +173,7 @@ namespace sdl3
     }
 
     template<pixel_format P, color_space C>
+    requires (is_array<P>() && !has_alpha<P>() && is_rgb_color_space<C>())
     rgb_array_color<P, C> &
     rgb_array_color<P, C>::operator=(rgb_array_color<P, C> const& other)
     {
@@ -179,6 +188,7 @@ namespace sdl3
     }
             
     template<pixel_format P, color_space C>
+    requires (is_array<P>() && !has_alpha<P>() && is_rgb_color_space<C>())
     rgb_array_color<P, C> &
     rgb_array_color<P, C>::operator*=(rgb_array_color<P, C> const& other)
     {
@@ -190,6 +200,7 @@ namespace sdl3
     }
 
     template<pixel_format P, color_space C>
+    requires (is_array<P>() && !has_alpha<P>() && is_rgb_color_space<C>())
     rgb_array_color<P, C> &
     rgb_array_color<P, C>::operator/=(rgb_array_color<P, C> const& other)
     {
@@ -201,6 +212,7 @@ namespace sdl3
     }
 
     template<pixel_format P, color_space C>
+    requires (is_array<P>() && !has_alpha<P>() && is_rgb_color_space<C>())
     rgb_array_color<P, C> &
     rgb_array_color<P, C>::operator+=(rgb_array_color<P, C> const& other)
     {
@@ -212,6 +224,7 @@ namespace sdl3
     }
 
     template<pixel_format P, color_space C>
+    requires (is_array<P>() && !has_alpha<P>() && is_rgb_color_space<C>())
     rgb_array_color<P, C> &
     rgb_array_color<P, C>::operator-=(rgb_array_color<P, C> const& other)
     {
@@ -223,6 +236,7 @@ namespace sdl3
     }
 
     template<pixel_format P, color_space C>
+    requires (is_array<P>() && !has_alpha<P>() && is_rgb_color_space<C>())
     rgb_array_color<P, C> &
     rgb_array_color<P, C>::operator*=(scalar_type scalar)
     {
@@ -234,6 +248,7 @@ namespace sdl3
     }
 
     template<pixel_format P, color_space C>
+    requires (is_array<P>() && !has_alpha<P>() && is_rgb_color_space<C>())
     rgb_array_color<P, C> &
     rgb_array_color<P, C>::operator/=(scalar_type scalar)
     {
@@ -245,6 +260,7 @@ namespace sdl3
     }
 
     template<pixel_format P, color_space C>
+    requires (is_array<P>() && !has_alpha<P>() && is_rgb_color_space<C>())
     bool
     rgb_array_color<P, C>::operator==(rgb_array_color<P, C> const& other) const
     {
@@ -259,6 +275,7 @@ namespace sdl3
     }
 
     template<pixel_format P, color_space C>
+    requires (is_array<P>() && !has_alpha<P>() && is_rgb_color_space<C>())
     typename rgb_array_color<P, C>::r_type
     rgb_array_color<P, C>::r() const
     {
@@ -266,6 +283,7 @@ namespace sdl3
     }
 
     template<pixel_format P, color_space C>
+    requires (is_array<P>() && !has_alpha<P>() && is_rgb_color_space<C>())
     typename rgb_array_color<P, C>::g_type
     rgb_array_color<P, C>::g() const
     {
@@ -273,6 +291,7 @@ namespace sdl3
     }
 
     template<pixel_format P, color_space C>
+    requires (is_array<P>() && !has_alpha<P>() && is_rgb_color_space<C>())
     typename rgb_array_color<P, C>::b_type
     rgb_array_color<P, C>::b() const
     {
@@ -287,6 +306,7 @@ namespace sdl3
     using s_bgr96f = rgb_array_color<pixel_format::bgr96f, color_space::srgb>;
 
     template<pixel_format P>
+    requires (is_array<P>() && has_alpha<P>())
     struct rgba_array_color_traits { };
 
 #define RGBA_ARRAY_COLOR_TRAITS(PIXEL_FORMAT, SCALAR_TYPE, R_INDEX, G_INDEX, B_INDEX, A_INDEX) \
@@ -309,8 +329,8 @@ namespace sdl3
     RGBA_ARRAY_COLOR_TRAITS(bgra128f, float, 3, 2, 1, 0)
 #undef RGBA_ARRAY_COLOR_TRAITS
 
-
     template<pixel_format P, color_space C>
+    requires (is_array<P>() && has_alpha<P>() && is_rgb_color_space<C>())
     class alignas(alignof(typename rgba_array_color_traits<P>::scalar_type)) rgba_array_color
     : boost::equality_comparable<rgba_array_color<P, C>
     , boost::additive<rgba_array_color<P, C>
@@ -383,12 +403,14 @@ namespace sdl3
     };
 
     template<pixel_format P, color_space C>
-    struct pixel_color<P, C, typename boost::enable_if_c<is_array<P>() && has_alpha<P>()>::type>
+    requires (is_array<P>() && has_alpha<P>() && is_rgb_color_space<C>())
+    struct pixel_color<P, C>
     {
         using type = rgba_array_color<P, C>;
     };
 
     template<pixel_format P, color_space C>
+    requires (is_array<P>() && has_alpha<P>() && is_rgb_color_space<C>())
     rgba_array_color<P, C> const rgba_array_color<P, C>::black(
         base_color_limits<r_type>::min(),
         base_color_limits<g_type>::min(),
@@ -397,6 +419,7 @@ namespace sdl3
     );
 
     template<pixel_format P, color_space C>
+    requires (is_array<P>() && has_alpha<P>() && is_rgb_color_space<C>())
     rgba_array_color<P, C> const rgba_array_color<P, C>::white(
         base_color_limits<r_type>::max(),
         base_color_limits<g_type>::max(),
@@ -405,6 +428,7 @@ namespace sdl3
     );
 
     template<pixel_format P, color_space C>
+    requires (is_array<P>() && has_alpha<P>() && is_rgb_color_space<C>())
     rgba_array_color<P, C>::rgba_array_color()
     {
         _components[r_index] = base_color_limits<r_type>::min();
@@ -414,6 +438,7 @@ namespace sdl3
     }
 
     template<pixel_format P, color_space C>
+    requires (is_array<P>() && has_alpha<P>() && is_rgb_color_space<C>())
     rgba_array_color<P, C>::rgba_array_color(r_type r, g_type g, b_type b, a_type a)
     {
         _components[r_index] = r;
@@ -423,6 +448,7 @@ namespace sdl3
     }
 
     template<pixel_format P, color_space C>
+    requires (is_array<P>() && has_alpha<P>() && is_rgb_color_space<C>())
     rgba_array_color<P, C>::rgba_array_color(rgba_array_color<P, C> const& other)
     {
         for (size_t i = 0; i < size; ++i)
@@ -432,6 +458,7 @@ namespace sdl3
     }
 
     template<pixel_format P, color_space C>
+    requires (is_array<P>() && has_alpha<P>() && is_rgb_color_space<C>())
     rgba_array_color<P, C> &
     rgba_array_color<P, C>::operator=(rgba_array_color<P, C> const& other)
     {
@@ -446,6 +473,7 @@ namespace sdl3
     }
             
     template<pixel_format P, color_space C>
+    requires (is_array<P>() && has_alpha<P>() && is_rgb_color_space<C>())
     rgba_array_color<P, C> &
     rgba_array_color<P, C>::operator*=(rgba_array_color<P, C> const& other)
     {
@@ -457,6 +485,7 @@ namespace sdl3
     }
 
     template<pixel_format P, color_space C>
+    requires (is_array<P>() && has_alpha<P>() && is_rgb_color_space<C>())
     rgba_array_color<P, C> &
     rgba_array_color<P, C>::operator/=(rgba_array_color<P, C> const& other)
     {
@@ -468,6 +497,7 @@ namespace sdl3
     }
 
     template<pixel_format P, color_space C>
+    requires (is_array<P>() && has_alpha<P>() && is_rgb_color_space<C>())
     rgba_array_color<P, C> &
     rgba_array_color<P, C>::operator+=(rgba_array_color<P, C> const& other)
     {
@@ -479,6 +509,7 @@ namespace sdl3
     }
 
     template<pixel_format P, color_space C>
+    requires (is_array<P>() && has_alpha<P>() && is_rgb_color_space<C>())
     rgba_array_color<P, C> &
     rgba_array_color<P, C>::operator-=(rgba_array_color<P, C> const& other)
     {
@@ -490,6 +521,7 @@ namespace sdl3
     }
 
     template<pixel_format P, color_space C>
+    requires (is_array<P>() && has_alpha<P>() && is_rgb_color_space<C>())
     rgba_array_color<P, C> &
     rgba_array_color<P, C>::operator*=(scalar_type scalar)
     {
@@ -501,6 +533,7 @@ namespace sdl3
     }
 
     template<pixel_format P, color_space C>
+    requires (is_array<P>() && has_alpha<P>() && is_rgb_color_space<C>())
     rgba_array_color<P, C> &
     rgba_array_color<P, C>::operator/=(scalar_type scalar)
     {
@@ -512,6 +545,7 @@ namespace sdl3
     }
 
     template<pixel_format P, color_space C>
+    requires (is_array<P>() && has_alpha<P>() && is_rgb_color_space<C>())
     bool
     rgba_array_color<P, C>::operator==(rgba_array_color<P, C> const& other) const
     {
@@ -526,6 +560,7 @@ namespace sdl3
     }
 
     template<pixel_format P, color_space C>
+    requires (is_array<P>() && has_alpha<P>() && is_rgb_color_space<C>())
     typename rgba_array_color<P, C>::r_type
     rgba_array_color<P, C>::r() const
     {
@@ -533,6 +568,7 @@ namespace sdl3
     }
 
     template<pixel_format P, color_space C>
+    requires (is_array<P>() && has_alpha<P>() && is_rgb_color_space<C>())
     typename rgba_array_color<P, C>::g_type
     rgba_array_color<P, C>::g() const
     {
@@ -540,6 +576,7 @@ namespace sdl3
     }
 
     template<pixel_format P, color_space C>
+    requires (is_array<P>() && has_alpha<P>() && is_rgb_color_space<C>())
     typename rgba_array_color<P, C>::b_type
     rgba_array_color<P, C>::b() const
     {
@@ -547,6 +584,7 @@ namespace sdl3
     }
 
     template<pixel_format P, color_space C>
+    requires (is_array<P>() && has_alpha<P>() && is_rgb_color_space<C>())
     typename rgba_array_color<P, C>::a_type
     rgba_array_color<P, C>::a() const
     {

@@ -35,18 +35,19 @@
 namespace sdl3
 {
     template<class T>
+    requires (std::is_enum_v<T>)
     struct is_flags_enum
     {
         static const bool value = false;
     };
 
     template<class T>
+    requires (std::is_enum_v<T>)
     constexpr bool is_flags_enum_v = is_flags_enum<T>::value;
 
     template<typename T>
-    constexpr
-    typename std::enable_if<std::is_enum_v<T> && is_flags_enum_v<T>, T>::type
-    operator~(T value)
+    requires (is_flags_enum_v<T>)
+    constexpr T operator~(T value)
     {
         using underlying_type = std::underlying_type_t<T>;
         return static_cast<T>(
@@ -55,9 +56,8 @@ namespace sdl3
     }
 
     template<typename T>
-    constexpr
-    typename std::enable_if<std::is_enum_v<T> && is_flags_enum_v<T>, T>::type
-    operator&(T left, T right)
+    requires (is_flags_enum_v<T>)
+    constexpr T operator&(T left, T right)
     {
         using underlying_type = std::underlying_type_t<T>;
         return static_cast<T>(
@@ -66,9 +66,8 @@ namespace sdl3
     }
 
     template<typename T>
-    constexpr
-    typename std::enable_if<std::is_enum_v<T> && is_flags_enum_v<T>, T>::type
-    operator|(T left, T right)
+    requires (is_flags_enum_v<T>)
+    constexpr T operator|(T left, T right)
     {
         using underlying_type = std::underlying_type_t<T>;
         return static_cast<T>(
@@ -77,9 +76,8 @@ namespace sdl3
     }
 
     template<typename T>
-    constexpr
-    typename std::enable_if<std::is_enum_v<T> && is_flags_enum_v<T>, T>::type
-    operator^(T left, T right)
+    requires (is_flags_enum_v<T>)
+    constexpr T operator^(T left, T right)
     {
         using underlying_type = std::underlying_type_t<T>;
         return static_cast<T>(
@@ -88,27 +86,24 @@ namespace sdl3
     }
 
     template<typename T>
-    constexpr
-    typename std::enable_if<std::is_enum_v<T> && is_flags_enum_v<T>, T>::type &
-    operator&=(T & self, T other)
+    requires (is_flags_enum_v<T>)
+    constexpr T & operator&=(T & self, T other)
     {
         self = self & other;
         return self;
     }
 
     template<typename T>
-    constexpr
-    typename std::enable_if<std::is_enum_v<T> && is_flags_enum_v<T>, T>::type &
-    operator|=(T & self, T other)
+    requires (is_flags_enum_v<T>)
+    constexpr T & operator|=(T & self, T other)
     {
         self = self | other;
         return self;
     }
 
     template<typename T>
-    constexpr
-    typename std::enable_if<std::is_enum_v<T> && is_flags_enum_v<T>, T>::type &
-    operator^=(T & self, T other)
+    requires (is_flags_enum_v<T>)
+    constexpr T & operator^=(T & self, T other)
     {
         self = self ^ other;
         return self;
