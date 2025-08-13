@@ -18,6 +18,7 @@
 //    misrepresented as being the original software.
 // 3. This notice may not be removed or altered from any source distribution.
 
+#define BOOST_TEST_MODULE renderer
 #include <boost/test/unit_test.hpp>
 #include <boost/units/io.hpp>
 
@@ -25,27 +26,27 @@
 
 using namespace sdl3;
 
-BOOST_AUTO_TEST_CASE(test_renderer_constructors)
+BOOST_AUTO_TEST_CASE(test_constructors)
 {
-    window test_window("test_renderer_constructors", 640*px, 480*px, window_flags::hidden);
+    window test_window("test_constructors", 640*px, 480*px, window_flags::hidden);
 
     BOOST_REQUIRE_NO_THROW(
         renderer test_renderer(test_window);
     );
 }
 
-BOOST_AUTO_TEST_CASE(test_renderer_output_size)
+BOOST_AUTO_TEST_CASE(test_output_size)
 {
-    auto test_window = window("test_renderer_constructors", 640*px, 480*px, window_flags::hidden);
+    auto test_window = window("test_output_size", 640*px, 480*px, window_flags::hidden);
     auto test_renderer = renderer(test_window);
     auto test_renderer_output_size = test_renderer.output_size();
     BOOST_TEST(test_renderer_output_size.width == 640*px);
     BOOST_TEST(test_renderer_output_size.height == 480*px);
 }
 
-BOOST_AUTO_TEST_CASE(test_renderer_draw_color)
+BOOST_AUTO_TEST_CASE(test_draw_color)
 {
-    auto test_window = window("test_renderer_draw_color", 640*px, 480*px, window_flags::hidden);
+    auto test_window = window("test_draw_color", 640*px, 480*px, window_flags::hidden);
     auto test_renderer = renderer(test_window);
     auto test_color = color(0xDE_r8, 0xAD_g8, 0xBE_b8, 0xEF_a8);
     
@@ -54,9 +55,9 @@ BOOST_AUTO_TEST_CASE(test_renderer_draw_color)
     BOOST_TEST(test_color == test_renderer.draw_color());
 }
 
-BOOST_AUTO_TEST_CASE(test_renderer_draw_blend_mode)
+BOOST_AUTO_TEST_CASE(test_draw_blend_mode)
 {
-    window test_window("test_renderer_draw_blend_mode", 640*px, 480*px, window_flags::hidden);
+    window test_window("test_draw_blend_mode", 640*px, 480*px, window_flags::hidden);
     renderer test_renderer(test_window);
     blend_mode test_mode = blend_mode::blend;
     

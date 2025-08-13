@@ -18,6 +18,7 @@
 //    misrepresented as being the original software.
 // 3. This notice may not be removed or altered from any source distribution.
 
+#define BOOST_TEST_MODULE color
 #include <boost/test/unit_test.hpp>
 
 #include <SDL3/SDL_pixels.h>
@@ -29,7 +30,7 @@ using sdl3::operator""_g8;
 using sdl3::operator""_b8;
 using sdl3::operator""_a8;
 
-BOOST_AUTO_TEST_CASE(test_color_default_constructor)
+BOOST_AUTO_TEST_CASE(test_default_constructor)
 {
     sdl3::color test_color;
 
@@ -39,7 +40,7 @@ BOOST_AUTO_TEST_CASE(test_color_default_constructor)
     BOOST_TEST(test_color.a == 0_a8);
 }
 
-BOOST_AUTO_TEST_CASE(test_color_component_constructor)
+BOOST_AUTO_TEST_CASE(test_component_constructor)
 {
     sdl3::color test_color(0xDE_r8, 0xAD_g8, 0xBE_b8, 0xEF_a8);
 
@@ -49,7 +50,7 @@ BOOST_AUTO_TEST_CASE(test_color_component_constructor)
     BOOST_TEST(test_color.a == 0xEF_a8);
 }
 
-BOOST_AUTO_TEST_CASE(test_color_compatibility)
+BOOST_AUTO_TEST_CASE(test_compatibility)
 {
     sdl3::color test_color(0xDE_r8, 0xAD_g8, 0xBE_b8, 0xEF_a8);
 
