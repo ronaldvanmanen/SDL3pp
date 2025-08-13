@@ -1,4 +1,4 @@
-﻿cmake_minimum_required (VERSION 3.20)
+﻿cmake_minimum_required (VERSION 3.30)
 
 # Enable Hot Reload for MSVC compilers if supported.
 if (POLICY CMP0141)
@@ -46,17 +46,17 @@ add_library("${PROJECT_NAME}"
   "sources/window.cpp"
 )
 
-find_package(boost_core REQUIRED CONFIG)
-find_package(boost_optional REQUIRED CONFIG)
-find_package(boost_qvm REQUIRED CONFIG)
-find_package(boost_units REQUIRED CONFIG)
-find_package(boost_utility CONFIG REQUIRED)
+find_package(Boost REQUIRED
+  COMPONENTS
+  optional
+  units
+  utility
+)
 
 target_link_libraries("${PROJECT_NAME}"
   PRIVATE
   Boost::core
   Boost::optional
-  Boost::qvm
   Boost::units
   Boost::utility
 )

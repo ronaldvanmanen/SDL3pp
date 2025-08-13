@@ -1,4 +1,4 @@
-cmake_minimum_required (VERSION 3.20)
+cmake_minimum_required (VERSION 3.30)
 
 # Enable Hot Reload for MSVC compilers if supported.
 if (POLICY CMP0141)
@@ -9,12 +9,20 @@ endif()
 project ("SDL3pp-samples")
 
 macro("add_sample" TARGET)
-  cmake_parse_arguments(arg "" "" "SOURCES" ${ARGN})
+  set(multiValueArgs SOURCES PACKAGES)
+  cmake_parse_arguments(arg "" "" "${multiValueArgs}" ${ARGN})
+
   add_executable(${TARGET} ${arg_SOURCES})
   target_link_libraries(${TARGET} PRIVATE SDL3pp)
-endmacro()
 
-find_package(boost_poly_collection REQUIRED CONFIG)
+  if ("${PACKAGES}")
+    find_package(Boost REQUIRED COMPONENTS "${PACKAGES}")
+    target_link_libraries("${TARGET}"
+      PRIVATE
+      "$<LIST:TRANSFORM,${PACKAGES},PREPEND,Boost::>"
+    )
+  endif()
+endmacro()
 
 add_sample("plasma_fractal"
   SOURCES
@@ -28,9 +36,10 @@ add_sample("sw_ray_tracer"
   "sw_ray_tracer.cpp"
   "shared/math.cpp"
   "shared/stopwatch.cpp"
+  PACKAGES
+  poly_collection
+  qvm
 )
-
-target_link_libraries("sw_ray_tracer" PRIVATE Boost::poly_collection)
 
 add_sample("tunnel_effect"
   SOURCES
