@@ -18,7 +18,6 @@
 //    misrepresented as being the original software.
 // 3. This notice may not be removed or altered from any source distribution.
 
-#define BOOST_TEST_MODULE texture
 #include <boost/test/unit_test.hpp>
 
 #include "SDL3pp/packed_color.h"
@@ -28,7 +27,7 @@
 
 using namespace sdl3;
 
-BOOST_AUTO_TEST_CASE(test_constructors)
+BOOST_AUTO_TEST_CASE(test_texture_constructors)
 {
     auto test_case = []() {
         auto test_window = window(

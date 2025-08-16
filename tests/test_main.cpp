@@ -18,13 +18,5 @@
 //    misrepresented as being the original software.
 // 3. This notice may not be removed or altered from any source distribution.
 
+#define BOOST_TEST_MODULE SDLpp-tests
 #include <boost/test/unit_test.hpp>
-
-#include "SDL3pp/event_queue.h"
-
-BOOST_AUTO_TEST_CASE(test_event_queue_constructor)
-{
-    BOOST_REQUIRE_NO_THROW(
-        sdl3::event_queue event_queue;
-    );
-}

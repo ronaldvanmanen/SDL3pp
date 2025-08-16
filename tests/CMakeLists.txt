@@ -8,37 +8,42 @@ endif()
 
 project ("SDL3pp-tests")
 
-macro("add_boost_test" TEST_MODULE_SOURCE)
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/../cmake")
 
-  get_filename_component(TEST_MODULE_EXE ${TEST_MODULE_SOURCE} NAME_WE)
-  
-  add_executable("${TEST_MODULE_EXE}" "global_fixture.cpp" ${TEST_MODULE_SOURCE})
+include(BoostTestDiscoverTests)
 
-  set_property(TARGET ${TEST_MODULE_EXE} PROPERTY CXX_STANDARD 23)
+set(BOOSTTEST_DISCOVER_TESTS_DISCOVERY_MODE PRE_TEST)
 
-  find_package(boost_unit_test_framework REQUIRED CONFIG)
+add_executable("${PROJECT_NAME}"
+  "global_fixture.cpp"
+  "test_argb8888.cpp"
+  "test_xrgb8888.cpp"
+  "test_color.cpp"
+  "test_event_queue.cpp"
+  "test_main.cpp"
+  "test_palette.cpp"
+  "test_pixel_format_details.cpp"
+  "test_renderer.cpp"
+  "test_surface.cpp"
+  "test_texture.cpp"
+  "test_window.cpp"
+)
 
-  target_link_libraries("${TEST_MODULE_EXE}"
-    PRIVATE
+set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD 23)
+
+find_package(boost_unit_test_framework REQUIRED CONFIG)
+target_link_libraries("${PROJECT_NAME}"
+  PRIVATE
     SDL3pp
     Boost::unit_test_framework
-  )
+)
 
-  file(READ "${TEST_MODULE_SOURCE}" TEST_MODULE_SOURCE_CONTENTS)
-
-  string(REGEX MATCH "BOOST_TEST_MODULE *([A-Za-z_0-9]+)" TEST_MODULE_DEFINE ${TEST_MODULE_SOURCE_CONTENTS})
-  string(REGEX REPLACE "BOOST_TEST_MODULE *([A-Za-z_0-9]+)" "\\1" TEST_MODULE_NAME ${TEST_MODULE_DEFINE})
-  string(REGEX MATCHALL "BOOST_AUTO_TEST_CASE\\( *([A-Za-z_0-9]+) *\\)" TEST_CASE_DEFS ${TEST_MODULE_SOURCE_CONTENTS})
-
-  foreach(TEST_CASE_DEF ${TEST_CASE_DEFS})
-    string(REGEX REPLACE "BOOST_AUTO_TEST_CASE\\( *([A-Za-z_0-9]+) *\\).*" "\\1" TEST_CASE_NAME ${TEST_CASE_DEF})
-    set(TEST_CASE_LOGICAL_NAME "${TEST_MODULE_NAME}.${TEST_CASE_NAME}")
-    add_test(NAME "${TEST_CASE_LOGICAL_NAME}" COMMAND ${TEST_MODULE_EXE} --run_test=${TEST_CASE_NAME} --catch_system_error=yes)
-  endforeach()
-endmacro()
-
-file(GLOB_RECURSE TEST_MODULE_SOURCES ${CMAKE_CURRENT_SOURCE_DIR} test_*.cpp)
-
-foreach(TEST_MODULE_SOURCE ${TEST_MODULE_SOURCES})
-  add_boost_test(${TEST_MODULE_SOURCE})
-endforeach()
+boosttest_discover_tests("${PROJECT_NAME}"
+  WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}"
+  TEST_PREFIX ""
+  TEST_SUFFIX ""
+  TEST_NAME_SEPARATOR "::"
+  SKIP_DISABLED_TESTS
+  DISCOVERY_TIMEOUT 1
+  DISCOVERY_MODE PRE_TEST
+)

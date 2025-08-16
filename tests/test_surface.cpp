@@ -18,7 +18,6 @@
 //    misrepresented as being the original software.
 // 3. This notice may not be removed or altered from any source distribution.
 
-#define BOOST_TEST_MODULE surface
 #include <boost/test/unit_test.hpp>
 
 #include "SDL3pp/indexed_color.h"
@@ -27,7 +26,7 @@
 
 using namespace sdl3;
 
-BOOST_AUTO_TEST_CASE(test_constructors)
+BOOST_AUTO_TEST_CASE(test_surface_constructors)
 {
     auto test_case = []() {
         surface<pixel_format::index8, color_space::srgb> test_surface(512*px, 384*px);
