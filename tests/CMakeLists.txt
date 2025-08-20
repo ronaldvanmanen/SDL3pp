@@ -16,11 +16,10 @@ set(BOOSTTEST_DISCOVER_TESTS_DISCOVERY_MODE PRE_TEST)
 
 add_executable("${PROJECT_NAME}"
   "global_fixture.cpp"
-  "test_argb8888.cpp"
-  "test_xrgb8888.cpp"
   "test_color.cpp"
   "test_event_queue.cpp"
   "test_main.cpp"
+  "test_packed_color.cpp"
   "test_palette.cpp"
   "test_pixel_format_details.cpp"
   "test_renderer.cpp"

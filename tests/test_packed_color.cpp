@@ -1,0 +1,170 @@
+// SDL3++
+//
+// Copyright (C) 2025 Ronald van Manen <rvanmanen@gmail.com>
+//
+// This software is provided 'as-is', without any express or implied
+// warranty.  In no event will the authors be held liable for any damages
+// arising from the use of this software.
+// 
+// Permission is granted to anyone to use this software for any purpose,
+// including commercial applications, and to alter it and redistribute it
+// freely, subject to the following restrictions:
+//
+// 1. The origin of this software must not be misrepresented; you must not
+//    claim that you wrote the original software. If you use this software
+//    in a product, an acknowledgment in the product documentation would be
+//    appreciated but is not required.
+// 2. Altered source versions must be plainly marked as such, and must not be
+//    misrepresented as being the original software.
+// 3. This notice may not be removed or altered from any source distribution.
+
+#include <random>
+
+#include <boost/mpl/list.hpp>
+#include <boost/test/unit_test.hpp>
+
+#include "SDL3pp/packed_color.h"
+
+#include "tools/random.h"
+#include "tools/template_test_case.h"
+
+template<sdl3::pixel_format P>
+using pixel_format_constant = std::integral_constant<sdl3::pixel_format, P>;
+
+namespace sdl3::unit_test::tools
+{
+    template<sdl3::pixel_format P>
+    struct test_type_name_generator<pixel_format_constant<P>>
+    {
+        static std::string value()
+        {
+            return name<char>(P);
+        }
+    };
+}
+
+typedef boost::mpl::list<
+    pixel_format_constant<sdl3::pixel_format::argb4444>,
+    pixel_format_constant<sdl3::pixel_format::rgba4444>,
+    pixel_format_constant<sdl3::pixel_format::abgr4444>,
+    pixel_format_constant<sdl3::pixel_format::bgra4444>,
+    pixel_format_constant<sdl3::pixel_format::argb1555>,
+    pixel_format_constant<sdl3::pixel_format::rgba5551>,
+    pixel_format_constant<sdl3::pixel_format::abgr1555>,
+    pixel_format_constant<sdl3::pixel_format::bgra5551>,
+    pixel_format_constant<sdl3::pixel_format::argb8888>,
+    pixel_format_constant<sdl3::pixel_format::rgba8888>,
+    pixel_format_constant<sdl3::pixel_format::abgr8888>,
+    pixel_format_constant<sdl3::pixel_format::bgra8888>,
+    pixel_format_constant<sdl3::pixel_format::argb2101010>,
+    pixel_format_constant<sdl3::pixel_format::abgr2101010>
+> test_pixel_formats;
+
+SDL3PP_AUTO_TEST_CASE_TEMPLATE(test_packed_color_default_constructor, PixelFormat, test_pixel_formats)
+{
+    using packed_color_t = sdl3::rgba_packed_color<PixelFormat::value, sdl3::color_space::srgb>;
+    using r_t = packed_color_t::r_type;
+    using g_t = packed_color_t::g_type;
+    using b_t = packed_color_t::b_type;
+    using a_t = packed_color_t::a_type;
+
+    packed_color_t test_color;
+
+    BOOST_TEST(test_color.r() == r_t(0));
+    BOOST_TEST(test_color.g() == g_t(0));
+    BOOST_TEST(test_color.b() == b_t(0));
+    BOOST_TEST(test_color.a() == a_t(0));
+}
+
+SDL3PP_AUTO_TEST_CASE_TEMPLATE(test_packed_color_component_constructor, PixelFormat, test_pixel_formats)
+{
+    using packed_color_t = sdl3::rgba_packed_color<PixelFormat::value, sdl3::color_space::srgb>;
+    using r_t = packed_color_t::r_type;
+    using g_t = packed_color_t::g_type;
+    using b_t = packed_color_t::b_type;
+    using a_t = packed_color_t::a_type;
+
+    auto random_engine = std::default_random_engine(0);
+    auto r_distribution = sdl3::unit_test::tools::uniform_color_distribution<r_t>();
+    auto g_distribution = sdl3::unit_test::tools::uniform_color_distribution<g_t>();
+    auto b_distribution = sdl3::unit_test::tools::uniform_color_distribution<b_t>();
+    auto a_distribution = sdl3::unit_test::tools::uniform_color_distribution<a_t>();
+
+    auto r = r_distribution(random_engine);
+    auto g = g_distribution(random_engine);
+    auto b = b_distribution(random_engine);
+    auto a = a_distribution(random_engine);
+
+    auto test_color = packed_color_t(r, g, b, a);
+
+    BOOST_TEST(r == test_color.r());
+    BOOST_TEST(g == test_color.g());
+    BOOST_TEST(b == test_color.b());
+    BOOST_TEST(a == test_color.a());
+}
+
+SDL3PP_AUTO_TEST_CASE_TEMPLATE(test_packed_color_copy_constructor, PixelFormat, test_pixel_formats)
+{
+    using packed_color_t = sdl3::rgba_packed_color<PixelFormat::value, sdl3::color_space::srgb>;
+    using r_t = packed_color_t::r_type;
+    using g_t = packed_color_t::g_type;
+    using b_t = packed_color_t::b_type;
+    using a_t = packed_color_t::a_type;
+
+    auto random_engine = std::default_random_engine(0);
+    auto r_distribution = sdl3::unit_test::tools::uniform_color_distribution<r_t>();
+    auto g_distribution = sdl3::unit_test::tools::uniform_color_distribution<g_t>();
+    auto b_distribution = sdl3::unit_test::tools::uniform_color_distribution<b_t>();
+    auto a_distribution = sdl3::unit_test::tools::uniform_color_distribution<a_t>();
+
+    auto r = r_distribution(random_engine);
+    auto g = g_distribution(random_engine);
+    auto b = b_distribution(random_engine);
+    auto a = a_distribution(random_engine);
+
+    auto source_color = packed_color_t(r, g, b, a);
+
+    auto target_color(source_color);
+
+    BOOST_TEST(source_color == target_color);
+}
+
+SDL3PP_AUTO_TEST_CASE_TEMPLATE(test_packed_color_assignment_operator, PixelFormat, test_pixel_formats)
+{
+    using packed_color_t = sdl3::rgba_packed_color<PixelFormat::value, sdl3::color_space::srgb>;
+    using r_t = packed_color_t::r_type;
+    using g_t = packed_color_t::g_type;
+    using b_t = packed_color_t::b_type;
+    using a_t = packed_color_t::a_type;
+
+    auto random_engine = std::default_random_engine(0);
+    auto r_distribution = sdl3::unit_test::tools::uniform_color_distribution<r_t>();
+    auto g_distribution = sdl3::unit_test::tools::uniform_color_distribution<g_t>();
+    auto b_distribution = sdl3::unit_test::tools::uniform_color_distribution<b_t>();
+    auto a_distribution = sdl3::unit_test::tools::uniform_color_distribution<a_t>();
+
+    auto r = r_distribution(random_engine);
+    auto g = g_distribution(random_engine);
+    auto b = b_distribution(random_engine);
+    auto a = a_distribution(random_engine);
+
+    auto source_color = packed_color_t(r, g, b, a);
+    
+    auto target_color = packed_color_t();
+
+    BOOST_TEST(source_color != target_color);
+    target_color = source_color;
+    BOOST_TEST(source_color == target_color);
+}
+
+SDL3PP_AUTO_TEST_CASE_TEMPLATE(test_packed_color_addition_commutative, PixelFormat, test_pixel_formats)
+{
+    using packed_color_t = sdl3::rgba_packed_color<PixelFormat::value, sdl3::color_space::srgb>;
+
+    auto random_engine = std::default_random_engine(0);
+    auto color_distribution = sdl3::unit_test::tools::uniform_color_distribution<packed_color_t>();
+    auto x = color_distribution(random_engine);
+    auto y = color_distribution(random_engine);
+
+    BOOST_TEST(x + y == y + x);
+}
