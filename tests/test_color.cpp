@@ -55,8 +55,8 @@ BOOST_AUTO_TEST_CASE(test_color_compatibility)
 
     SDL_Color* ri_test_color = reinterpret_cast<SDL_Color*>(&test_color);
 
-    BOOST_TEST(ri_test_color->r == 0xDE_r8);
-    BOOST_TEST(ri_test_color->g == 0xAD_g8);
-    BOOST_TEST(ri_test_color->b == 0xBE_b8);
-    BOOST_TEST(ri_test_color->a == 0xEF_a8);
+    BOOST_TEST(ri_test_color->r == 0xDE);
+    BOOST_TEST(ri_test_color->g == 0xAD);
+    BOOST_TEST(ri_test_color->b == 0xBE);
+    BOOST_TEST(ri_test_color->a == 0xEF);
 }

@@ -33,7 +33,7 @@ const sdl3::color sdl3::color::green(0_r8, 255_g8, 0_b8, 255_a8);
 const sdl3::color sdl3::color::blue(0_r8, 0_g8, 255_b8, 255_a8);
 
 sdl3::color::color()
-: r(0), g(0), b(0), a(0)
+: r(0_r8), g(0_g8), b(0_b8), a(0_a8)
 { }
 
 sdl3::color::color(sdl3::r8 r, sdl3::g8 g, sdl3::b8 b, sdl3::a8 a)
@@ -60,60 +60,78 @@ sdl3::color::operator=(sdl3::color const& other)
 sdl3::color &
 sdl3::color::operator*=(sdl3::color const& other)
 {
-    r *= other.r;
-    g *= other.g;
-    b *= other.b;
-    a *= other.a;
+    // NOTE: Call member operator*=, otherwise MSVC will fail with error C2968: recursive
+    // alias declaration. See https://github.com/boostorg/safe_numerics/issues/135 for
+    // more details.
+    r.operator*=(other.r);
+    g.operator*=(other.g);
+    b.operator*=(other.b);
+    a.operator*=(other.a);
     return *this;
 }
 
 sdl3::color &
 sdl3::color::operator/=(sdl3::color const& other)
 {
-    r /= other.r;
-    g /= other.g;
-    b /= other.b;
-    a /= other.a;
+    // NOTE: Call member operator/=, otherwise MSVC will fail with error C2968: recursive
+    // alias declaration. See https://github.com/boostorg/safe_numerics/issues/135 for
+    // more details.
+    r.operator/=(other.r);
+    g.operator/=(other.g);
+    b.operator/=(other.b);
+    a.operator/=(other.a);
     return *this;
 }
 
 sdl3::color &
 sdl3::color::operator+=(sdl3::color const& other)
 {
-    r += other.r;
-    g += other.g;
-    b += other.b;
-    a += other.a;
+    // NOTE: Call member operator+=, otherwise MSVC will fail with error C2968: recursive
+    // alias declaration. See https://github.com/boostorg/safe_numerics/issues/135 for
+    // more details.
+    r.operator+=(other.r);
+    g.operator+=(other.g);
+    b.operator+=(other.b);
+    a.operator+=(other.a);
     return *this;
 }
 
 sdl3::color &
 sdl3::color::operator-=(sdl3::color const& other)
 {
-    r -= other.r;
-    g -= other.g;
-    b -= other.b;
-    a -= other.a;
+    // NOTE: Call member operator-=, otherwise MSVC will fail with error C2968: recursive
+    // alias declaration. See https://github.com/boostorg/safe_numerics/issues/135 for
+    // more details.
+    r.operator-=(other.r);
+    g.operator-=(other.g);
+    b.operator-=(other.b);
+    a.operator-=(other.a);
     return *this;
 }
 
 sdl3::color &
-sdl3::color::operator*=(std::uint8_t scalar)
+sdl3::color::operator*=(safe_uint8_t scalar)
 {
-    r *= scalar;
-    g *= scalar;
-    b *= scalar;
-    a *= scalar;
+    // NOTE: Call member operator*=, otherwise MSVC will fail with error C2968: recursive
+    // alias declaration. See https://github.com/boostorg/safe_numerics/issues/135 for
+    // more details.
+    r.operator*=(scalar);
+    g.operator*=(scalar);
+    b.operator*=(scalar);
+    a.operator*=(scalar);
     return *this;
 }
 
 sdl3::color &
-sdl3::color::operator/=(std::uint8_t scalar)
+sdl3::color::operator/=(safe_uint8_t scalar)
 {
-    r /= scalar;
-    g /= scalar;
-    b /= scalar;
-    a /= scalar;
+    // NOTE: Call member operator/=, otherwise MSVC will fail with error C2968: recursive
+    // alias declaration. See https://github.com/boostorg/safe_numerics/issues/135 for
+    // more details.
+    r.operator/=(scalar);
+    g.operator/=(scalar);
+    b.operator/=(scalar);
+    a.operator/=(scalar);
     return *this;
 }
 

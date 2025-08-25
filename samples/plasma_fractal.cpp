@@ -238,10 +238,10 @@ int main()
     auto plasma_palette = create_palette(plasma_surface);
     auto plasma_colors = std::vector<sdl3::color>(256);
 
-    for (std::uint8_t i = 0; i < 32; ++i)
+    for (sdl3::safe_uint8_t i = 0; i < 32; ++i)
     {
-        std::uint8_t lo = i * 255 / 31;
-        std::uint8_t hi = 255 - lo;
+        sdl3::safe_uint8_t lo = i * 255 / 31;
+        sdl3::safe_uint8_t hi = 255 - lo;
         plasma_colors[i]        = sdl3::color(sdl3::r8(lo), sdl3::g8(0),  sdl3::b8(0),  sdl3::a8(255));
         plasma_colors[i + 32]   = sdl3::color(sdl3::r8(hi), sdl3::g8(0),  sdl3::b8(0),  sdl3::a8(255));
         plasma_colors[i + 64]   = sdl3::color(sdl3::r8(0),  sdl3::g8(lo), sdl3::b8(0),  sdl3::a8(255));

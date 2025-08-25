@@ -9,6 +9,7 @@
     "boost-optional",
     "boost-poly-collection",
     "boost-qvm",
+    "boost-safe-numerics",
     "boost-test",
     "boost-units",
     "boost-utility",

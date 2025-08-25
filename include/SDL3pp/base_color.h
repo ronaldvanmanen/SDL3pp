@@ -23,8 +23,11 @@
 #include <cstdint>
 #include <limits>
 #include <iostream>
+#include <type_traits>
 
 #include <boost/operators.hpp>
+
+#include "safe_numeric.h"
 
 namespace sdl3
 {
@@ -48,34 +51,6 @@ namespace sdl3
         }
     };
 
-    template<typename Tag>
-    struct base_color_limits<base_color<float, Tag>>
-    {
-        static constexpr base_color<float, Tag>(min)()
-        {
-            return base_color<float, Tag>(0.0f);
-        }
-
-        static constexpr base_color<float, Tag>(max)()
-        {
-            return base_color<float, Tag>(1.0f);
-        }
-    };
-
-    template<typename Tag>
-    struct base_color_limits<base_color<double, Tag>>
-    {
-        static constexpr base_color<double, Tag>(min)()
-        {
-            return base_color<double, Tag>(0.0);
-        }
-
-        static constexpr base_color<double, Tag>(max)()
-        {
-            return base_color<double, Tag>(1.0);
-        }
-    };
-
     template<typename T, typename Tag>
     class alignas(alignof(T)) base_color
     : boost::totally_ordered<base_color<T, Tag>
@@ -89,7 +64,13 @@ namespace sdl3
         using base_type = T;
 
     public:
+        base_color();
+
         explicit base_color(T value);
+
+        template<class From>
+            requires (!std::is_same_v<From, T> && std::is_convertible_v<From, T>)
+        explicit base_color(From value);
 
         base_color(base_color<T, Tag> const& other);
 
@@ -117,12 +98,37 @@ namespace sdl3
 
         operator T() const;
 
+        template<class To>
+            requires (!std::is_same_v<T, To> && std::is_convertible_v<T, To>)
+        operator To() const;
+
+    public:
+        template<typename CharT, typename Traits>
+        friend
+        std::basic_ostream<CharT, Traits> &
+        operator<<(std::basic_ostream<CharT, Traits> & stream, base_color<T, Tag> const& value)
+        {
+            return stream << value._value;
+        }
+
     private:
         T _value;
     };
 
     template<typename T, typename Tag>
+    base_color<T, Tag>::base_color()
+    : _value()
+    { }
+
+    template<typename T, typename Tag>
     base_color<T, Tag>::base_color(T value)
+    : _value(value)
+    { }
+
+    template<typename T, typename Tag>
+        template<typename From>
+            requires (!std::is_same_v<From, T> && std::is_convertible_v<From, T>)
+    base_color<T, Tag>::base_color(From value)
     : _value(value)
     { }
 
@@ -226,78 +232,79 @@ namespace sdl3
         return _value;
     }
 
-    template<typename CharT, typename Traits, typename Tag, typename T>
-    std::basic_ostream<CharT, Traits> &
-    operator<<(std::basic_ostream<CharT, Traits> & stream, base_color<T, Tag> const& value)
+    template<typename T, typename Tag>
+        template<class To>
+            requires (!std::is_same_v<T, To> && std::is_convertible_v<T, To>)
+    base_color<T, Tag>::operator To() const
     {
-        return stream << static_cast<T>(value);
+        return static_cast<To>(_value);
     }
 
     template<typename T>
     using red = base_color<T, struct red_tag>;
 
-    using r3 = red<std::uint8_t>;
-    using r4 = red<std::uint8_t>;
-    using r5 = red<std::uint8_t>;
-    using r8 = red<std::uint8_t>;
-    using r10 = red<std::uint16_t>;
-    using r32f = red<float>;
+    using r3 = red<safe_uint3_t>;
+    using r4 = red<safe_uint4_t>;
+    using r5 = red<safe_uint5_t>;
+    using r8 = red<safe_uint8_t>;
+    using r10 = red<safe_uint10_t>;
+    using r32f = red<safe_unorm_float>;
 
-    inline auto operator""_r3(unsigned long long value) { return r3(static_cast<r3::base_type>(value)); };
-    inline auto operator""_r4(unsigned long long value) { return r4(static_cast<r4::base_type>(value)); };
-    inline auto operator""_r5(unsigned long long value) { return r5(static_cast<r5::base_type>(value)); };
-    inline auto operator""_r8(unsigned long long value) { return r8(static_cast<r8::base_type>(value)); };
-    inline auto operator""_r10(unsigned long long value) { return r10(static_cast<r10::base_type>(value)); };
-    inline auto operator""_r32f(long double value) { return r32f(static_cast<r32f::base_type>(value)); };
+    inline auto operator""_r3(unsigned long long value) { return r3(value); };
+    inline auto operator""_r4(unsigned long long value) { return r4(value); };
+    inline auto operator""_r5(unsigned long long value) { return r5(value); };
+    inline auto operator""_r8(unsigned long long value) { return r8(value); };
+    inline auto operator""_r10(unsigned long long value) { return r10(value); };
+    inline auto operator""_r32f(long double value) { return r32f(value); };
 
     template<typename T>
     using green = base_color<T, struct green_tag>;
 
-    using g3 = green<std::uint8_t>;
-    using g4 = green<std::uint8_t>;
-    using g5 = green<std::uint8_t>;
-    using g6 = green<std::uint8_t>;
-    using g8 = green<std::uint8_t>;
-    using g10 = green<std::uint16_t>;
-    using g32f = green<float>;
+    using g3 = green<safe_uint3_t>;
+    using g4 = green<safe_uint4_t>;
+    using g5 = green<safe_uint5_t>;
+    using g6 = green<safe_uint6_t>;
+    using g8 = green<safe_uint8_t>;
+    using g10 = green<safe_uint10_t>;
+    using g32f = green<safe_unorm_float>;
 
-    inline auto operator""_g3(unsigned long long value) { return g3(static_cast<g3::base_type>(value)); };
-    inline auto operator""_g4(unsigned long long value) { return g4(static_cast<g4::base_type>(value)); };
-    inline auto operator""_g5(unsigned long long value) { return g5(static_cast<g5::base_type>(value)); };
-    inline auto operator""_g6(unsigned long long value) { return g6(static_cast<g6::base_type>(value)); };
-    inline auto operator""_g8(unsigned long long value) { return g8(static_cast<g8::base_type>(value)); };
-    inline auto operator""_g10(unsigned long long value) { return g10(static_cast<g10::base_type>(value)); };
-    inline auto operator""_g32f(long double value) { return g32f(static_cast<g32f::base_type>(value)); };
+    inline auto operator""_g3(unsigned long long value) { return g3(value); };
+    inline auto operator""_g4(unsigned long long value) { return g4(value); };
+    inline auto operator""_g5(unsigned long long value) { return g5(value); };
+    inline auto operator""_g6(unsigned long long value) { return g6(value); };
+    inline auto operator""_g8(unsigned long long value) { return g8(value); };
+    inline auto operator""_g10(unsigned long long value) { return g10(value); };
+    inline auto operator""_g32f(long double value) { return g32f(value); };
 
     template<typename T>
     using blue = base_color<T, struct blue_tag>;
 
-    using b2 = blue<std::uint8_t>;
-    using b4 = blue<std::uint8_t>;
-    using b5 = blue<std::uint8_t>;
-    using b8 = blue<std::uint8_t>;
-    using b10 = blue<std::uint16_t>;
-    using b32f = blue<float>;
+    using b2 = blue<safe_uint2_t>;
+    using b4 = blue<safe_uint4_t>;
+    using b5 = blue<safe_uint5_t>;
+    using b8 = blue<safe_uint8_t>;
+    using b10 = blue<safe_uint10_t>;
+    using b32f = blue<safe_unorm_float>;
 
-    inline auto operator""_b2(unsigned long long value) { return b2(static_cast<b2::base_type>(value)); };
-    inline auto operator""_b4(unsigned long long value) { return b4(static_cast<b4::base_type>(value)); };
-    inline auto operator""_b5(unsigned long long value) { return b5(static_cast<b5::base_type>(value)); };
-    inline auto operator""_b8(unsigned long long value) { return b8(static_cast<b8::base_type>(value)); };
-    inline auto operator""_b10(unsigned long long value) { return b10(static_cast<b10::base_type>(value)); };
-    inline auto operator""_b32f(long double value) { return b32f(static_cast<b32f::base_type>(value)); };
+    inline auto operator""_b2(unsigned long long value) { return b2(value); };
+    inline auto operator""_b4(unsigned long long value) { return b4(value); };
+    inline auto operator""_b5(unsigned long long value) { return b5(value); };
+    inline auto operator""_b8(unsigned long long value) { return b8(value); };
+    inline auto operator""_b10(unsigned long long value) { return b10(value); };
+    inline auto operator""_b32f(long double value) { return b32f(value); };
 
     template<typename T>
     using alpha = base_color<T, struct alpha_tag>;
 
-    using a1 = alpha<std::uint8_t>;
-    using a2 = alpha<std::uint8_t>;
-    using a4 = alpha<std::uint8_t>;
-    using a8 = alpha<std::uint8_t>;
-    using a32f = alpha<float>;
+    using a1 = alpha<safe_uint1_t>;
+    using a2 = alpha<safe_uint2_t>;
+    using a4 = alpha<safe_uint4_t>;
+    using a8 = alpha<safe_uint8_t>;
+    using a32f = alpha<safe_unorm_float>;
 
-    inline auto operator""_a1(unsigned long long value) { return a1(static_cast<a1::base_type>(value)); };
-    inline auto operator""_a2(unsigned long long value) { return a2(static_cast<a2::base_type>(value)); };
-    inline auto operator""_a4(unsigned long long value) { return a4(static_cast<a4::base_type>(value)); };
-    inline auto operator""_a8(unsigned long long value) { return a8(static_cast<a8::base_type>(value)); };
-    inline auto operator""_a32f(long double value) { return a32f(static_cast<a32f::base_type>(value)); };
+    inline auto operator""_a1(unsigned long long value) { return a1(value); };
+    inline auto operator""_a2(unsigned long long value) { return a2(value); };
+    inline auto operator""_a4(unsigned long long value) { return a4(value); };
+    inline auto operator""_a8(unsigned long long value) { return a8(value); };
+    inline auto operator""_a32f(long double value) { return a32f(value); };
 }

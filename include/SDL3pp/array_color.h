@@ -24,6 +24,7 @@
 
 #include "color.h"
 #include "pixels.h"
+#include "safe_numeric.h"
 
 namespace sdl3
 {
@@ -46,12 +47,12 @@ namespace sdl3
         static const size_t size = 3; \
     };
 
-    RGB_ARRAY_COLOR_TRAITS(rgb24, std::uint8_t, 0, 1, 2)
-    RGB_ARRAY_COLOR_TRAITS(bgr24, std::uint8_t, 2, 1, 0)
-    RGB_ARRAY_COLOR_TRAITS(rgb48, std::uint16_t, 0, 1, 2)
-    RGB_ARRAY_COLOR_TRAITS(bgr48, std::uint16_t, 2, 1, 0)
-    RGB_ARRAY_COLOR_TRAITS(rgb96f, float, 0, 1, 2)
-    RGB_ARRAY_COLOR_TRAITS(bgr96f, float, 2, 1, 0)
+    RGB_ARRAY_COLOR_TRAITS(rgb24, safe_uint8_t, 0, 1, 2)
+    RGB_ARRAY_COLOR_TRAITS(bgr24, safe_uint8_t, 2, 1, 0)
+    RGB_ARRAY_COLOR_TRAITS(rgb48, safe_uint16_t, 0, 1, 2)
+    RGB_ARRAY_COLOR_TRAITS(bgr48, safe_uint16_t, 2, 1, 0)
+    RGB_ARRAY_COLOR_TRAITS(rgb96f, safe_unorm_float, 0, 1, 2)
+    RGB_ARRAY_COLOR_TRAITS(bgr96f, safe_unorm_float, 2, 1, 0)
 #undef RGB_ARRAY_COLOR_TRAITS
 
     template<pixel_format P, color_space C>
@@ -147,19 +148,23 @@ namespace sdl3
     template<pixel_format P, color_space C>
     requires (is_array<P>() && !has_alpha<P>() && is_rgb_color_space<C>())
     rgb_array_color<P, C>::rgb_array_color()
-    {
-        _components[r_index] = base_color_limits<r_type>::min();
-        _components[g_index] = base_color_limits<g_type>::min();
-        _components[b_index] = base_color_limits<b_type>::min();
-    }
+    : rgb_array_color(
+        base_color_limits<r_type>::min(),
+        base_color_limits<g_type>::min(),
+        base_color_limits<b_type>::min()
+    )
+    { }
 
     template<pixel_format P, color_space C>
     requires (is_array<P>() && !has_alpha<P>() && is_rgb_color_space<C>())
     rgb_array_color<P, C>::rgb_array_color(r_type r, g_type g, b_type b)
     {
-        _components[r_index] = r;
-        _components[g_index] = g;
-        _components[b_index] = b;
+        // NOTE: Cannot use static_cast<scalar_type> here, because the constructor of
+        // boost::safe_numerics::safe_base<T, Min, Max, P, E> is considered before our
+        // conversion operator and fails to compile.
+        _components[r_index] = r.operator scalar_type();
+        _components[g_index] = g.operator scalar_type();
+        _components[b_index] = b.operator scalar_type();
     }
 
     template<pixel_format P, color_space C>
@@ -325,8 +330,8 @@ namespace sdl3
         static const size_t size = 4; \
     };
 
-    RGBA_ARRAY_COLOR_TRAITS(rgba128f, float, 0, 1, 2, 3)
-    RGBA_ARRAY_COLOR_TRAITS(bgra128f, float, 3, 2, 1, 0)
+    RGBA_ARRAY_COLOR_TRAITS(rgba128f, safe_unorm_float, 0, 1, 2, 3)
+    RGBA_ARRAY_COLOR_TRAITS(bgra128f, safe_unorm_float, 3, 2, 1, 0)
 #undef RGBA_ARRAY_COLOR_TRAITS
 
     template<pixel_format P, color_space C>

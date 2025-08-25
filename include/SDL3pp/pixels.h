@@ -25,7 +25,7 @@
 
 #include <SDL3/SDL_pixels.h>
 
-#include "integer.h"
+#include "tagged_numeric.h"
 
 namespace sdl3
 {
@@ -279,9 +279,9 @@ namespace sdl3
         return stream;
     }
 
-    using pixel_bit_depth = integer<std::size_t, struct pixel_bit_depth_tag>;    
+    using pixel_bit_depth = tagged_numeric<std::size_t, struct pixel_bit_depth_tag>;    
 
-    using pixel_byte_depth = integer<std::size_t, struct pixel_byte_depth_tag>;    
+    using pixel_byte_depth = tagged_numeric<std::size_t, struct pixel_byte_depth_tag>;    
 
     template<pixel_format P>
     static constexpr pixel_type get_pixel_type() noexcept
