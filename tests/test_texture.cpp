@@ -39,7 +39,7 @@ BOOST_AUTO_TEST_CASE(test_texture_constructors)
 
         auto test_renderer = renderer(test_window);
 
-        auto test_texture = texture<pixel_format::argb8888, color_space::srgb, texture_access::streaming_access>(
+        auto test_texture = streaming_texture<pixel_format::argb8888, color_space::srgb>(
             test_renderer, test_renderer.output_size()
         );
     };

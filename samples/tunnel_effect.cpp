@@ -231,7 +231,7 @@ int main()
 {
     auto window = sdl3::window("Tunnel Effect", 800*px, 600*px, sdl3::window_flags::resizable);
     auto renderer = sdl3::renderer(window);
-    auto texture = sdl3::texture<sdl3::pixel_format::xrgb8888, sdl3::color_space::srgb, sdl3::texture_access::streaming_access>(renderer, renderer.output_size());
+    auto texture = sdl3::streaming_texture<sdl3::pixel_format::xrgb8888, sdl3::color_space::srgb>(renderer, renderer.output_size());
 
     auto event_queue = sdl3::event_queue();
 

@@ -103,6 +103,15 @@ namespace sdl3
         void with_lock(CallbackFunction callback);
     };
 
+    template<pixel_format P, color_space C>
+    using static_texture = texture<P, C, texture_access::static_access>;
+
+    template<pixel_format P, color_space C>
+    using streaming_texture = texture<P, C, texture_access::streaming_access>;
+
+    template<pixel_format P, color_space C>
+    using target_texture = texture<P, C, texture_access::target_access>;
+
     namespace details
     {
         inline

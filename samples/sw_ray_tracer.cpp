@@ -763,7 +763,7 @@ int main()
 {
     auto window = sdl3::window("Software Ray Tracer", 640*px, 480*px, sdl3::window_flags::resizable);
     auto renderer = sdl3::renderer(window);
-    auto texture = sdl3::texture<sdl3::pixel_format::rgb96f, sdl3::color_space::srgb, sdl3::texture_access::streaming_access>(renderer, renderer.output_size());
+    auto texture = sdl3::streaming_texture<sdl3::pixel_format::rgb96f, sdl3::color_space::srgb>(renderer, renderer.output_size());
     auto raster = sdl3::surface<sdl3::pixel_format::rgb96f, sdl3::color_space::srgb>(renderer.output_size());
 
     auto event_queue = sdl3::event_queue();
