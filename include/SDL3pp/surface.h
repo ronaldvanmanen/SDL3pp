@@ -70,6 +70,7 @@ namespace sdl3
     };
 
     template<pixel_format P, color_space C>
+    requires (is_compatible_color_space<P, C>())
     class surface : public surface_base
     {
     public:
@@ -101,26 +102,31 @@ namespace sdl3
     };
 
     template<pixel_format P, color_space C>
+    requires (is_compatible_color_space<P, C>())
     surface<P, C>::surface(length<std::int32_t> const& width, length<std::int32_t> const& height)
     : surface_base(width, height, format)
     { }
 
     template<pixel_format P, color_space C>
+    requires (is_compatible_color_space<P, C>())
     surface<P, C>::surface(size_2d<std::int32_t> const& size)
     : surface_base(size, format)
     { }
 
     template<pixel_format P, color_space C>
+    requires (is_compatible_color_space<P, C>())
     surface<P, C>::surface(length<std::int32_t> const& width, length<std::int32_t> const& height, pixel_type* pixels, std::int32_t pitch)
     : surface_base(width, height, format, pixels, pitch)
     { }
 
     template<pixel_format P, color_space C>
+    requires (is_compatible_color_space<P, C>())
     surface<P, C>::surface(surface<P, C> const& other)
     : surface_base(other)
     { }
 
     template<pixel_format P, color_space C>
+    requires (is_compatible_color_space<P, C>())
     std::int32_t
     surface<P, C>::pitch() const
     {
@@ -128,6 +134,7 @@ namespace sdl3
     }
 
     template<pixel_format P, color_space C>
+    requires (is_compatible_color_space<P, C>())
     typename surface<P, C>::pixel_type const*
     surface<P, C>::pixels() const
     {
@@ -135,6 +142,7 @@ namespace sdl3
     }
 
     template<pixel_format P, color_space C>
+    requires (is_compatible_color_space<P, C>())
     typename surface<P, C>::pixel_type &
     surface<P, C>::operator()(offset<std::int32_t> x, offset<std::int32_t> y)
     {
@@ -146,6 +154,7 @@ namespace sdl3
     }
 
     template<pixel_format P, color_space C>
+    requires (is_compatible_color_space<P, C>())
     typename surface<P, C>::pixel_type const&
     surface<P, C>::operator()(offset<std::int32_t> x, offset<std::int32_t> y) const
     {
@@ -156,7 +165,9 @@ namespace sdl3
         return pixels[sy * pitch + sx];
     }
 
-    template<pixel_format P, color_space C> template <typename CallbackFunction>
+    template<pixel_format P, color_space C>
+    requires (is_compatible_color_space<P, C>())
+    template <typename CallbackFunction>
     void
     surface<P, C>::with_lock(CallbackFunction callback)
     {

@@ -414,5 +414,11 @@ namespace sdl3
     }
 
     template<pixel_format P, color_space C>
+    static constexpr bool is_compatible_color_space() noexcept
+    {
+        return (is_array<P>() || is_indexed<P>() || is_packed<P>()) && is_rgb_color_space<C>();
+    }
+
+    template<pixel_format P, color_space C>
     struct pixel_color { };
 }

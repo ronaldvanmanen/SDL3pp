@@ -74,6 +74,7 @@ namespace sdl3
     };
 
     template<pixel_format P, color_space C, texture_access A>
+    requires (is_compatible_color_space<P, C>())
     class texture : public texture_base
     {
     public:
@@ -118,21 +119,25 @@ namespace sdl3
     }
 
     template<pixel_format P, color_space C, texture_access A>
+    requires (is_compatible_color_space<P, C>())
     texture<P, C, A>::texture(renderer & owner, length<std::int32_t> width, length<std::int32_t> height)
     : texture_base(owner, details::make_texture_properties(format, color_space, access, width, height))
     { }
 
     template<pixel_format P, color_space C, texture_access A>
+    requires (is_compatible_color_space<P, C>())
     texture<P, C, A>::texture(renderer & owner, size_2d<std::int32_t> const& size)
     : texture_base(owner, details::make_texture_properties(format, color_space, access, size.width, size.height))
     { }
 
     template<pixel_format P, color_space C, texture_access A>
+    requires (is_compatible_color_space<P, C>())
     texture<P, C, A>::texture(texture<P, C, A> && other)
     : _native_handle(std::exchange(other._native_handle, nullptr))
     { }
 
     template<pixel_format P, color_space C, texture_access A>
+    requires (is_compatible_color_space<P, C>())
     void
     texture<P, C, A>::update(surface<P, C> const& pixels)
     {
@@ -147,6 +152,7 @@ namespace sdl3
     }
 
     template<pixel_format P, color_space C, texture_access A>
+    requires (is_compatible_color_space<P, C>())
     template<typename CallbackFunction>
     void
     texture<P, C, A>::with_lock(CallbackFunction callback)
