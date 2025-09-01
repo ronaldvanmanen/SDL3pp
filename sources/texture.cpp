@@ -82,6 +82,10 @@ sdl3::texture_base::texture_base(sdl3::renderer & owner, sdl3::property_group &&
 : _native_handle(sdl3::create_texture(owner, properties))
 { }
 
+sdl3::texture_base::texture_base(sdl3::texture_base && other)
+: _native_handle(std::exchange(other._native_handle, nullptr))
+{ }
+
 sdl3::texture_base::~texture_base()
 {
     if (_native_handle != nullptr)

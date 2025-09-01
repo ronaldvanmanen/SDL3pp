@@ -48,7 +48,5 @@ namespace sdl3
     using safe_uint10_t  = safe_numeric_range<std::uint16_t, 0, 1023>;
     using safe_uint16_t  = safe_numeric_range<std::uint16_t, 0, 65535>;
 
-#if (__cpp_nontype_template_args == 201911L)
     using safe_unorm_float = safe_numeric_range<float, 0.0f, 1.0f>;
-#endif
 }

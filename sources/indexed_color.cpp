@@ -18,8 +18,6 @@
 //    misrepresented as being the original software.
 // 3. This notice may not be removed or altered from any source distribution.
 
-#pragma once
-
 #include "SDL3pp/indexed_color.h"
 
 sdl3::index8::index8() { }

@@ -170,6 +170,8 @@ namespace sdl3
             case pixel_format::unknown: stream << "unknown"; break;
             case pixel_format::index1lsb: stream << "index1lsb"; break;
             case pixel_format::index1msb: stream << "index1msb"; break;
+            case pixel_format::index2lsb: stream << "index2lsb"; break;
+            case pixel_format::index2msb: stream << "index2msb"; break;
             case pixel_format::index4lsb: stream << "index4lsb"; break;
             case pixel_format::index4msb: stream << "index4msb"; break;
             case pixel_format::index8: stream << "index8"; break;
@@ -403,7 +405,7 @@ namespace sdl3
     static constexpr color_type color_space_type() noexcept
     {
         return static_cast<color_type>(
-            SDL_COLORSPACETYPE(static_cast<SDL_ColorType>(C))
+            SDL_COLORSPACETYPE(static_cast<SDL_Colorspace>(C))
         );
     }
 

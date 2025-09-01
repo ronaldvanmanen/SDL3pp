@@ -18,8 +18,6 @@
 //    misrepresented as being the original software.
 // 3. This notice may not be removed or altered from any source distribution.
 
-#pragma once
-
 #include <SDL3/SDL_mouse.h>
 
 #include "SDL3pp/error.h"

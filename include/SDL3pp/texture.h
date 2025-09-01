@@ -60,6 +60,8 @@ namespace sdl3
 
         texture_base(texture_base const& other) = delete;
 
+        texture_base(texture_base && other);
+
         ~texture_base();
 
         texture_base & operator=(texture_base const& other) = delete;
@@ -142,7 +144,7 @@ namespace sdl3
     template<pixel_format P, color_space C, texture_access A>
     requires (is_compatible_color_space<P, C>())
     texture<P, C, A>::texture(texture<P, C, A> && other)
-    : _native_handle(std::exchange(other._native_handle, nullptr))
+    : texture_base(other)
     { }
 
     template<pixel_format P, color_space C, texture_access A>
@@ -166,7 +168,7 @@ namespace sdl3
     void
     texture<P, C, A>::with_lock(CallbackFunction callback)
     {
-        using pixel_type = surface<format>::type;
+        using pixel_type = surface<P, C>::type;
 
         void* pixels;
         std::int32_t pitch;
@@ -174,7 +176,7 @@ namespace sdl3
             SDL_LockTexture(_native_handle, nullptr, &pixels, &pitch)
         );
 
-        surface<format> surface(
+        surface<P, C> surface(
             _native_handle->w * px,
             _native_handle->h * px,
             static_cast<pixel_type*>(pixels),
