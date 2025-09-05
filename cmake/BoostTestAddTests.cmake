@@ -71,9 +71,8 @@ macro(add_command NAME)
   unset(_script_len)
 endmacro()
 
-
 # Adds another test to the script.
-macro(add_another_test hierarchy_list enabled separator)
+macro(add_another_test hierarchy_list enabled source_line separator)
   # Create the name and path of the test-case...
   if (CMAKE_VERSION VERSION_LESS "3.12")
     set(test_name)
@@ -105,13 +104,15 @@ macro(add_another_test hierarchy_list enabled separator)
   if(NOT ${enabled})
     add_command(set_tests_properties
       "${prefix}${test_name}${suffix}"
-      PROPERTIES DISABLED TRUE
+      PROPERTIES
+      DISABLED TRUE
     )
   endif()
   add_command(set_tests_properties
     "${prefix}${test_name}${suffix}"
     PROPERTIES
     WORKING_DIRECTORY "${__TEST_WORKING_DIR}"
+    DEF_SOURCE_LINE "${source_line}"
     ${properties}
   )
   list(APPEND tests_buffer "${prefix}${test_name}${suffix}")
@@ -122,8 +123,8 @@ macro(add_another_test hierarchy_list enabled separator)
 endmacro()
 
 
-# Internal implementation for boosttest_discover_tests.
-function(boosttest_discover_tests_impl)
+# Internal implementation for boost_test_discover_tests.
+function(boost_test_discover_tests_impl)
 
   cmake_parse_arguments(
     "_"
@@ -150,36 +151,63 @@ function(boosttest_discover_tests_impl)
       "  Path: '${__TEST_EXECUTABLE}'"
     )
   endif()
+
+  # DOT format is used to get the source file and line number of a test case.
   execute_process(
-    COMMAND ${__TEST_EXECUTOR} "${__TEST_EXECUTABLE}" --list_content=HRF --detect_memory_leaks=0
+    COMMAND ${__TEST_EXECUTOR} "${__TEST_EXECUTABLE}" --list_content=DOT --detect_memory_leaks=0
     WORKING_DIRECTORY "${__TEST_WORKING_DIR}"
     TIMEOUT ${__TEST_DISCOVERY_TIMEOUT}
-    OUTPUT_VARIABLE output
-    ERROR_VARIABLE output  # Boost.Test writes the requested content to stderr!
+    OUTPUT_VARIABLE dot_output
+    ERROR_VARIABLE dot_output  # Boost.Test writes the requested content to stderr!
     RESULT_VARIABLE result
   )
+  
   if(NOT ${result} EQUAL 0)
-    string(REPLACE "\n" "\n    " output "${output}")
     message(FATAL_ERROR
       "Error running test executable.\n"
       "  Path: '${__TEST_EXECUTABLE}'\n"
       "  Result: ${result}\n"
       "  Output:\n"
-      "    ${output}\n"
+      "    ${dot_output}\n"
+    )
+  endif()
+
+  # Replace \ with / to prevent invalid escape sequence error when parsing DOT output
+  string(REPLACE [[\]] [[/]] dot_output "${dot_output}")
+
+  # HRF format is used to build the test suite / test case hierarchy and determine which tests are enabled / disabled
+  execute_process(
+    COMMAND ${__TEST_EXECUTOR} "${__TEST_EXECUTABLE}" --list_content=HRF --detect_memory_leaks=0
+    WORKING_DIRECTORY "${__TEST_WORKING_DIR}"
+    TIMEOUT ${__TEST_DISCOVERY_TIMEOUT}
+    OUTPUT_VARIABLE hrf_output
+    ERROR_VARIABLE hrf_output  # Boost.Test writes the requested content to stderr!
+    RESULT_VARIABLE result
+  )
+
+  if(NOT ${result} EQUAL 0)
+    string(REPLACE "\n" "\n    " HRF output "${hrf_output}")
+    message(FATAL_ERROR
+      "Error running test executable.\n"
+      "  Path: '${__TEST_EXECUTABLE}'\n"
+      "  Result: ${result}\n"
+      "  Output:\n"
+      "    ${hrf_output}\n"
     )
   endif()
 
   # Preserve semicolon in test-parameters
-  string(REPLACE [[;]] [[\;]] output "${output}")
-  string(REPLACE "\n" ";" output "${output}")
+  string(REPLACE [[;]] [[\;]] hrf_output "${hrf_output}")
+  string(REPLACE "\n" ";" hrf_output "${hrf_output}")
 
   # The hierarchy and its depth-level of the test of the former line.
-  set(hierarchy "${TEST_TARGET}_MISSING_TESTS")
+  set(test_hierarchy "${TEST_TARGET}_MISSING_TESTS")
   set(former_level NaN)
-  set(test_is_enabled 0)
+  set(test_enabled 0)
+  set(test_source_line "")
 
   # Parse output
-  foreach(line ${output})
+  foreach(line ${hrf_output})
     # Determine the depth-level of the next test-hierarchy.
     # Note: Each new depth-level (except for the top one) is indented
     #       by 4 spaces. So we need to count the spaces.
@@ -190,22 +218,23 @@ function(boosttest_discover_tests_impl)
     # Add the test for the test-case from the former loop-run?
     if ((next_level LESS former_level) OR (next_level EQUAL former_level))
       # Add test-case to the script.
-      add_another_test(hierarchy ${test_is_enabled} "${__TEST_NAME_SEPARATOR}")
+      add_another_test(test_hierarchy ${test_enabled} "${test_source_line}" "${__TEST_NAME_SEPARATOR}")
 
       # Prepare the hierarchy list for the next test-case.
       math(EXPR diff "${former_level} - ${next_level}")
       foreach(i RANGE ${diff})
         if (CMAKE_VERSION VERSION_LESS "3.15")
-          list(LENGTH hierarchy length)
+          list(LENGTH test_hierarchy length)
           math(EXPR index "${length} - 1")
-          list(REMOVE_AT hierarchy ${index})
+          list(REMOVE_AT test_hierarchy ${index})
         else()
-          list(POP_BACK hierarchy)
+          list(POP_BACK test_hierarchy)
         endif()
       endforeach()
     endif()
     if (former_level STREQUAL NaN)
-      set(hierarchy "")  # Clear hierarchy, as we have at least one test.
+      set(test_hierarchy "")  # Clear hierarchy, as we have at least one test.
+      set(test_source_line "")
     endif()
     set(former_level ${next_level})  # Store depth-level for next loop-run.
 
@@ -214,27 +243,26 @@ function(boosttest_discover_tests_impl)
     string(REGEX REPLACE ":( .*)?$" "" name "${line}")
     string(STRIP "${name}" name)
     if(name MATCHES "\\*$")
-      set(test_is_enabled 1)
+      set(test_enabled 1)
       string(REGEX REPLACE "\\*$" "" name "${name}")
     elseif(__TEST_SKIP_DISABLED)
-      set(test_is_enabled 0)
+      set(test_enabled 0)
     endif()
 
     # Sanitize name for further processing downstream:
-    #  - escape \
-    string(REPLACE [[\]] [[\\]] name "${name}")
-    #  - escape ;
-    string(REPLACE [[;]] [[\;]] name "${name}")
-    #  - escape $
-    string(REPLACE [[$]] [[\$]] name "${name}")
+    #  - escape \ ; $
+    string(REGEX REPLACE [[([\;$])]] [[\\\1]] name "${name}")
+
+    # Extract the source file and line number name of the next test case.
+    string(REGEX MATCH "${name}\\|[^\"]+" test_source_line "${dot_output}")
+    string(REGEX REPLACE "${name}\\|([^\\(]+)\\(([0-9]+)\\)" "\\1:\\2" test_source_line "${test_source_line}")
 
     # Add the name to the hierarchy list.
-    list(APPEND hierarchy "${name}")
+    list(APPEND test_hierarchy "${name}")
   endforeach()
 
   # Add last test-case to the script (if any).
-  add_another_test(hierarchy ${test_is_enabled} "${__TEST_NAME_SEPARATOR}")
-
+  add_another_test(test_hierarchy ${test_enabled} "${test_source_line}" "${__TEST_NAME_SEPARATOR}")
 
   # Create a list of all discovered tests, which users may use to e.g. set
   # properties on the tests.
@@ -250,6 +278,7 @@ function(boosttest_discover_tests_impl)
   flush_script()
 
 endfunction()
+
 
 if(CMAKE_SCRIPT_MODE_FILE)
   # Note: Make sure to remove the outer layer of quotes that were added
@@ -268,7 +297,7 @@ if(CMAKE_SCRIPT_MODE_FILE)
   remove_outer_quotes(CTEST_FILE)
   remove_outer_quotes(TEST_DISCOVERY_TIMEOUT)
 
-  boosttest_discover_tests_impl(
+  boost_test_discover_tests_impl(
     TEST_TARGET ${TEST_TARGET}
     TEST_EXECUTABLE ${TEST_EXECUTABLE}
     TEST_EXECUTOR ${TEST_EXECUTOR}

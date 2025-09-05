@@ -37,7 +37,7 @@ target_link_libraries("${PROJECT_NAME}"
     Boost::unit_test_framework
 )
 
-boosttest_discover_tests("${PROJECT_NAME}"
+boost_test_discover_tests("${PROJECT_NAME}"
   WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}"
   TEST_PREFIX ""
   TEST_SUFFIX ""

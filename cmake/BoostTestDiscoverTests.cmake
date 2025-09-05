@@ -29,7 +29,7 @@ BoostTestDiscoverTests
 
 This module defines a function to help use the Boost.Test infrastructure.
 
-The :command:`boosttest_discover_tests` discovers tests by asking the compiled
+The :command:`boost_test_discover_tests` discovers tests by asking the compiled
 test executable to enumerate its tests.  This does not require CMake to be
 re-run when tests change.  However, it may not work in a cross-compiling
 environment, and setting test properties is less convenient.
@@ -42,12 +42,12 @@ However, it provides more fine-grained pass/fail information to CTest, which is
 usually considered as more beneficial.  By default, the CTest test name is the
 same as the Boost.Test name; see also ``TEST_PREFIX`` and ``TEST_SUFFIX``.
 
-.. command:: boosttest_discover_tests
+.. command:: boost_test_discover_tests
 
   Automatically add tests with CTest by querying the compiled test executable
   for available tests::
 
-    boosttest_discover_tests(target
+    boost_test_discover_tests(target
                              [EXTRA_ARGS arg1...]
                              [WORKING_DIRECTORY dir]
                              [TEST_PREFIX prefix]
@@ -60,7 +60,7 @@ same as the Boost.Test name; see also ``TEST_PREFIX`` and ``TEST_SUFFIX``.
                              [DISCOVERY_MODE <POST_BUILD|PRE_TEST>]
     )
 
-  ``boosttest_discover_tests`` sets up a post-build / pre-test command on the
+  ``boost_test_discover_tests`` sets up a post-build / pre-test command on the
   test executable that generates the list of tests by parsing the output from
   running the test with the ``--list_content=HRF`` argument.  This ensures that
   the full list of tests, including instantiations of parameterized tests, is
@@ -95,7 +95,7 @@ same as the Boost.Test name; see also ``TEST_PREFIX`` and ``TEST_SUFFIX``.
   ``TEST_PREFIX prefix``
     Specifies a ``prefix`` to be prepended to the name of each discovered test
     case.  This can be useful when the same test executable is being used in
-    multiple calls to ``boosttest_discover_tests()`` but with different
+    multiple calls to ``boost_test_discover_tests()`` but with different
     ``EXTRA_ARGS``.
 
   ``TEST_SUFFIX suffix``
@@ -114,19 +114,19 @@ same as the Boost.Test name; see also ``TEST_PREFIX`` and ``TEST_SUFFIX``.
 
   ``PROPERTIES name1 value1...``
     Specifies additional properties to be set on all tests discovered by this
-    invocation of ``boosttest_discover_tests``.
+    invocation of ``boost_test_discover_tests``.
 
   ``TEST_LIST var``
     Make the list of tests available in the variable ``var``, rather than the
     default ``<target>_TESTS``.  This can be useful when the same test
     executable is being used in multiple calls to
-    ``boosttest_discover_tests()``.  Note that this variable is only available
+    ``boost_test_discover_tests()``.  Note that this variable is only available
     in CTest.
 
   ``SKIP_DISABLED_TESTS``
     Specifies if disabled tests should be skipped. Boost.Test allows to disable
     individual tests which in general would not be run by default but because
-    ``boosttest_discover_tests`` finds all tests and runs each one individually
+    ``boost_test_discover_tests`` finds all tests and runs each one individually
     we have to explicitly skip these with this option in case they shall not be
     run.
 
@@ -139,7 +139,7 @@ same as the Boost.Test name; see also ``TEST_PREFIX`` and ``TEST_SUFFIX``.
     :command:`execute_process`.
 
   ``DISCOVERY_MODE``
-    Provides greater control over when ``boosttest_discover_tests``performs
+    Provides greater control over when ``boost_test_discover_tests``performs
     test discovery. By default, ``PRE_TEST`` delays test discovery until just
     prior to test execution. This way test discovery occurs in the target
     environment where the test has a better chance at finding appropriate
@@ -150,14 +150,14 @@ same as the Boost.Test name; see also ``TEST_PREFIX`` and ``TEST_SUFFIX``.
 
   ``DISCOVERY_MODE`` defaults to the value of the
     ``BOOSTTEST_DISCOVER_TESTS_DISCOVERY_MODE`` variable if it is not passed
-    when calling ``boosttest_discover_tests``. This provides a mechanism for
+    when calling ``boost_test_discover_tests``. This provides a mechanism for
     globally selecting a preferred test discovery behavior without having to
     modify each call site.
 
 #]=======================================================================]
 
 if(CMAKE_VERSION VERSION_LESS "3.5")
-  message(FATAL_ERROR "CMake version is too old for `boosttest_discover_tests`!")
+  message(FATAL_ERROR "CMake version is too old for `boost_test_discover_tests`!")
 endif()
 
 if(CMAKE_VERSION VERSION_LESS "3.17")
@@ -165,7 +165,7 @@ if(CMAKE_VERSION VERSION_LESS "3.17")
 endif()
 
 #------------------------------------------------------------------------------
-function(boosttest_discover_tests TARGET)
+function(boost_test_discover_tests TARGET)
 
   cmake_parse_arguments(
     "_"
@@ -290,7 +290,7 @@ function(boosttest_discover_tests TARGET)
       "if(EXISTS \"$<TARGET_FILE:${TARGET}>\")"                                    "\n"
       "  if(\"$<TARGET_FILE:${TARGET}>\" IS_NEWER_THAN \"${ctest_tests_file}\")"   "\n"
       "    include(\"${__BOOSTTEST_DISCOVER_TESTS_SCRIPT}\")"                      "\n"
-      "    boosttest_discover_tests_impl("                                         "\n"
+      "    boost_test_discover_tests_impl("                                         "\n"
       "      TEST_TARGET"            " [==[" "${TARGET}"                  "]==]"   "\n"
       "      TEST_EXECUTABLE"        " [==[" "$<TARGET_FILE:${TARGET}>"   "]==]"   "\n"
       "      TEST_EXECUTOR"          " [==[" "${crosscompiling_emulator}" "]==]"   "\n"
