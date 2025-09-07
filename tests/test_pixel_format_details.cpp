@@ -22,9 +22,13 @@
 
 #include "SDL3pp/pixel_format_details.h"
 
+BOOST_AUTO_TEST_SUITE(pixel_format_details);
+
 BOOST_AUTO_TEST_CASE(test_pixel_format_details_constructor)
 {
     BOOST_REQUIRE_NO_THROW(
         auto instance = sdl3::pixel_format_details(sdl3::pixel_format::argb8888)
     );
 }
+
+BOOST_AUTO_TEST_SUITE_END();

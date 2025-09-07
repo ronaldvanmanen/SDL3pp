@@ -25,24 +25,28 @@
 #include "SDL3pp/texture.h"
 #include "SDL3pp/window.h"
 
-using namespace sdl3;
+using sdl3::px;
+
+BOOST_AUTO_TEST_SUITE(texture);
 
 BOOST_AUTO_TEST_CASE(test_texture_constructors)
 {
     auto test_case = []() {
-        auto test_window = window(
+        sdl3::window test_window(
             "test_renderer_constructors",
             640*px,
             480*px,
-            window_flags::hidden
+            sdl3::window_flags::hidden
         );
 
-        auto test_renderer = renderer(test_window);
+        sdl3::renderer test_renderer(test_window);
 
-        auto test_texture = streaming_texture<pixel_format::argb8888, color_space::srgb>(
+        sdl3::streaming_texture<sdl3::pixel_format::argb8888, sdl3::color_space::srgb> test_texture(
             test_renderer, test_renderer.output_size()
         );
     };
 
     BOOST_REQUIRE_NO_THROW(test_case());
 }
+
+BOOST_AUTO_TEST_SUITE_END();

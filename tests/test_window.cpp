@@ -22,16 +22,19 @@
 
 #include "SDL3pp/window.h"
 
-using namespace sdl3;
+using sdl3::px;
 
+BOOST_AUTO_TEST_SUITE(window);
 
-BOOST_AUTO_TEST_CASE(test_window_constructors)
+BOOST_AUTO_TEST_CASE(test_constructors)
 {
     BOOST_REQUIRE_NO_THROW(
-        window test_window("test_window_constructor", 640*px, 480*px)
+        sdl3::window test_window("test_window_constructor", 640*px, 480*px)
     );
 
     BOOST_REQUIRE_NO_THROW(
-        window test_window("test_window_constructor", 640*px, 480*px, window_flags::hidden)
+        sdl3::window test_window("test_window_constructor", 640*px, 480*px, sdl3::window_flags::hidden)
     );
 }
+
+BOOST_AUTO_TEST_SUITE_END();

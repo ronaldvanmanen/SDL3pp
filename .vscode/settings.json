@@ -1,6 +1,7 @@
 {
     "C_Cpp.default.cppStandard": "c++23",
     "cmake.ctest.debugLaunchTarget": "(Windows) Launch ctest",
+    "cmake.ctest.testSuiteDelimiter": "::",
     "files.associations": {
         "ostream": "cpp",
         "utility": "cpp",

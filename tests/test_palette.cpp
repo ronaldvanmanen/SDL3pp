@@ -22,14 +22,16 @@
 
 #include "SDL3pp/palette.h"
 
-BOOST_AUTO_TEST_CASE(test_palette_size_constructor)
+BOOST_AUTO_TEST_SUITE(palette);
+
+BOOST_AUTO_TEST_CASE(test_size_constructor)
 {
     sdl3::palette test_palette(256);
 
     BOOST_TEST(256 == test_palette.size());
 }
 
-BOOST_AUTO_TEST_CASE(test_palette_initializer_list_constructor)
+BOOST_AUTO_TEST_CASE(test_initializer_list_constructor)
 {
     sdl3::palette test_palette { sdl3::color::white, sdl3::color::black };
 
@@ -38,7 +40,7 @@ BOOST_AUTO_TEST_CASE(test_palette_initializer_list_constructor)
     BOOST_TEST(test_palette[1] == sdl3::color::black);
 }
 
-BOOST_AUTO_TEST_CASE(test_palette_subscript_operator)
+BOOST_AUTO_TEST_CASE(test_subscript_operator)
 {
     sdl3::palette test_palette(2);
 
@@ -50,3 +52,5 @@ BOOST_AUTO_TEST_CASE(test_palette_subscript_operator)
     BOOST_TEST(test_palette[0] == sdl3::color::white);
     BOOST_TEST(test_palette[1] == sdl3::color::black);
 }
+
+BOOST_AUTO_TEST_SUITE_END();

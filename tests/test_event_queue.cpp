@@ -22,9 +22,13 @@
 
 #include "SDL3pp/event_queue.h"
 
+BOOST_AUTO_TEST_SUITE(event_queue);
+
 BOOST_AUTO_TEST_CASE(test_event_queue_constructor)
 {
     BOOST_REQUIRE_NO_THROW(
         sdl3::event_queue event_queue;
     );
 }
+
+BOOST_AUTO_TEST_SUITE_END();
