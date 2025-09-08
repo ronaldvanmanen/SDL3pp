@@ -41,7 +41,7 @@ BOOST_AUTO_TEST_CASE(test_texture_constructors)
 
         sdl3::renderer test_renderer(test_window);
 
-        sdl3::streaming_texture<sdl3::pixel_format::argb8888, sdl3::color_space::srgb> test_texture(
+        sdl3::streaming_texture<sdl3::pixel_format::argb8888> test_texture(
             test_renderer, test_renderer.output_size()
         );
     };

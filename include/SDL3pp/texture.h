@@ -75,7 +75,7 @@ namespace sdl3
         SDL_Texture* _native_handle;
     };
 
-    template<pixel_format P, color_space C, texture_access A>
+    template<pixel_format P, texture_access A, color_space C = default_color_space<P>()>
     requires (is_compatible_color_space<P, C>())
     class texture : public texture_base
     {
@@ -93,11 +93,11 @@ namespace sdl3
 
         texture(renderer & owner, size_2d<std::int32_t> const& size);
 
-        texture(texture<P, C, A> const& other) = delete;
+        texture(texture<P, A, C> const& other) = delete;
 
-        texture(texture<P, C, A> && other);
+        texture(texture<P, A, C> && other);
 
-        texture<P, C, A> & operator=(texture<P, C, A> const& other) = delete;
+        texture<P, A, C> & operator=(texture<P, A, C> const& other) = delete;
 
         void update(surface<P, C> const& pixels);
 
@@ -105,14 +105,14 @@ namespace sdl3
         void with_lock(CallbackFunction callback);
     };
 
-    template<pixel_format P, color_space C>
-    using static_texture = texture<P, C, texture_access::static_access>;
+    template<pixel_format P, color_space C = default_color_space<P>()>
+    using static_texture = texture<P, texture_access::static_access, C>;
 
-    template<pixel_format P, color_space C>
-    using streaming_texture = texture<P, C, texture_access::streaming_access>;
+    template<pixel_format P, color_space C = default_color_space<P>()>
+    using streaming_texture = texture<P, texture_access::streaming_access, C>;
 
-    template<pixel_format P, color_space C>
-    using target_texture = texture<P, C, texture_access::target_access>;
+    template<pixel_format P, color_space C = default_color_space<P>()>
+    using target_texture = texture<P, texture_access::target_access, C>;
 
     namespace details
     {
@@ -129,28 +129,28 @@ namespace sdl3
         }
     }
 
-    template<pixel_format P, color_space C, texture_access A>
+    template<pixel_format P, texture_access A, color_space C>
     requires (is_compatible_color_space<P, C>())
-    texture<P, C, A>::texture(renderer & owner, length<std::int32_t> width, length<std::int32_t> height)
+    texture<P, A, C>::texture(renderer & owner, length<std::int32_t> width, length<std::int32_t> height)
     : texture_base(owner, details::make_texture_properties(format, color_space, access, width, height))
     { }
 
-    template<pixel_format P, color_space C, texture_access A>
+    template<pixel_format P, texture_access A, color_space C>
     requires (is_compatible_color_space<P, C>())
-    texture<P, C, A>::texture(renderer & owner, size_2d<std::int32_t> const& size)
+    texture<P, A, C>::texture(renderer & owner, size_2d<std::int32_t> const& size)
     : texture_base(owner, details::make_texture_properties(format, color_space, access, size.width, size.height))
     { }
 
-    template<pixel_format P, color_space C, texture_access A>
+    template<pixel_format P, texture_access A, color_space C>
     requires (is_compatible_color_space<P, C>())
-    texture<P, C, A>::texture(texture<P, C, A> && other)
+    texture<P, A, C>::texture(texture<P, A, C> && other)
     : texture_base(other)
     { }
 
-    template<pixel_format P, color_space C, texture_access A>
+    template<pixel_format P, texture_access A, color_space C>
     requires (is_compatible_color_space<P, C>())
     void
-    texture<P, C, A>::update(surface<P, C> const& pixels)
+    texture<P, A, C>::update(surface<P, C> const& pixels)
     {
         throw_last_error(
             SDL_UpdateTexture(
@@ -162,11 +162,11 @@ namespace sdl3
         );
     }
 
-    template<pixel_format P, color_space C, texture_access A>
+    template<pixel_format P, texture_access A, color_space C>
     requires (is_compatible_color_space<P, C>())
     template<typename CallbackFunction>
     void
-    texture<P, C, A>::with_lock(CallbackFunction callback)
+    texture<P, A, C>::with_lock(CallbackFunction callback)
     {
         using pixel_type = surface<P, C>::type;
 

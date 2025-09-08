@@ -31,7 +31,7 @@ BOOST_AUTO_TEST_SUITE(surface);
 BOOST_AUTO_TEST_CASE(test_surface_constructors)
 {
     auto test_case = []() {
-        sdl3::surface<sdl3::pixel_format::index8, sdl3::color_space::srgb> test_surface(512*px, 384*px);
+        sdl3::surface<sdl3::pixel_format::index8> test_surface(512*px, 384*px);
     };
 
     BOOST_REQUIRE_NO_THROW(test_case());

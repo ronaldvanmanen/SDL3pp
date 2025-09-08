@@ -69,7 +69,7 @@ namespace sdl3
         bool _free_handle;
     };
 
-    template<pixel_format P, color_space C>
+    template<pixel_format P, color_space C = default_color_space<P>()>
     requires (is_compatible_color_space<P, C>())
     class surface : public surface_base
     {

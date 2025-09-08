@@ -428,6 +428,29 @@ namespace sdl3
         return (is_array<P>() || is_indexed<P>() || is_packed<P>()) && is_rgb_color_space<C>();
     }
 
+    template<pixel_format P>
+    static constexpr color_space default_color_space() noexcept
+    {
+        if (is_four_cc<P>())
+        {
+            switch (P)
+            {
+                case pixel_format::mjpg: return color_space::srgb;
+                case pixel_format::p010: return color_space::hdr10;
+                default: return color_space::jpeg;
+            }
+        }
+        if (is_float<P>())
+        {
+            return color_space::srgb_linear;
+        }
+        if (is_10bit<P>())
+        {
+            return color_space::hdr10;
+        }
+        return color_space::srgb;
+    }
+
     template<pixel_format P, color_space C>
     struct pixel_color { };
 }

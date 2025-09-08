@@ -55,7 +55,7 @@ namespace sdl3
     RGB_ARRAY_COLOR_TRAITS(bgr96f, safe_unorm_float, 2, 1, 0)
 #undef RGB_ARRAY_COLOR_TRAITS
 
-    template<pixel_format P, color_space C>
+    template<pixel_format P, color_space C = default_color_space<P>()>
     requires (is_array<P>() && !has_alpha<P>() && is_rgb_color_space<C>())
     class alignas(alignof(typename rgb_array_color_traits<P>::scalar_type)) rgb_array_color
     : boost::equality_comparable<rgb_array_color<P, C>
@@ -334,7 +334,7 @@ namespace sdl3
     RGBA_ARRAY_COLOR_TRAITS(bgra128f, safe_unorm_float, 3, 2, 1, 0)
 #undef RGBA_ARRAY_COLOR_TRAITS
 
-    template<pixel_format P, color_space C>
+    template<pixel_format P, color_space C = default_color_space<P>()>
     requires (is_array<P>() && has_alpha<P>() && is_rgb_color_space<C>())
     class alignas(alignof(typename rgba_array_color_traits<P>::scalar_type)) rgba_array_color
     : boost::equality_comparable<rgba_array_color<P, C>

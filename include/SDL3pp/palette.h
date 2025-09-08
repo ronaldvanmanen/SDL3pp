@@ -75,7 +75,7 @@ namespace sdl3
         bool _free_handle;
     };
 
-    template<pixel_format P, color_space C>
+    template<pixel_format P, color_space C = default_color_space<P>()>
     palette create_palette(surface<P, C> & owner)
     requires (is_indexed<P>())
     {
@@ -84,7 +84,7 @@ namespace sdl3
         return sdl3::palette(result, false);
     }
 
-    template<pixel_format P, color_space C>
+    template<pixel_format P, color_space C = default_color_space<P>()>
     std::optional<palette> get_palette(surface<P, C> & owner)
     requires (is_indexed<P>())
     {

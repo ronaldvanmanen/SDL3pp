@@ -57,7 +57,7 @@ namespace sdl3
     RGB_PACKED_COLOR_TRAITS(bgr565,     16,  5, 6, 5)
 #undef RGB_PACKED_COLOR_TRAITS
 
-    template<pixel_format P, color_space C>
+    template<pixel_format P, color_space C = default_color_space<P>()>
     requires (is_packed<P>() && !has_alpha<P>() && is_rgb_color_space<C>())
     class alignas(alignof(typename rgb_packed_color_traits<P>::packed_type)) rgb_packed_color
     : boost::equality_comparable<rgb_packed_color<P, C>
@@ -316,7 +316,7 @@ namespace sdl3
     RGBA_PACKED_COLOR_TRAITS(abgr2101010,   32, 10, 10, 10, 2)
 #undef RGBA_PACKED_COLOR_TRAITS
 
-    template<pixel_format P, color_space C>
+    template<pixel_format P, color_space C = default_color_space<P>()>
     requires (is_packed<P>() && has_alpha<P>() && is_rgb_color_space<C>())
     class alignas(alignof(typename rgba_packed_color_traits<P>::packed_type)) rgba_packed_color
     : boost::equality_comparable<rgba_packed_color<P, C>
