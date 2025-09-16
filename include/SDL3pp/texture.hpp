@@ -33,12 +33,12 @@ namespace sdl3
 
 #include <SDL3/SDL_render.h>
 
-#include "error.h"
-#include "pixels.h"
-#include "properties.h"
-#include "renderer.h"
-#include "size.h"
-#include "surface.h"
+#include "error.hpp"
+#include "pixels.hpp"
+#include "properties.hpp"
+#include "renderer.hpp"
+#include "size.hpp"
+#include "surface.hpp"
 
 namespace sdl3
 {

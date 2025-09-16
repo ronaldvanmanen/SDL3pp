@@ -20,10 +20,10 @@
 
 #include <boost/test/unit_test.hpp>
 
-#include "SDL3pp/packed_color.h"
-#include "SDL3pp/renderer.h"
-#include "SDL3pp/texture.h"
-#include "SDL3pp/window.h"
+#include "SDL3pp/packed_color.hpp"
+#include "SDL3pp/renderer.hpp"
+#include "SDL3pp/texture.hpp"
+#include "SDL3pp/window.hpp"
 
 using sdl3::px;
 

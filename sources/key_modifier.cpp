@@ -18,7 +18,7 @@
 //    misrepresented as being the original software.
 // 3. This notice may not be removed or altered from any source distribution.
 
-#include "SDL3pp/key_modifier.h"
+#include "SDL3pp/key_code.hpp"
 
 sdl3::key_modifier_set::key_modifier_set(std::uint16_t values)
 : _values(values)

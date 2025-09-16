@@ -18,7 +18,7 @@
 //    misrepresented as being the original software.
 // 3. This notice may not be removed or altered from any source distribution.
 
-#include "SDL3pp/color.h"
+#include "SDL3pp/color.hpp"
 
 const sdl3::color sdl3::color::black(0_r8, 0_g8, 0_b8, 255_a8);
 

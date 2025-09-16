@@ -20,7 +20,7 @@
 
 #include <SDL3/SDL_error.h>
 
-#include "SDL3pp/error.h"
+#include "SDL3pp/error.hpp"
 
 sdl3::error::error(std::string const& what_arg)
 : std::runtime_error(what_arg)

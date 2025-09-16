@@ -26,21 +26,19 @@
 
 #include <boost/units/cmath.hpp>
 
-#include "SDL3pp/color.h"
-#include "SDL3pp/event_queue.h"
-#include "SDL3pp/event.h"
-#include "SDL3pp/indexed_color.h"
-#include "SDL3pp/keyboard_event.h"
-#include "SDL3pp/packed_color.h"
-#include "SDL3pp/palette.h"
-#include "SDL3pp/pixel_format_details.h"
-#include "SDL3pp/renderer.h"
-#include "SDL3pp/size.h"
-#include "SDL3pp/surface.h"
-#include "SDL3pp/window.h"
+#include "SDL3pp/color.hpp"
+#include "SDL3pp/events.hpp"
+#include "SDL3pp/indexed_color.hpp"
+#include "SDL3pp/packed_color.hpp"
+#include "SDL3pp/palette.hpp"
+#include "SDL3pp/pixels.hpp"
+#include "SDL3pp/renderer.hpp"
+#include "SDL3pp/size.hpp"
+#include "SDL3pp/surface.hpp"
+#include "SDL3pp/window.hpp"
 
-#include "shared/math.h"
-#include "shared/stopwatch.h"
+#include "shared/math.hpp"
+#include "shared/stopwatch.hpp"
 
 using sdl3::px;
 using sdl3::operator""_r8;

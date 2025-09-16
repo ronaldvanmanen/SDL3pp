@@ -20,7 +20,7 @@
 
 #include <boost/test/unit_test.hpp>
 
-#include "SDL3pp/pixel_format_details.h"
+#include "SDL3pp/pixels.hpp"
 
 BOOST_AUTO_TEST_SUITE(pixel_format_details);
 

@@ -18,8 +18,8 @@
 //    misrepresented as being the original software.
 // 3. This notice may not be removed or altered from any source distribution.
 
-#include "SDL3pp/error.h"
-#include "SDL3pp/pixel_format_details.h"
+#include "SDL3pp/error.hpp"
+#include "SDL3pp/pixels.hpp"
 
 namespace sdl3
 {

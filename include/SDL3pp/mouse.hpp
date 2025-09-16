@@ -22,34 +22,20 @@
 
 #include <cstdint>
 
-#include <boost/units/quantity.hpp>
-#include <boost/units/systems/si/frequency.hpp>
-
-#include <SDL3/SDL_video.h>
-
-#include "length.h"
-#include "pixels.h"
-
 namespace sdl3
 {
-    typedef boost::units::quantity<
-        boost::units::si::frequency, float
-    > display_rate;
+    struct mouse_state
+    {
+        float x;
+        float y;
+        std::uint32_t buttons;
 
-    class display_mode
+        bool pressed(std::uint32_t which) const;
+    };
+
+    class mouse
     {
     public:
-        display_mode(SDL_DisplayMode const* native_handle);
-       
-        pixel_format format() const;
-        
-        length<std::int32_t> width() const;
-
-        length<std::int32_t> height() const;
-
-        display_rate refresh_rate() const;
-    
-    private:
-        SDL_DisplayMode const* _native_handle;
+        static mouse_state relative_state();
     };
 }

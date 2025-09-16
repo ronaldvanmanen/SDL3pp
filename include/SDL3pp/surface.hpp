@@ -27,10 +27,10 @@
 
 #include <SDL3/SDL_surface.h>
 
-#include "error.h"
-#include "length.h"
-#include "pixels.h"
-#include "size.h"
+#include "error.hpp"
+#include "pixels.hpp"
+#include "size.hpp"
+#include "units.hpp"
 
 namespace sdl3
 {

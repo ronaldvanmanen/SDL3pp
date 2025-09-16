@@ -23,10 +23,10 @@
 #include <boost/mpl/list.hpp>
 #include <boost/test/unit_test.hpp>
 
-#include "SDL3pp/packed_color.h"
+#include "SDL3pp/packed_color.hpp"
 
-#include "tools/random.h"
-#include "tools/template_test_case.h"
+#include "tools/random.hpp"
+#include "tools/template_test_case.hpp"
 
 template<sdl3::pixel_format P>
 using pixel_format_constant = std::integral_constant<sdl3::pixel_format, P>;

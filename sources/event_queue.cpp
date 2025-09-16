@@ -23,7 +23,7 @@
 #include <SDL3/SDL.h>
 #include <SDL3/SDL_events.h>
 
-#include "SDL3pp/event_queue.h"
+#include "SDL3pp/events.hpp"
 
 sdl3::event_queue::event_queue()
 {

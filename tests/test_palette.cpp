@@ -20,7 +20,7 @@
 
 #include <boost/test/unit_test.hpp>
 
-#include "SDL3pp/palette.h"
+#include "SDL3pp/palette.hpp"
 
 BOOST_AUTO_TEST_SUITE(palette);
 

@@ -20,7 +20,7 @@
 
 #include <SDL3/SDL_keyboard.h>
 
-#include "SDL3pp/keyboard.h"
+#include "SDL3pp/keyboard.hpp"
 
 sdl3::keyboard_state
 sdl3::keyboard::state()

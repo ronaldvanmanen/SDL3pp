@@ -20,7 +20,7 @@
 
 #include <cstdint>
 
-#include "SDL3pp/keyboard_state.h"
+#include "SDL3pp/keyboard.hpp"
 
 sdl3::keyboard_state::keyboard_state(bool const* key_states, std::int32_t key_count)
 : _key_states(key_states)

@@ -20,67 +20,36 @@
 
 #pragma once
 
-namespace sdl3
-{
-    class texture_base;
-}
-
 #include <cstdint>
 
 #include <boost/units/quantity.hpp>
-#include <boost/units/systems/si/length.hpp>
+#include <boost/units/systems/si/frequency.hpp>
 
-#include <SDL3/SDL_render.h>
+#include <SDL3/SDL_video.h>
 
-#include "blend_mode.h"
-#include "color.h"
-#include "error.h"
-#include "pixels.h"
-#include "properties.h"
-#include "size.h"
-#include "texture.h"
-#include "window.h"
+#include "pixels.hpp"
+#include "units.hpp"
 
 namespace sdl3
 {
-    class renderer
+    typedef boost::units::quantity<
+        boost::units::si::frequency, float
+    > display_rate;
+
+    class display_mode
     {
     public:
-        renderer(window & owner);
+        display_mode(SDL_DisplayMode const* native_handle);
+       
+        pixel_format format() const;
+        
+        length<std::int32_t> width() const;
 
-        renderer(window & owner, std::string const& name);
+        length<std::int32_t> height() const;
 
-        renderer(renderer const& other) = delete;
-
-        renderer(renderer&& other);
-
-        ~renderer();
-
-        renderer & operator=(renderer const& other) = delete;
-
-        std::string name() const;
-
-        property_group properties() const;
-
-        size_2d<std::int32_t> output_size() const;
-
-        color draw_color() const;
-
-        void draw_color(color const& draw_color);
-
-        blend_mode draw_blend_mode() const;
-
-        void draw_blend_mode(blend_mode mode);
-
-        void clear();
-
-        void present();
-
-        void copy(texture_base const& texture);
-
-        SDL_Renderer* native_handle();
-
+        display_rate refresh_rate() const;
+    
     private:
-        SDL_Renderer* _native_handle;
+        SDL_DisplayMode const* _native_handle;
     };
 }

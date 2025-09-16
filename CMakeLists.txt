@@ -25,7 +25,6 @@ set(CMAKE_CXX_STANDARD 23)
 include(CTest)
 
 add_library("${PROJECT_NAME}"
-  "sources/blend_mode.cpp"
   "sources/color.cpp"
   "sources/display_mode.cpp"
   "sources/error.cpp"

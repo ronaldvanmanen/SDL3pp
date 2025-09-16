@@ -20,7 +20,7 @@
 
 #include <boost/test/unit_test.hpp>
 
-#include "SDL3pp/window.h"
+#include "SDL3pp/window.hpp"
 
 using sdl3::px;
 

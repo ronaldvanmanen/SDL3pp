@@ -30,23 +30,19 @@
 #include <boost/poly_collection/base_collection.hpp>
 #include <boost/qvm/all.hpp>
 
-#include "SDL3pp/array_color.h"
-#include "SDL3pp/color.h"
-#include "SDL3pp/event_queue.h"
-#include "SDL3pp/event.h"
-#include "SDL3pp/keyboard_event.h"
-#include "SDL3pp/keyboard.h"
-#include "SDL3pp/mouse_wheel_event.h"
-#include "SDL3pp/mouse.h"
-#include "SDL3pp/packed_color.h"
-#include "SDL3pp/renderer.h"
-#include "SDL3pp/surface.h"
-#include "SDL3pp/texture.h"
-#include "SDL3pp/window.h"
+#include "SDL3pp/array_color.hpp"
+#include "SDL3pp/color.hpp"
+#include "SDL3pp/events.hpp"
+#include "SDL3pp/keyboard.hpp"
+#include "SDL3pp/mouse.hpp"
+#include "SDL3pp/packed_color.hpp"
+#include "SDL3pp/renderer.hpp"
+#include "SDL3pp/surface.hpp"
+#include "SDL3pp/texture.hpp"
+#include "SDL3pp/window.hpp"
 
-#include "shared/math.h"
-
-#include "shared/stopwatch.h"
+#include "shared/math.hpp"
+#include "shared/stopwatch.hpp"
 
 using sdl3::px;
 using sdl3::operator""_r32f;

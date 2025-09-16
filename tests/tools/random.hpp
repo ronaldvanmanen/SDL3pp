@@ -22,7 +22,7 @@
 
 #include <boost/safe_numerics/safe_integer_range.hpp>
 
-#include "SDL3pp/base_color.h"
+#include "SDL3pp/base_color.hpp"
 
 namespace sdl3::unit_test::tools
 {

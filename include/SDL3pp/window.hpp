@@ -27,11 +27,11 @@
 
 #include <SDL3/SDL_video.h>
 
-#include "display_mode.h"
-#include "flags.h"
-#include "length.h"
-#include "size.h"
-#include "surface.h"
+#include "display_mode.hpp"
+#include "flags.hpp"
+#include "size.hpp"
+#include "surface.hpp"
+#include "units.hpp"
 
 namespace sdl3
 {

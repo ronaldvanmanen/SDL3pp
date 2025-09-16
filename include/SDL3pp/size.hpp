@@ -20,55 +20,43 @@
 
 #pragma once
 
-#include <cstdint>
-
 #include <boost/operators.hpp>
 
-#include "pixels.h"
+#include "units.hpp"
 
 namespace sdl3
 {
-    class alignas(alignof(std::uint8_t)) index8
-    : boost::totally_ordered<index8
-    , boost::additive<index8
-    , boost::multiplicative<index8
-    , boost::unit_steppable<index8
-    > > > >
+    template<typename Y>
+    struct size_2d : boost::equality_comparable<size_2d<Y>>
     {
     public:
-        static constexpr pixel_format format = pixel_format::index8;
+        explicit size_2d(length<Y> width_and_height);
 
-    public:
-        index8();
+        size_2d(length<Y> width, length<Y> height);
 
-        index8(std::uint8_t value);
+        bool operator==(size_2d<Y> const& other) const;
 
-        index8(index8 const& other);
-
-        index8 & operator=(index8 const& other);
-
-        index8 & operator+=(index8 const& other);
-
-        index8 & operator-=(index8 const& other);
-
-        index8 & operator++();
-
-        index8 & operator--();
-
-        bool operator==(index8 const& other) const;
-
-        bool operator<(index8 const& other) const;
-
-        operator std::uint8_t() const;
-
-    private:
-        std::uint8_t _value;
+        length<Y> width;
+        
+        length<Y> height;
     };
 
-    template<color_space C>
-    requires (is_rgb_color_space<C>())
-    struct pixel_color<pixel_format::index8, C>
+    template<typename Y>
+    size_2d<Y>::size_2d(length<Y> width_and_height)
+    : width(width_and_height)
+    , height(width_and_height)
+    { }
+
+    template<typename Y>
+    size_2d<Y>::size_2d(length<Y> width, length<Y> height)
+    : width(width)
+    , height(height)
+    { }
+
+    template<typename Y>
+    bool
+    size_2d<Y>::operator==(size_2d<Y> const& other) const
     {
-        using type = index8;
-    };
+        return width == other.width && height == other.height;
+    }
 }

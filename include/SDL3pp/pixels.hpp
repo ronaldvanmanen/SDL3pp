@@ -25,7 +25,7 @@
 
 #include <SDL3/SDL_pixels.h>
 
-#include "tagged_numeric.h"
+#include "numerics.hpp"
 
 namespace sdl3
 {
@@ -244,7 +244,7 @@ namespace sdl3
     {
         return stream << name<CharT, Traits>(value);
     }
-
+    
     enum class color_type
     {
         unknown = SDL_COLOR_TYPE_UNKNOWN,
@@ -287,6 +287,51 @@ namespace sdl3
         }
         return stream;
     }
+
+    class pixel_format_details
+    {
+    public:
+        pixel_format_details(pixel_format format);
+
+        pixel_format_details(SDL_PixelFormatDetails const* native_handle);
+
+        pixel_format_details(pixel_format_details const& other);
+
+        pixel_format_details(pixel_format_details && other);
+
+        std::uint8_t bits_per_pixel() const;
+
+        std::uint8_t bytes_per_pixel() const;
+
+        std::uint32_t r_mask() const;
+
+        std::uint32_t g_mask() const;
+
+        std::uint32_t b_mask() const;
+
+        std::uint32_t a_mask() const;
+
+        std::uint8_t g_bits() const;
+
+        std::uint8_t r_bits() const;
+
+        std::uint8_t b_bits() const;
+
+        std::uint8_t a_bits() const;
+
+        std::uint8_t r_shift() const;
+
+        std::uint8_t g_shift() const;
+
+        std::uint8_t b_shift() const;
+
+        std::uint8_t a_shift() const;
+        
+        SDL_PixelFormatDetails const* native_handle();
+
+    private:
+        SDL_PixelFormatDetails const* _native_handle;
+    };
 
     using pixel_bit_depth = tagged_numeric<std::size_t, struct pixel_bit_depth_tag>;    
 

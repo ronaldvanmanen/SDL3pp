@@ -27,7 +27,7 @@
 
 #include <SDL3/SDL_pixels.h>
 
-#include "base_color.h"
+#include "base_color.hpp"
 
 namespace sdl3
 {

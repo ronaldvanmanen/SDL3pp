@@ -20,14 +20,31 @@
 
 #pragma once
 
-#include <cstdint>
-
-#include <boost/units/make_system.hpp>
-
-#include "pixel_base_unit.h"
-#include "second_base_unit.h"
+#include "key_code.hpp"
+#include "scan_code.hpp"
 
 namespace sdl3
 {
-    typedef boost::units::make_system<pixel_base_unit, second_base_unit>::type system_of_units;
+    class keyboard_state
+    {
+    public:
+        keyboard_state(bool const* key_states, std::int32_t key_count);
+
+        bool pressed(scan_code key) const;
+
+        bool released(scan_code key) const;
+
+    private:
+        bool const* _key_states;
+
+        std::int32_t _key_count;
+    };
+
+    class keyboard
+    {
+    public:
+        static keyboard_state state();
+
+        static key_modifier_set modifier_state();
+    };
 }

@@ -18,7 +18,7 @@
 //    misrepresented as being the original software.
 // 3. This notice may not be removed or altered from any source distribution.
 
-#include "math.h"
+#include "math.hpp"
 
 bool
 sdl3::is_power_of_two(std::int32_t value)

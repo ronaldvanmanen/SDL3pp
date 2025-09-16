@@ -20,8 +20,8 @@
 
 #include <SDL3/SDL_mouse.h>
 
-#include "SDL3pp/error.h"
-#include "SDL3pp/mouse.h"
+#include "SDL3pp/error.hpp"
+#include "SDL3pp/mouse.hpp"
 
 sdl3::mouse_state
 sdl3::mouse::relative_state()

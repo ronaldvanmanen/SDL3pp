@@ -18,7 +18,7 @@
 //    misrepresented as being the original software.
 // 3. This notice may not be removed or altered from any source distribution.
 
-#include "SDL3pp/event.h"
+#include "SDL3pp/events.hpp"
 
 sdl3::event::event()
 : _native_handle(SDL_Event())

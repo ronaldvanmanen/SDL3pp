@@ -22,9 +22,9 @@
 
 #include <boost/operators.hpp>
 
-#include "color.h"
-#include "pixels.h"
-#include "safe_numeric.h"
+#include "color.hpp"
+#include "numerics.hpp"
+#include "pixels.hpp"
 
 namespace sdl3
 {

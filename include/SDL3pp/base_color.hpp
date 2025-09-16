@@ -27,7 +27,7 @@
 
 #include <boost/operators.hpp>
 
-#include "safe_numeric.h"
+#include "numerics.hpp"
 
 namespace sdl3
 {

@@ -27,9 +27,9 @@
 
 #include <SDL3/SDL_pixels.h>
 
-#include "color.h"
-#include "pixels.h"
-#include "surface.h"
+#include "color.hpp"
+#include "pixels.hpp"
+#include "surface.hpp"
 
 namespace sdl3
 {

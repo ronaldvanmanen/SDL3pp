@@ -22,7 +22,7 @@
 
 #include <SDL3/SDL_properties.h>
 
-#include "error.h"
+#include "error.hpp"
 
 namespace sdl3
 {

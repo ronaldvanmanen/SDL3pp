@@ -22,13 +22,53 @@
 
 #include <cstdint>
 
-#include <SDL3/SDL_events.h>
+#include <boost/operators.hpp>
+
+#include "pixels.hpp"
 
 namespace sdl3
 {
-    enum class key_event_type : std::uint32_t
+    class alignas(alignof(std::uint8_t)) index8
+    : boost::totally_ordered<index8
+    , boost::additive<index8
+    , boost::multiplicative<index8
+    , boost::unit_steppable<index8
+    > > > >
     {
-        key_down = SDL_EVENT_KEY_DOWN,
-        key_up = SDL_EVENT_KEY_UP,
+    public:
+        static constexpr pixel_format format = pixel_format::index8;
+
+    public:
+        index8();
+
+        index8(std::uint8_t value);
+
+        index8(index8 const& other);
+
+        index8 & operator=(index8 const& other);
+
+        index8 & operator+=(index8 const& other);
+
+        index8 & operator-=(index8 const& other);
+
+        index8 & operator++();
+
+        index8 & operator--();
+
+        bool operator==(index8 const& other) const;
+
+        bool operator<(index8 const& other) const;
+
+        operator std::uint8_t() const;
+
+    private:
+        std::uint8_t _value;
+    };
+
+    template<color_space C>
+    requires (is_rgb_color_space<C>())
+    struct pixel_color<pixel_format::index8, C>
+    {
+        using type = index8;
     };
 }

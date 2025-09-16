@@ -20,9 +20,9 @@
 
 #include <boost/test/unit_test.hpp>
 
-#include "SDL3pp/indexed_color.h"
-#include "SDL3pp/packed_color.h"
-#include "SDL3pp/surface.h"
+#include "SDL3pp/indexed_color.hpp"
+#include "SDL3pp/packed_color.hpp"
+#include "SDL3pp/surface.hpp"
 
 using sdl3::px;
 

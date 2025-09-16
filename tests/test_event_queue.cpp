@@ -20,7 +20,7 @@
 
 #include <boost/test/unit_test.hpp>
 
-#include "SDL3pp/event_queue.h"
+#include "SDL3pp/events.hpp"
 
 BOOST_AUTO_TEST_SUITE(event_queue);
 

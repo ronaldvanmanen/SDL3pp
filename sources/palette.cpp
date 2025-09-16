@@ -20,8 +20,8 @@
 
 #include <utility>
 
-#include "SDL3pp/error.h"
-#include "SDL3pp/palette.h"
+#include "SDL3pp/error.hpp"
+#include "SDL3pp/palette.hpp"
 
 namespace sdl3
 {

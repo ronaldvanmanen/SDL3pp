@@ -22,7 +22,7 @@
 
 #include <SDL3/SDL_pixels.h>
 
-#include "SDL3pp/color.h"
+#include "SDL3pp/color.hpp"
 
 using sdl3::operator""_r8;
 using sdl3::operator""_g8;

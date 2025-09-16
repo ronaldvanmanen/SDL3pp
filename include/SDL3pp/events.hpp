@@ -24,23 +24,22 @@
 
 #include <SDL3/SDL_events.h>
 
-#include "key_code.h"
-#include "key_event_type.h"
-#include "key_modifier.h"
-#include "scan_code.h"
+#include "key_code.hpp"
+#include "scan_code.hpp"
 
 namespace sdl3
 {
+    class quit_event {};
+
     class keyboard_event
     {
-    public:
+    protected:
         keyboard_event() = delete;
 
         keyboard_event(keyboard_event const&) = delete;
 
         keyboard_event& operator=(keyboard_event const&) = delete;
 
-    protected:
         keyboard_event(SDL_Event && native_handle);
 
     public:
@@ -86,5 +85,95 @@ namespace sdl3
         key_down_event(SDL_Event && native_handle);
 
         key_down_event& operator=(key_down_event const&) = delete;
+    };
+
+    class mouse_wheel_event
+    {
+    public:
+        mouse_wheel_event() = delete;
+
+        mouse_wheel_event(SDL_Event && native_handle);
+
+        mouse_wheel_event(mouse_wheel_event const&) = delete;
+        
+        mouse_wheel_event & operator=(mouse_wheel_event const&) = delete;
+
+        std::uint64_t timestamp() const;
+        
+        std::uint32_t window_id() const;
+
+        std::uint32_t which() const;
+
+        float x() const;
+
+        float y() const;
+
+        std::uint32_t direction() const;
+
+        float mouse_x() const;
+
+        float mouse_y() const;
+
+    private:
+        SDL_Event _native_handle;
+    };
+
+    template<class... Ts>
+    struct event_handler : Ts...
+    {
+        using Ts::operator()...;
+    };
+
+    template<class... Ts>
+    event_handler(Ts...) -> event_handler<Ts...>;
+
+    class event
+    {
+    public:
+        event();
+
+        template<class Self, class EventHandler>
+        void handle(this Self&& self, EventHandler&& handler);
+
+        SDL_Event * native_handle();
+
+    private:
+        SDL_Event _native_handle;
+    };
+
+    template<class Self, class EventHandler>
+    void
+    event::handle(this Self && self, EventHandler && handler)
+    {
+        switch (self._native_handle.type)
+        {
+            case SDL_EVENT_QUIT:
+                handler(quit_event());
+                break;
+
+            case SDL_EVENT_KEY_DOWN:
+                handler(key_down_event(std::move(self._native_handle)));
+                break;
+
+            case SDL_EVENT_KEY_UP:
+                handler(key_up_event(std::move(self._native_handle)));
+                break;
+
+            case SDL_EVENT_MOUSE_WHEEL:
+                handler(mouse_wheel_event(std::move(self._native_handle)));
+                break;
+        }
+    }
+
+    class event_queue
+    {
+    public:
+        event_queue();
+
+        ~event_queue();
+
+        bool poll(event & polled_event);
+
+        bool pending() const;
     };
 }

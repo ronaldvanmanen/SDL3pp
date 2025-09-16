@@ -18,7 +18,7 @@
 //    misrepresented as being the original software.
 // 3. This notice may not be removed or altered from any source distribution.
 
-#include "SDL3pp/mouse_wheel_event.h"
+#include "SDL3pp/events.hpp"
 
 sdl3::mouse_wheel_event::mouse_wheel_event(SDL_Event && native_handle)
 : _native_handle(native_handle)

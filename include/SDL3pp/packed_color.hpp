@@ -24,9 +24,8 @@
 
 #include <boost/operators.hpp>
 
-#include "base_color.h"
-#include "pixels.h"
-#include "pixel_format_details.h"
+#include "base_color.hpp"
+#include "pixels.hpp"
 
 namespace sdl3
 {

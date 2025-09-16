@@ -21,7 +21,7 @@
 #include <boost/test/unit_test.hpp>
 #include <boost/units/io.hpp>
 
-#include "SDL3pp/renderer.h"
+#include "SDL3pp/renderer.hpp"
 
 using sdl3::px;
 using sdl3::operator""_r8;

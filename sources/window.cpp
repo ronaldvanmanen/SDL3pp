@@ -19,8 +19,9 @@
 // 3. This notice may not be removed or altered from any source distribution.
 
 #include <SDL3/SDL.h>
-#include "SDL3pp/error.h"
-#include "SDL3pp/window.h"
+
+#include "SDL3pp/error.hpp"
+#include "SDL3pp/window.hpp"
 
 namespace sdl3
 {

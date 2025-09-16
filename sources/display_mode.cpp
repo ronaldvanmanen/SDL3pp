@@ -18,7 +18,7 @@
 //    misrepresented as being the original software.
 // 3. This notice may not be removed or altered from any source distribution.
 
-#include "SDL3pp/display_mode.h"
+#include "SDL3pp/display_mode.hpp"
 
 sdl3::display_mode::display_mode(SDL_DisplayMode const* native_handle)
 : _native_handle(native_handle)

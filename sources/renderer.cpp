@@ -18,9 +18,9 @@
 //    misrepresented as being the original software.
 // 3. This notice may not be removed or altered from any source distribution.
 
-#include "SDL3pp/error.h"
-#include "SDL3pp/renderer.h"
-#include "SDL3pp/texture.h"
+#include "SDL3pp/error.hpp"
+#include "SDL3pp/renderer.hpp"
+#include "SDL3pp/texture.hpp"
 
 namespace sdl3
 {

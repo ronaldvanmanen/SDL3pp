@@ -18,27 +18,44 @@
 //    misrepresented as being the original software.
 // 3. This notice may not be removed or altered from any source distribution.
 
-#pragma once
-
+#include <chrono>
 #include <cstdint>
 
-#include "key_modifier.h"
-#include "keyboard_state.h"
+#include "SDL3pp/units.hpp"
 
 namespace sdl3
 {
-    struct mouse_state
-    {
-        float x;
-        float y;
-        std::uint32_t buttons;
-
-        bool pressed(std::uint32_t which) const;
-    };
-
-    class mouse
+    class stopwatch
     {
     public:
-        static mouse_state relative_state();
+        using clock = std::chrono::steady_clock;
+        using time_point = clock::time_point;
+        using duration = clock::duration;
+
+    public:
+        static stopwatch start_now();
+
+        stopwatch();
+
+        void start();
+
+        void stop();
+
+        void reset();
+
+        duration elapsed();
+
+    private:
+        time_point _start_time;
+
+        duration _elapsed_time;
+
+        bool _running;
     };
+
+    using fractional_seconds = std::chrono::duration<double>;
+
+    fractional_seconds elapsed_seconds(stopwatch & s);
+
+    time<double> elapsed_time(stopwatch & s);
 }
