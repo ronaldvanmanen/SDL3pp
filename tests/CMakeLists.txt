@@ -9,13 +9,12 @@ endif()
 project ("SDL3pp-tests")
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/../cmake")
-
 include(BoostTestDiscoverTests)
-
-set(BOOSTTEST_DISCOVER_TESTS_DISCOVERY_MODE PRE_TEST)
+include(CodeCoverage)
 
 add_executable("${PROJECT_NAME}"
   "global_fixture.cpp"
+  "test_blend_mode.cpp"
   "test_color.cpp"
   "test_event_queue.cpp"
   "test_main.cpp"
@@ -37,6 +36,12 @@ target_link_libraries("${PROJECT_NAME}"
     Boost::unit_test_framework
 )
 
+add_code_coverage("${PROJECT_NAME}"
+  WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}"
+  PRE_RUN_COVERAGE_TARGET "pre-run-coverage"
+  POST_RUN_COVERAGE_TARGET "post-run-coverage"
+)
+
 boost_test_discover_tests("${PROJECT_NAME}"
   WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}"
   TEST_PREFIX ""
@@ -45,4 +50,6 @@ boost_test_discover_tests("${PROJECT_NAME}"
   SKIP_DISABLED_TESTS
   DISCOVERY_TIMEOUT 1
   DISCOVERY_MODE PRE_TEST
+  PROPERTIES
+    ENVIRONMENT "LLVM_PROFILE_FILE=${PROJECT_NAME}-%m-%p.profraw"
 )

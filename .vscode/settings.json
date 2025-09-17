@@ -2,6 +2,12 @@
     "C_Cpp.default.cppStandard": "c++23",
     "cmake.ctest.debugLaunchTarget": "(Windows) Launch ctest",
     "cmake.ctest.testSuiteDelimiter": "::",
+    "cmake.useCMakePresets": "always",
+    "cmake.preRunCoverageTarget": "pre-run-coverage",
+    "cmake.postRunCoverageTarget": "post-run-coverage",
+    "cmake.coverageInfoFiles": [
+        "${workspaceFolder}/artifacts/build/coverage.info"
+    ],
     "files.associations": {
         "ostream": "cpp",
         "utility": "cpp",

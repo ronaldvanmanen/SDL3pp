@@ -22,6 +22,10 @@ set(CMAKE_CXX_STANDARD 23)
 # B) Add "include(CTest)" to the root "CMakeLists.txt" before we declare any tests
 #
 # See: https://github.com/microsoft/vscode-cmake-tools/issues/3917
+
+find_program(LLVM_COV llvm-cov REQUIRED)
+set(COVERAGE_COMMAND "${LLVM_COV}")
+set(COVERAGE_EXTRA_FLAGS "")
 include(CTest)
 
 add_library("${PROJECT_NAME}"
