@@ -72,16 +72,16 @@ macro(add_command NAME)
 endmacro()
 
 # Adds another test to the script.
-macro(add_another_test hierarchy_list enabled source_line separator)
+macro(write_test_to_file test_hierarchy test_enabled test_source_line test_name_separator)
   # Create the name and path of the test-case...
   if (CMAKE_VERSION VERSION_LESS "3.12")
     set(test_name)
     set(test_path)
-    foreach(hierarchy_entry IN LISTS ${hierarchy_list})
+    foreach(hierarchy_entry IN LISTS ${test_hierarchy})
       if ("${test_name}" STREQUAL "")
         set(test_name "${hierarchy_entry}")
       else()
-        set(test_name "${test_name}${separator}${hierarchy_entry}")
+        set(test_name "${test_name}${test_name_separator}${hierarchy_entry}")
       endif()
       if ("${test_path}" STREQUAL "")
         set(test_path "${hierarchy_entry}")
@@ -90,34 +90,44 @@ macro(add_another_test hierarchy_list enabled source_line separator)
       endif()
     endforeach()
   else()
-    list(JOIN ${hierarchy_list} ${separator} test_name)
-    list(JOIN ${hierarchy_list} "/" test_path)
+    list(JOIN ${test_hierarchy} ${test_name_separator} test_name)
+    list(JOIN ${test_hierarchy} "/" test_path)
   endif()
+  set(full_test_name "${prefix}${test_name}${suffix}")
   # ...and add to script.
   add_command(add_test
-      "${prefix}${test_name}${suffix}"
+      "${full_test_name}"
       ${__TEST_EXECUTOR}
       "${__TEST_EXECUTABLE}"
       "--run_test=${test_path}"
       ${extra_args}
   )
-  if(NOT ${enabled})
-    add_command(set_tests_properties
-      "${prefix}${test_name}${suffix}"
-      PROPERTIES
-      DISABLED TRUE
-    )
+
+  set(maybe_disabled "")
+  if(NOT ${test_enabled})
+    set(maybe_disabled DISABLED TRUE)
   endif()
+
+  set(maybe_source_line "")
+  if(NOT ${test_source_line} STREQUAL "")
+    set(maybe_source_line DEF_SOURCE_LINE ${test_source_line})
+  endif()
+
   add_command(set_tests_properties
-    "${prefix}${test_name}${suffix}"
+    "${full_test_name}"
     PROPERTIES
-    WORKING_DIRECTORY "${__TEST_WORKING_DIR}"
-    DEF_SOURCE_LINE "${source_line}"
-    ${properties}
+      ${maybe_disabled}
+      ${maybe_source_line}
+      WORKING_DIRECTORY "${__TEST_WORKING_DIR}"
+      ${properties}
   )
-  list(APPEND tests_buffer "${prefix}${test_name}${suffix}")
+  list(APPEND tests_buffer "${full_test_name}")
   list(LENGTH tests_buffer tests_buffer_length)
   if(${tests_buffer_length} GREATER "250")
+    # Chunk updates to the final "tests" variable, keeping the
+    # "tests_buffer" variable that we append each test to relatively
+    # small. This mitigates worsening performance impacts for the
+    # corner case of having many thousands of tests.
     flush_tests_buffer()
   endif()
 endmacro()
@@ -218,7 +228,7 @@ function(boost_test_discover_tests_impl)
     # Add the test for the test-case from the former loop-run?
     if ((next_level LESS former_level) OR (next_level EQUAL former_level))
       # Add test-case to the script.
-      add_another_test(test_hierarchy ${test_enabled} "${test_source_line}" "${__TEST_NAME_SEPARATOR}")
+      write_test_to_file(test_hierarchy ${test_enabled} ${test_source_line} "${__TEST_NAME_SEPARATOR}")
 
       # Prepare the hierarchy list for the next test-case.
       math(EXPR diff "${former_level} - ${next_level}")
@@ -254,15 +264,22 @@ function(boost_test_discover_tests_impl)
     string(REGEX REPLACE [[([\;$])]] [[\\\1]] name "${name}")
 
     # Extract the source file and line number name of the next test case.
-    string(REGEX MATCH "${name}\\|[^\"]+" test_source_line "${dot_output}")
-    string(REGEX REPLACE "${name}\\|([^\\(]+)\\(([0-9]+)\\)" "\\1:\\2" test_source_line "${test_source_line}")
+    string(REGEX MATCH "${name}\\|([^\\(]+)\\(([0-9]+)\\)" _ "${dot_output}")
+    if(CMAKE_MATCH_COUNT EQUAL 2)
+      set(test_source ${CMAKE_MATCH_1})
+      set(test_line ${CMAKE_MATCH_2})
+      cmake_path(CONVERT "${test_source}" TO_CMAKE_PATH_LIST test_source)
+      set(test_source_line "${test_source}:${test_line}")
+    else()
+      set(test_source_line "")
+    endif()
 
     # Add the name to the hierarchy list.
     list(APPEND test_hierarchy "${name}")
   endforeach()
 
   # Add last test-case to the script (if any).
-  add_another_test(test_hierarchy ${test_enabled} "${test_source_line}" "${__TEST_NAME_SEPARATOR}")
+  write_test_to_file(test_hierarchy ${test_enabled} ${test_source_line} "${__TEST_NAME_SEPARATOR}")
 
   # Create a list of all discovered tests, which users may use to e.g. set
   # properties on the tests.
@@ -271,10 +288,7 @@ function(boost_test_discover_tests_impl)
     add_command(set ${__TEST_LIST} ${tests})
   endif()
 
-  # Write CTest script
-  file(WRITE "${__CTEST_FILE}" "${script}")
-
-  # Write CTest script
+  # Write remaining content to the CTest script
   flush_script()
 
 endfunction()
