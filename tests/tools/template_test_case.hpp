@@ -67,9 +67,9 @@ namespace sdl3::unit_test::tools
         void operator()(boost::mpl::identity<TestType>)
         {
             std::string test_case_name;
-            assign_op(test_case_name, m_test_case_name, 0);
+            // assign_op(test_case_name, m_test_case_name, 0);
             //test_case_name += '<';
-            test_case_name += "_for_";
+            // test_case_name += "_for_";
             test_case_name += test_type_name_generator<TestType>::value();
             //test_case_name += '>';
 
@@ -114,15 +114,15 @@ namespace sdl3::unit_test::tools
 
 #define SDL3PP_FIXTURE_TEST_CASE_TEMPLATE(test_name, type_name, type_list, fixture) \
 template<typename type_name>                                                        \
-struct test_name : public fixture                                                   \
+struct BOOST_PP_CAT(test_name, _case) : public fixture                              \
 { void test_method(); };                                                            \
                                                                                     \
-struct BOOST_AUTO_TC_INVOKER(test_name) {                                           \
+struct BOOST_AUTO_TC_INVOKER( BOOST_PP_CAT(test_name, _case)) {                     \
     template<typename TestType>                                                     \
     static void run(boost::type<TestType>* = 0)                                     \
     {                                                                               \
         BOOST_TEST_CHECKPOINT('"' << #test_name << "\" fixture ctor");              \
-        test_name<TestType> t;                                                      \
+        BOOST_PP_CAT(test_name, _case)<TestType> t;                                 \
         BOOST_TEST_CHECKPOINT('"' << #test_name << "\" fixture setup");             \
         boost::unit_test::setup_conditional(t);                                     \
         BOOST_TEST_CHECKPOINT('"' << #test_name << "\" test entry");                \
@@ -133,14 +133,19 @@ struct BOOST_AUTO_TC_INVOKER(test_name) {                                       
     }                                                                               \
 };                                                                                  \
                                                                                     \
-BOOST_AUTO_TU_REGISTRAR( test_name )(                                               \
-    sdl3::unit_test::tools::template_test_case_generator<                               \
-        BOOST_AUTO_TC_INVOKER(test_name), type_list>(                               \
+BOOST_AUTO_TEST_SUITE( test_name,                                                   \
+                       *boost::unit_test::decorator::stack_decorator())             \
+                                                                                    \
+BOOST_AUTO_TU_REGISTRAR( BOOST_PP_CAT(test_name, _case) )(                          \
+    sdl3::unit_test::tools::template_test_case_generator<                           \
+        BOOST_AUTO_TC_INVOKER( BOOST_PP_CAT(test_name, _case) ), type_list>(        \
           BOOST_STRINGIZE(test_name), __FILE__, __LINE__),                          \
     boost::unit_test::decorator::collector_t::instance());                          \
                                                                                     \
+BOOST_AUTO_TEST_SUITE_END()                                                         \
+                                                                                    \
 template<typename type_name>                                                        \
-void test_name<type_name>::test_method()                                            \
+void BOOST_PP_CAT(test_name, _case)<type_name>::test_method()                       \
 /**/
 
 #define SDL3PP_AUTO_TEST_CASE_TEMPLATE(test_name, type_name, type_list)     \
