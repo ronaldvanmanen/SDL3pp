@@ -43,12 +43,12 @@ namespace sdl3
     {
         switch (value)
         {
-            case blend_mode::none: stream << "none";
-            case blend_mode::blend: stream << "blend";
-            case blend_mode::additive: stream << "additive";
-            case blend_mode::modulate: stream << "modulate";
-            case blend_mode::multiply: stream << "multiply";
-            case blend_mode::invalid: stream << "invalid";
+            case blend_mode::none: stream << "none"; break;
+            case blend_mode::blend: stream << "blend"; break;
+            case blend_mode::additive: stream << "additive"; break;
+            case blend_mode::modulate: stream << "modulate"; break;
+            case blend_mode::multiply: stream << "multiply"; break;
+            case blend_mode::invalid: stream << "invalid"; break;
         }
         return stream;
     }
