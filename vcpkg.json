@@ -5,6 +5,7 @@
   "homepage": "https://github.com/ronaldvanmanen/sdl3pp",
   "license": "zlib",
   "dependencies": [
+    "boost-algorithm",
     "boost-core",
     "boost-optional",
     "boost-poly-collection",

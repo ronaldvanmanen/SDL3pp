@@ -18,8 +18,13 @@
 //    misrepresented as being the original software.
 // 3. This notice may not be removed or altered from any source distribution.
 
-#include <boost/test/unit_test.hpp>
+#if !defined(NDEBUG) && defined(_MSC_VER)
+#   define SDL3PP_MS_CRT_BASED_DEBUG
+#   include <crtdbg.h>
+#endif
+
 #include <boost/test/debug.hpp>
+#include <boost/test/unit_test.hpp>
 
 struct global_fixture
 {
@@ -30,6 +35,10 @@ struct global_fixture
 
 global_fixture::global_fixture()
 {
+#ifdef SDL3PP_MS_CRT_BASED_DEBUG
+    _CrtSetDbgFlag(0);
+#endif
+
     boost::debug::detect_memory_leaks(false);
 }
 

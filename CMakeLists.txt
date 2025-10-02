@@ -51,6 +51,7 @@ add_library("${PROJECT_NAME}"
 
 find_package(Boost REQUIRED
   COMPONENTS
+  algorithm
   optional
   safe_numerics
   units
@@ -59,6 +60,7 @@ find_package(Boost REQUIRED
 
 target_link_libraries("${PROJECT_NAME}"
   PRIVATE
+  Boost::algorithm
   Boost::core
   Boost::optional
   Boost::safe_numerics
