@@ -45,15 +45,19 @@ namespace sdl3
     }; \
     /**/
 
-    RGB_PACKED_COLOR_TRAITS(rgb332,     8,   3, 3, 2)
-    RGB_PACKED_COLOR_TRAITS(xrgb4444,   16,  4, 4, 4)
-    RGB_PACKED_COLOR_TRAITS(xbgr4444,   16,  4, 4, 4)
-    RGB_PACKED_COLOR_TRAITS(xrgb8888,   32,  8, 8, 8)
-    RGB_PACKED_COLOR_TRAITS(rgbx8888,   32,  8, 8, 8)
-    RGB_PACKED_COLOR_TRAITS(xbgr8888,   32,  8, 8, 8)
-    RGB_PACKED_COLOR_TRAITS(bgrx8888,   32,  8, 8, 8)
-    RGB_PACKED_COLOR_TRAITS(rgb565,     16,  5, 6, 5)
-    RGB_PACKED_COLOR_TRAITS(bgr565,     16,  5, 6, 5)
+    RGB_PACKED_COLOR_TRAITS(rgb332,      8,   3,  3,  2)
+    RGB_PACKED_COLOR_TRAITS(xrgb4444,    16,  4,  4,  4)
+    RGB_PACKED_COLOR_TRAITS(xbgr4444,    16,  4,  4,  4)
+    RGB_PACKED_COLOR_TRAITS(xrgb1555,    16,  5,  5,  5)
+    RGB_PACKED_COLOR_TRAITS(xbgr1555,    16,  5,  5,  5)
+    RGB_PACKED_COLOR_TRAITS(xrgb8888,    32,  8,  8,  8)
+    RGB_PACKED_COLOR_TRAITS(rgbx8888,    32,  8,  8,  8)
+    RGB_PACKED_COLOR_TRAITS(xbgr8888,    32,  8,  8,  8)
+    RGB_PACKED_COLOR_TRAITS(bgrx8888,    32,  8,  8,  8)
+    RGB_PACKED_COLOR_TRAITS(rgb565,      16,  5,  6,  5)
+    RGB_PACKED_COLOR_TRAITS(bgr565,      16,  5,  6,  5)
+    RGB_PACKED_COLOR_TRAITS(xrgb2101010, 32,  10, 10, 10)
+    RGB_PACKED_COLOR_TRAITS(xbgr2101010, 32,  10, 10, 10)
 #undef RGB_PACKED_COLOR_TRAITS
 
     template<pixel_format P, color_space C = default_color_space<P>()>
@@ -271,7 +275,7 @@ namespace sdl3
     std::basic_ostream<CharT, Traits> &
     operator<<(std::basic_ostream<CharT, Traits> & stream, rgb_packed_color<P, C> const& value)
     {
-        return stream << value.a << ',' << value.r << ',' << value.g << ',' << value.b;
+        return stream << value.r() << ',' << value.g() << ',' << value.b();
     }
 
     using s_rgb332 = rgb_packed_color<pixel_format::rgb332, color_space::srgb>;

@@ -44,87 +44,76 @@ namespace sdl3::unit_test::tools
 }
 
 typedef boost::mpl::list<
-    pixel_format_constant<sdl3::pixel_format::argb4444>,
-    pixel_format_constant<sdl3::pixel_format::rgba4444>,
-    pixel_format_constant<sdl3::pixel_format::abgr4444>,
-    pixel_format_constant<sdl3::pixel_format::bgra4444>,
-    pixel_format_constant<sdl3::pixel_format::argb1555>,
-    pixel_format_constant<sdl3::pixel_format::rgba5551>,
-    pixel_format_constant<sdl3::pixel_format::abgr1555>,
-    pixel_format_constant<sdl3::pixel_format::bgra5551>,
-    pixel_format_constant<sdl3::pixel_format::argb8888>,
-    pixel_format_constant<sdl3::pixel_format::rgba8888>,
-    pixel_format_constant<sdl3::pixel_format::abgr8888>,
-    pixel_format_constant<sdl3::pixel_format::bgra8888>,
-    pixel_format_constant<sdl3::pixel_format::argb2101010>,
-    pixel_format_constant<sdl3::pixel_format::abgr2101010>
+    pixel_format_constant<sdl3::pixel_format::xrgb4444>,
+    pixel_format_constant<sdl3::pixel_format::xbgr4444>,
+    pixel_format_constant<sdl3::pixel_format::xrgb1555>,
+    pixel_format_constant<sdl3::pixel_format::xbgr1555>,
+    pixel_format_constant<sdl3::pixel_format::rgb565>,
+    pixel_format_constant<sdl3::pixel_format::bgr565>,
+    pixel_format_constant<sdl3::pixel_format::xrgb8888>,
+    pixel_format_constant<sdl3::pixel_format::rgbx8888>,
+    pixel_format_constant<sdl3::pixel_format::xbgr8888>,
+    pixel_format_constant<sdl3::pixel_format::bgrx8888>,
+    pixel_format_constant<sdl3::pixel_format::xrgb2101010>,
+    pixel_format_constant<sdl3::pixel_format::xbgr2101010>
 > test_pixel_formats;
 
-BOOST_AUTO_TEST_SUITE(packed_color);
+BOOST_AUTO_TEST_SUITE(rgb_packed_color);
 
 SDL3PP_AUTO_TEST_CASE_TEMPLATE(test_default_constructor, PixelFormat, test_pixel_formats)
 {
-    using packed_color_t = sdl3::rgba_packed_color<PixelFormat::value>;
+    using packed_color_t = sdl3::rgb_packed_color<PixelFormat::value>;
     using r_t = packed_color_t::r_type;
     using g_t = packed_color_t::g_type;
     using b_t = packed_color_t::b_type;
-    using a_t = packed_color_t::a_type;
 
     packed_color_t test_color;
 
     BOOST_TEST(test_color.r() == r_t(0));
     BOOST_TEST(test_color.g() == g_t(0));
     BOOST_TEST(test_color.b() == b_t(0));
-    BOOST_TEST(test_color.a() == a_t(0));
 }
 
 SDL3PP_AUTO_TEST_CASE_TEMPLATE(test_component_constructor, PixelFormat, test_pixel_formats)
 {
-    using packed_color_t = sdl3::rgba_packed_color<PixelFormat::value>;
+    using packed_color_t = sdl3::rgb_packed_color<PixelFormat::value>;
     using r_t = packed_color_t::r_type;
     using g_t = packed_color_t::g_type;
     using b_t = packed_color_t::b_type;
-    using a_t = packed_color_t::a_type;
 
     auto random_engine = std::default_random_engine(0);
     auto r_distribution = sdl3::unit_test::tools::uniform_color_distribution<r_t>();
     auto g_distribution = sdl3::unit_test::tools::uniform_color_distribution<g_t>();
     auto b_distribution = sdl3::unit_test::tools::uniform_color_distribution<b_t>();
-    auto a_distribution = sdl3::unit_test::tools::uniform_color_distribution<a_t>();
 
     auto r = r_distribution(random_engine);
     auto g = g_distribution(random_engine);
     auto b = b_distribution(random_engine);
-    auto a = a_distribution(random_engine);
 
-    auto test_color = packed_color_t(r, g, b, a);
+    auto test_color = packed_color_t(r, g, b);
 
     BOOST_TEST(r == test_color.r());
     BOOST_TEST(g == test_color.g());
     BOOST_TEST(b == test_color.b());
-    BOOST_TEST(a == test_color.a());
 }
 
 SDL3PP_AUTO_TEST_CASE_TEMPLATE(test_copy_constructor, PixelFormat, test_pixel_formats)
 {
-    using packed_color_t = sdl3::rgba_packed_color<PixelFormat::value>;
+    using packed_color_t = sdl3::rgb_packed_color<PixelFormat::value>;
     using r_t = packed_color_t::r_type;
     using g_t = packed_color_t::g_type;
     using b_t = packed_color_t::b_type;
-    using a_t = packed_color_t::a_type;
 
     auto random_engine = std::default_random_engine(0);
     auto r_distribution = sdl3::unit_test::tools::uniform_color_distribution<r_t>();
     auto g_distribution = sdl3::unit_test::tools::uniform_color_distribution<g_t>();
     auto b_distribution = sdl3::unit_test::tools::uniform_color_distribution<b_t>();
-    auto a_distribution = sdl3::unit_test::tools::uniform_color_distribution<a_t>();
 
     auto r = r_distribution(random_engine);
     auto g = g_distribution(random_engine);
     auto b = b_distribution(random_engine);
-    auto a = a_distribution(random_engine);
 
-    auto source_color = packed_color_t(r, g, b, a);
+    auto source_color = packed_color_t(r, g, b);
 
     auto target_color(source_color);
 
@@ -133,24 +122,21 @@ SDL3PP_AUTO_TEST_CASE_TEMPLATE(test_copy_constructor, PixelFormat, test_pixel_fo
 
 SDL3PP_AUTO_TEST_CASE_TEMPLATE(test_assignment_operator, PixelFormat, test_pixel_formats)
 {
-    using packed_color_t = sdl3::rgba_packed_color<PixelFormat::value>;
+    using packed_color_t = sdl3::rgb_packed_color<PixelFormat::value>;
     using r_t = packed_color_t::r_type;
     using g_t = packed_color_t::g_type;
     using b_t = packed_color_t::b_type;
-    using a_t = packed_color_t::a_type;
 
     auto random_engine = std::default_random_engine(0);
     auto r_distribution = sdl3::unit_test::tools::uniform_color_distribution<r_t>();
     auto g_distribution = sdl3::unit_test::tools::uniform_color_distribution<g_t>();
     auto b_distribution = sdl3::unit_test::tools::uniform_color_distribution<b_t>();
-    auto a_distribution = sdl3::unit_test::tools::uniform_color_distribution<a_t>();
 
     auto r = r_distribution(random_engine);
     auto g = g_distribution(random_engine);
     auto b = b_distribution(random_engine);
-    auto a = a_distribution(random_engine);
 
-    auto source_color = packed_color_t(r, g, b, a);
+    auto source_color = packed_color_t(r, g, b);
     
     auto target_color = packed_color_t();
 
@@ -161,7 +147,7 @@ SDL3PP_AUTO_TEST_CASE_TEMPLATE(test_assignment_operator, PixelFormat, test_pixel
 
 SDL3PP_AUTO_TEST_CASE_TEMPLATE(test_addition_is_commutative, PixelFormat, test_pixel_formats)
 {
-    using packed_color_t = sdl3::rgba_packed_color<PixelFormat::value>;
+    using packed_color_t = sdl3::rgb_packed_color<PixelFormat::value>;
 
     auto random_engine = std::default_random_engine(0);
     auto color_distribution = sdl3::unit_test::tools::uniform_color_distribution<packed_color_t>();
