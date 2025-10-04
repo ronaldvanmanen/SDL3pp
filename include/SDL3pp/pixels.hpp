@@ -161,7 +161,7 @@ namespace sdl3
         mjpg = SDL_PIXELFORMAT_MJPG,
     };
 
-    template<class CharT, class Traits = std::char_traits<CharT>, class Allocator = std::allocator<CharT>>
+    template<class CharT, class Traits = std::char_traits<CharT>, class Allocator = std::allocator<CharT> >
     std::basic_string<CharT, Traits, Allocator> name(pixel_format const& value)
     {
         switch (value)

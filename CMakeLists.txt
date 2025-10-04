@@ -53,7 +53,6 @@ find_package(Boost REQUIRED
   COMPONENTS
   algorithm
   optional
-  safe_numerics
   units
   utility
 )
@@ -63,7 +62,6 @@ target_link_libraries("${PROJECT_NAME}"
   Boost::algorithm
   Boost::core
   Boost::optional
-  Boost::safe_numerics
   Boost::units
   Boost::utility
 )

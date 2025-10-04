@@ -20,9 +20,9 @@
 
 #include <random>
 
-#include <boost/safe_numerics/safe_integer_range.hpp>
-
 #include "SDL3pp/base_color.hpp"
+#include "SDL3pp/numerics.hpp"
+#include "SDL3pp/packed_color.hpp"
 
 namespace sdl3::unit_test::tools
 {
@@ -38,19 +38,19 @@ namespace sdl3::unit_test::tools
         using type = unsigned short;
     };
 
-    template<class SafeInt>
-    class uniform_safe_int_distribution
+    template<class ClampedInt>
+    class uniform_clamped_int_distribution
     {
     public:
-        using result_type = SafeInt;
+        using result_type = ClampedInt;
 
     private:
         using int_type = promote<
-            typename boost::safe_numerics::base_type<result_type>::type
+            typename base_type<result_type>::type
         >::type;
 
     public:
-        uniform_safe_int_distribution()
+        uniform_clamped_int_distribution()
         : _distribution(
             static_cast<int_type>(std::numeric_limits<result_type>::min()),
             static_cast<int_type>(std::numeric_limits<result_type>::max())
@@ -72,7 +72,7 @@ namespace sdl3::unit_test::tools
     { };
 
     template<typename T, typename Tag>
-    class uniform_color_distribution<base_color<T, Tag>>
+    class uniform_color_distribution<base_color<T, Tag> >
     {
     public:
         using result_type = base_color<T, Tag>;
@@ -85,11 +85,11 @@ namespace sdl3::unit_test::tools
         }
 
     private:
-        uniform_safe_int_distribution<T> _distribution;
+        uniform_clamped_int_distribution<T> _distribution;
     };
 
     template<pixel_format P, color_space C>
-    class uniform_color_distribution<rgba_packed_color<P, C>>
+    class uniform_color_distribution<rgba_packed_color<P, C> >
     {
     public:
         using result_type = rgba_packed_color<P, C>;

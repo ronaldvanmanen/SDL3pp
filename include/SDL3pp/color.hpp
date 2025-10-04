@@ -35,7 +35,7 @@ namespace sdl3
     : boost::equality_comparable<color
     , boost::additive<color
     , boost::multiplicative<color
-    , boost::multiplicative<color, safe_uint8_t
+    , boost::multiplicative<color, clamped_uint8_t
     > > > >
     {
     public:
@@ -66,9 +66,9 @@ namespace sdl3
 
         color & operator-=(color const& other);
 
-        color & operator*=(safe_uint8_t scalar);
+        color & operator*=(clamped_uint8_t scalar);
 
-        color & operator/=(safe_uint8_t scalar);
+        color & operator/=(clamped_uint8_t scalar);
 
         bool operator==(color const& other) const;
 

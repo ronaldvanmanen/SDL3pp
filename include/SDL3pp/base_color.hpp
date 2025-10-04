@@ -38,7 +38,7 @@ namespace sdl3
     struct base_color_limits { };
 
     template<typename T, typename Tag>
-    struct base_color_limits<base_color<T, Tag>>
+    struct base_color_limits<base_color<T, Tag> >
     {
         static constexpr base_color<T, Tag>(min)()
         {
@@ -243,12 +243,12 @@ namespace sdl3
     template<typename T>
     using red = base_color<T, struct red_tag>;
 
-    using r3 = red<safe_uint3_t>;
-    using r4 = red<safe_uint4_t>;
-    using r5 = red<safe_uint5_t>;
-    using r8 = red<safe_uint8_t>;
-    using r10 = red<safe_uint10_t>;
-    using r32f = red<safe_unorm_float>;
+    using r3 = red<clamped_uint3_t>;
+    using r4 = red<clamped_uint4_t>;
+    using r5 = red<clamped_uint5_t>;
+    using r8 = red<clamped_uint8_t>;
+    using r10 = red<clamped_uint10_t>;
+    using r32f = red<clamped_unorm_float>;
 
     inline auto operator""_r3(unsigned long long value) { return r3(value); };
     inline auto operator""_r4(unsigned long long value) { return r4(value); };
@@ -260,13 +260,13 @@ namespace sdl3
     template<typename T>
     using green = base_color<T, struct green_tag>;
 
-    using g3 = green<safe_uint3_t>;
-    using g4 = green<safe_uint4_t>;
-    using g5 = green<safe_uint5_t>;
-    using g6 = green<safe_uint6_t>;
-    using g8 = green<safe_uint8_t>;
-    using g10 = green<safe_uint10_t>;
-    using g32f = green<safe_unorm_float>;
+    using g3 = green<clamped_uint3_t>;
+    using g4 = green<clamped_uint4_t>;
+    using g5 = green<clamped_uint5_t>;
+    using g6 = green<clamped_uint6_t>;
+    using g8 = green<clamped_uint8_t>;
+    using g10 = green<clamped_uint10_t>;
+    using g32f = green<clamped_unorm_float>;
 
     inline auto operator""_g3(unsigned long long value) { return g3(value); };
     inline auto operator""_g4(unsigned long long value) { return g4(value); };
@@ -279,12 +279,12 @@ namespace sdl3
     template<typename T>
     using blue = base_color<T, struct blue_tag>;
 
-    using b2 = blue<safe_uint2_t>;
-    using b4 = blue<safe_uint4_t>;
-    using b5 = blue<safe_uint5_t>;
-    using b8 = blue<safe_uint8_t>;
-    using b10 = blue<safe_uint10_t>;
-    using b32f = blue<safe_unorm_float>;
+    using b2 = blue<clamped_uint2_t>;
+    using b4 = blue<clamped_uint4_t>;
+    using b5 = blue<clamped_uint5_t>;
+    using b8 = blue<clamped_uint8_t>;
+    using b10 = blue<clamped_uint10_t>;
+    using b32f = blue<clamped_unorm_float>;
 
     inline auto operator""_b2(unsigned long long value) { return b2(value); };
     inline auto operator""_b4(unsigned long long value) { return b4(value); };
@@ -296,11 +296,11 @@ namespace sdl3
     template<typename T>
     using alpha = base_color<T, struct alpha_tag>;
 
-    using a1 = alpha<safe_uint1_t>;
-    using a2 = alpha<safe_uint2_t>;
-    using a4 = alpha<safe_uint4_t>;
-    using a8 = alpha<safe_uint8_t>;
-    using a32f = alpha<safe_unorm_float>;
+    using a1 = alpha<clamped_uint1_t>;
+    using a2 = alpha<clamped_uint2_t>;
+    using a4 = alpha<clamped_uint4_t>;
+    using a8 = alpha<clamped_uint8_t>;
+    using a32f = alpha<clamped_unorm_float>;
 
     inline auto operator""_a1(unsigned long long value) { return a1(value); };
     inline auto operator""_a2(unsigned long long value) { return a2(value); };

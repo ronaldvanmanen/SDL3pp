@@ -159,7 +159,7 @@ SDL3PP_AUTO_TEST_CASE_TEMPLATE(test_assignment_operator, PixelFormat, test_pixel
     BOOST_TEST(source_color == target_color);
 }
 
-SDL3PP_AUTO_TEST_CASE_TEMPLATE(test_addition_commutative, PixelFormat, test_pixel_formats)
+SDL3PP_AUTO_TEST_CASE_TEMPLATE(test_addition_is_commutative, PixelFormat, test_pixel_formats)
 {
     using packed_color_t = sdl3::rgba_packed_color<PixelFormat::value>;
 
