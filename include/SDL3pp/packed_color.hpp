@@ -555,7 +555,7 @@ namespace sdl3
     std::basic_ostream<CharT, Traits> &
     operator<<(std::basic_ostream<CharT, Traits> & stream, rgba_packed_color<P, C> const& value)
     {
-        return stream << value.a() << ',' << value.r() << ',' << value.g() << ',' << value.b();
+        return stream << value.r() << ',' << value.g() << ',' << value.b() << ',' << value.a();
     }
 
     using s_argb4444 = rgba_packed_color<pixel_format::argb4444, color_space::srgb>;
