@@ -145,6 +145,31 @@ SDL3PP_AUTO_TEST_CASE_TEMPLATE(test_assignment_operator, PixelFormat, test_pixel
     BOOST_TEST(source_color == target_color);
 }
 
+SDL3PP_AUTO_TEST_CASE_TEMPLATE(test_self_assignment, PixelFormat, test_pixel_formats)
+{
+    using packed_color_t = sdl3::rgb_packed_color<PixelFormat::value>;
+    using r_t = packed_color_t::r_type;
+    using g_t = packed_color_t::g_type;
+    using b_t = packed_color_t::b_type;
+
+    auto random_engine = std::default_random_engine(0);
+    auto r_distribution = sdl3::unit_test::tools::uniform_color_distribution<r_t>();
+    auto g_distribution = sdl3::unit_test::tools::uniform_color_distribution<g_t>();
+    auto b_distribution = sdl3::unit_test::tools::uniform_color_distribution<b_t>();
+
+    auto r = r_distribution(random_engine);
+    auto g = g_distribution(random_engine);
+    auto b = b_distribution(random_engine);
+
+    auto test_color = packed_color_t(r, g, b);
+    
+    test_color = test_color;
+
+    BOOST_TEST(r == test_color.r());
+    BOOST_TEST(g == test_color.g());
+    BOOST_TEST(b == test_color.b());
+}
+
 SDL3PP_AUTO_TEST_CASE_TEMPLATE(test_addition_is_commutative, PixelFormat, test_pixel_formats)
 {
     using packed_color_t = sdl3::rgb_packed_color<PixelFormat::value>;
@@ -155,6 +180,18 @@ SDL3PP_AUTO_TEST_CASE_TEMPLATE(test_addition_is_commutative, PixelFormat, test_p
     auto y = color_distribution(random_engine);
 
     BOOST_TEST(x + y == y + x);
+}
+
+SDL3PP_AUTO_TEST_CASE_TEMPLATE(test_multiplication_is_commutative, PixelFormat, test_pixel_formats)
+{
+    using packed_color_t = sdl3::rgb_packed_color<PixelFormat::value>;
+
+    auto random_engine = std::default_random_engine(0);
+    auto color_distribution = sdl3::unit_test::tools::uniform_color_distribution<packed_color_t>();
+    auto x = color_distribution(random_engine);
+    auto y = color_distribution(random_engine);
+
+    BOOST_TEST(x * y == y * x);
 }
 
 BOOST_AUTO_TEST_SUITE_END();
