@@ -23,6 +23,7 @@
 
 #include "SDL3pp/array_color.hpp"
 #include "SDL3pp/base_color.hpp"
+#include "SDL3pp/color.hpp"
 #include "SDL3pp/numerics.hpp"
 #include "SDL3pp/packed_color.hpp"
 
@@ -136,6 +137,28 @@ namespace sdl3::unit_test::tools
 
     private:
         uniform_clamped_real_distribution<T> _distribution;
+    };
+
+    template<>
+    class uniform_color_distribution<color>
+    {
+    public:
+        template <class Engine>
+        color operator()(Engine & engine) /*const*/
+        {
+            return color(
+                _r_distribution(engine),
+                _g_distribution(engine),
+                _b_distribution(engine),
+                _a_distribution(engine)
+            );
+        }
+
+    private:
+        uniform_color_distribution<r8> _r_distribution;
+        uniform_color_distribution<g8> _g_distribution;
+        uniform_color_distribution<b8> _b_distribution;
+        uniform_color_distribution<a8> _a_distribution;
     };
 
     template<pixel_format P, color_space C>

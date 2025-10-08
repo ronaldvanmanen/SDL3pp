@@ -84,18 +84,23 @@ namespace sdl3
             requires (!std::is_same_v<T, To> && std::is_convertible_v<T, To>)
         operator To() const;
 
-    public:
-        template<typename CharT, typename Traits>
-        friend
-        std::basic_ostream<CharT, Traits> &
-        operator<<(std::basic_ostream<CharT, Traits> & stream, clamped_numeric const& value)
-        {
-            return stream << value._value;
-        }
-
     private:
         T _value;
     };
+
+    template<typename T, T Min, T Max, typename CharT, typename Traits>
+    std::basic_ostream<CharT, Traits> &
+    operator<<(std::basic_ostream<CharT, Traits> & stream, clamped_numeric<T, Min, Max> const& value)
+    {
+        return stream << static_cast<T>(value);
+    }
+
+    template<std::uint8_t Min, std::uint8_t Max, typename CharT, typename Traits>
+    std::basic_ostream<CharT, Traits> &
+    operator<<(std::basic_ostream<CharT, Traits> & stream, clamped_numeric<std::uint8_t, Min, Max> const& value)
+    {
+        return stream << static_cast<std::uint32_t>(value);
+    }
 
     template<class T>
     struct is_clamped_numeric
