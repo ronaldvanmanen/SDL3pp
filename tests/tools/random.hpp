@@ -225,4 +225,34 @@ namespace sdl3::unit_test::tools
         uniform_color_distribution<b_type> _b_distribution;
     };
 
+    template<pixel_format P, color_space C>
+    class uniform_color_distribution<rgba_array_color<P, C> >
+    {
+    public:
+        using result_type = rgba_array_color<P, C>;
+
+    private:
+        using r_type = result_type::r_type;
+        using g_type = result_type::g_type;
+        using b_type = result_type::b_type;
+        using a_type = result_type::a_type;
+
+    public:
+        template <class Engine>
+        result_type operator()(Engine & engine) /*const*/
+        {
+            return result_type(
+                _r_distribution(engine),
+                _g_distribution(engine),
+                _b_distribution(engine),
+                _a_distribution(engine)
+            );
+        }
+
+    private:
+        uniform_color_distribution<r_type> _r_distribution;
+        uniform_color_distribution<g_type> _g_distribution;
+        uniform_color_distribution<b_type> _b_distribution;
+        uniform_color_distribution<a_type> _a_distribution;
+    };
 }

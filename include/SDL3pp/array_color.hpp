@@ -338,7 +338,9 @@ namespace sdl3
     };
 
     RGBA_ARRAY_COLOR_TRAITS(rgba128f, clamped_unorm_float, 0, 1, 2, 3)
-    RGBA_ARRAY_COLOR_TRAITS(bgra128f, clamped_unorm_float, 3, 2, 1, 0)
+    RGBA_ARRAY_COLOR_TRAITS(argb128f, clamped_unorm_float, 1, 2, 3, 0)
+    RGBA_ARRAY_COLOR_TRAITS(bgra128f, clamped_unorm_float, 2, 1, 0, 3)
+    RGBA_ARRAY_COLOR_TRAITS(abgr128f, clamped_unorm_float, 3, 2, 1, 0)
 #undef RGBA_ARRAY_COLOR_TRAITS
 
     template<pixel_format P, color_space C = default_color_space<P>()>
@@ -576,7 +578,7 @@ namespace sdl3
     typename rgba_array_color<P, C>::r_type
     rgba_array_color<P, C>::r() const
     {
-        return _components[r_index];
+        return static_cast<r_type>(_components[r_index]);
     }
 
     template<pixel_format P, color_space C>
@@ -584,7 +586,7 @@ namespace sdl3
     typename rgba_array_color<P, C>::g_type
     rgba_array_color<P, C>::g() const
     {
-        return _components[g_index];
+        return static_cast<g_type>(_components[g_index]);
     }
 
     template<pixel_format P, color_space C>
@@ -592,7 +594,7 @@ namespace sdl3
     typename rgba_array_color<P, C>::b_type
     rgba_array_color<P, C>::b() const
     {
-        return _components[b_index];
+        return static_cast<b_type>(_components[b_index]);
     }
 
     template<pixel_format P, color_space C>
@@ -600,7 +602,15 @@ namespace sdl3
     typename rgba_array_color<P, C>::a_type
     rgba_array_color<P, C>::a() const
     {
-        return _components[a_index];
+        return static_cast<a_type>(_components[a_index]);
+    }
+
+    template<class CharT, class Traits, pixel_format P, color_space C>
+    requires (is_array<P>() && has_alpha<P>() && is_rgb_color_space<C>())
+    std::basic_ostream<CharT, Traits> &
+    operator<<(std::basic_ostream<CharT, Traits> & stream, rgba_array_color<P, C> const& value)
+    {
+        return stream << value.r() << ',' << value.g() << ',' << value.b() << ',' << value.a();
     }
 
     using s_rgba64 = rgba_array_color<pixel_format::rgba64, color_space::srgb>;
