@@ -18,6 +18,8 @@
 //    misrepresented as being the original software.
 // 3. This notice may not be removed or altered from any source distribution.
 
+#pragma once
+
 #include <algorithm>
 
 #include <boost/operators.hpp>
@@ -281,7 +283,7 @@ namespace sdl3
     typename rgb_array_color<P, C>::r_type
     rgb_array_color<P, C>::r() const
     {
-        return _components[r_index];
+        return static_cast<r_type>(_components[r_index]);
     }
 
     template<pixel_format P, color_space C>
@@ -289,7 +291,7 @@ namespace sdl3
     typename rgb_array_color<P, C>::g_type
     rgb_array_color<P, C>::g() const
     {
-        return _components[g_index];
+        return static_cast<g_type>(_components[g_index]);
     }
 
     template<pixel_format P, color_space C>
@@ -297,7 +299,15 @@ namespace sdl3
     typename rgb_array_color<P, C>::b_type
     rgb_array_color<P, C>::b() const
     {
-        return _components[b_index];
+        return static_cast<b_type>(_components[b_index]);
+    }
+
+    template<class CharT, class Traits, pixel_format P, color_space C>
+    requires (is_array<P>() && !has_alpha<P>() && is_rgb_color_space<C>())
+    std::basic_ostream<CharT, Traits> &
+    operator<<(std::basic_ostream<CharT, Traits> & stream, rgb_array_color<P, C> const& value)
+    {
+        return stream << value.r() << ',' << value.g() << ',' << value.b();
     }
 
     using s_rgb24 = rgb_array_color<pixel_format::rgb24, color_space::srgb>;

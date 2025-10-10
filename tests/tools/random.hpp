@@ -19,7 +19,9 @@
 // 3. This notice may not be removed or altered from any source distribution.
 
 #include <random>
+#include <type_traits>
 
+#include "SDL3pp/array_color.hpp"
 #include "SDL3pp/base_color.hpp"
 #include "SDL3pp/numerics.hpp"
 #include "SDL3pp/packed_color.hpp"
@@ -39,6 +41,7 @@ namespace sdl3::unit_test::tools
     };
 
     template<class ClampedInt>
+    requires (is_clamped_integral_v<ClampedInt>)
     class uniform_clamped_int_distribution
     {
     public:
@@ -67,11 +70,40 @@ namespace sdl3::unit_test::tools
         std::uniform_int_distribution<int_type> _distribution;
     };
 
+    template<class ClampedReal>
+    requires (is_clamped_floating_point_v<ClampedReal>)
+    class uniform_clamped_real_distribution
+    {
+    public:
+        using result_type = ClampedReal;
+
+    private:
+        using real_type = base_type<result_type>::type;
+
+    public:
+        uniform_clamped_real_distribution()
+        : _distribution(
+            static_cast<real_type>(std::numeric_limits<result_type>::min()),
+            static_cast<real_type>(std::numeric_limits<result_type>::max())
+        )
+        { }
+
+        template <class Engine>
+        result_type operator()(Engine & engine) /*const*/
+        {
+            return result_type(_distribution(engine));
+        }
+
+    private:
+        std::uniform_real_distribution<real_type> _distribution;
+    };
+
     template<typename Color>
     class uniform_color_distribution
     { };
 
     template<typename T, typename Tag>
+    requires (is_clamped_integral_v<T>)
     class uniform_color_distribution<base_color<T, Tag> >
     {
     public:
@@ -86,6 +118,24 @@ namespace sdl3::unit_test::tools
 
     private:
         uniform_clamped_int_distribution<T> _distribution;
+    };
+
+    template<typename T, typename Tag>
+    requires (is_clamped_floating_point_v<T>)
+    class uniform_color_distribution<base_color<T, Tag> >
+    {
+    public:
+        using result_type = base_color<T, Tag>;
+
+    public:
+        template <class Engine>
+        result_type operator()(Engine & engine) /*const*/
+        {
+            return result_type(_distribution(engine));
+        }
+
+    private:
+        uniform_clamped_real_distribution<T> _distribution;
     };
 
     template<pixel_format P, color_space C>
@@ -146,4 +196,33 @@ namespace sdl3::unit_test::tools
         uniform_color_distribution<b_type> _b_distribution;
         uniform_color_distribution<a_type> _a_distribution;
     };
+
+    template<pixel_format P, color_space C>
+    class uniform_color_distribution<rgb_array_color<P, C> >
+    {
+    public:
+        using result_type = rgb_array_color<P, C>;
+
+    private:
+        using r_type = result_type::r_type;
+        using g_type = result_type::g_type;
+        using b_type = result_type::b_type;
+
+    public:
+        template <class Engine>
+        result_type operator()(Engine & engine) /*const*/
+        {
+            return result_type(
+                _r_distribution(engine),
+                _g_distribution(engine),
+                _b_distribution(engine)
+            );
+        }
+
+    private:
+        uniform_color_distribution<r_type> _r_distribution;
+        uniform_color_distribution<g_type> _g_distribution;
+        uniform_color_distribution<b_type> _b_distribution;
+    };
+
 }
