@@ -21,6 +21,9 @@
 #include <random>
 #include <type_traits>
 
+#include <boost/test/data/config.hpp>
+#include <boost/test/data/monomorphic/generators/random.hpp>
+
 #include <boost/mpl/if.hpp>
 
 #include "SDL3pp/array_color.hpp"
@@ -240,4 +243,20 @@ namespace sdl3::unit_test::tools
         uniform_color_distribution<b_type> _b_distribution;
         uniform_color_distribution<a_type> _a_distribution;
     };
+
+    template<
+        typename Color = sdl3::color,
+        typename ColorDistribution = uniform_color_distribution<Color>,
+        typename EngineType = std::default_random_engine
+    >
+    using random_color_t = boost::unit_test::data::monomorphic::random_t<Color, ColorDistribution, EngineType>;
+
+    template<typename Color>
+    boost::unit_test::data::monomorphic::generated_by<random_color_t<Color> >
+    random_color()
+    {
+        return boost::unit_test::data::monomorphic::generated_by<
+            random_color_t<Color>
+        >(random_color_t<Color>());
+    } 
 }

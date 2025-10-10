@@ -23,10 +23,15 @@
 #include <random>
 #include <sstream>
 
+#include <boost/test/data/test_case.hpp>
+#include <boost/test/data/monomorphic.hpp>
+#include <boost/test/data/monomorphic.hpp>
+#include <boost/test/data/monomorphic/generators/xrange.hpp>
 #include <boost/test/unit_test.hpp>
 
 #include "SDL3pp/color.hpp"
 
+#include "tools/data_test_case.hpp"
 #include "tools/random.hpp"
 
 using sdl3::operator""_r8;
@@ -46,19 +51,14 @@ BOOST_AUTO_TEST_CASE(test_default_constructor)
     BOOST_TEST(test_color.a == 0_a8);
 }
 
-BOOST_AUTO_TEST_CASE(test_component_constructor)
+BOOST_DATA_TEST_CASE(test_component_constructor,
+    sdl3::unit_test::tools::random_color<sdl3::r8>() ^
+    sdl3::unit_test::tools::random_color<sdl3::g8>() ^
+    sdl3::unit_test::tools::random_color<sdl3::b8>() ^
+    sdl3::unit_test::tools::random_color<sdl3::a8>() ^
+    boost::unit_test::data::xrange(8),
+    r, g, b, a, index)
 {
-    auto random_engine = std::default_random_engine(0);
-    auto r_distribution = sdl3::unit_test::tools::uniform_color_distribution<sdl3::r8>();
-    auto g_distribution = sdl3::unit_test::tools::uniform_color_distribution<sdl3::g8>();
-    auto b_distribution = sdl3::unit_test::tools::uniform_color_distribution<sdl3::b8>();
-    auto a_distribution = sdl3::unit_test::tools::uniform_color_distribution<sdl3::a8>();
- 
-    auto r = r_distribution(random_engine);
-    auto g = g_distribution(random_engine);
-    auto b = b_distribution(random_engine);
-    auto a = a_distribution(random_engine);
-
     auto test_color = sdl3::color(r, g, b, a);
 
     BOOST_TEST(test_color.r == r);
@@ -67,41 +67,31 @@ BOOST_AUTO_TEST_CASE(test_component_constructor)
     BOOST_TEST(test_color.a == a);
 }
 
-BOOST_AUTO_TEST_CASE(test_copy_constructor)
+BOOST_DATA_TEST_CASE(test_copy_constructor,
+    sdl3::unit_test::tools::random_color<sdl3::r8>() ^
+    sdl3::unit_test::tools::random_color<sdl3::g8>() ^
+    sdl3::unit_test::tools::random_color<sdl3::b8>() ^
+    sdl3::unit_test::tools::random_color<sdl3::a8>() ^
+    boost::unit_test::data::xrange(8),
+    r, g, b, a, index)
 {
-    auto random_engine = std::default_random_engine(0);
-    auto r_distribution = sdl3::unit_test::tools::uniform_color_distribution<sdl3::r8>();
-    auto g_distribution = sdl3::unit_test::tools::uniform_color_distribution<sdl3::g8>();
-    auto b_distribution = sdl3::unit_test::tools::uniform_color_distribution<sdl3::b8>();
-    auto a_distribution = sdl3::unit_test::tools::uniform_color_distribution<sdl3::a8>();
-
-    auto r = r_distribution(random_engine);
-    auto g = g_distribution(random_engine);
-    auto b = b_distribution(random_engine);
-    auto a = a_distribution(random_engine);
-
     auto source_color = sdl3::color(r, g, b, a);
 
     auto target_color(source_color);
 
-    BOOST_TEST(source_color == target_color);
+    BOOST_TEST(target_color.r == r);
+    BOOST_TEST(target_color.g == g);
+    BOOST_TEST(target_color.b == b);
+    BOOST_TEST(target_color.a == a);
+    
+    BOOST_TEST(target_color == source_color);
 }
 
-BOOST_AUTO_TEST_CASE(test_assignment_operator)
+BOOST_DATA_TEST_CASE(test_assignment_operator,
+    sdl3::unit_test::tools::random_color<sdl3::color>() ^
+    boost::unit_test::data::xrange(8),
+    source_color, index)
 {
-    auto random_engine = std::default_random_engine(0);
-    auto r_distribution = sdl3::unit_test::tools::uniform_color_distribution<sdl3::r8>();
-    auto g_distribution = sdl3::unit_test::tools::uniform_color_distribution<sdl3::g8>();
-    auto b_distribution = sdl3::unit_test::tools::uniform_color_distribution<sdl3::b8>();
-    auto a_distribution = sdl3::unit_test::tools::uniform_color_distribution<sdl3::a8>();
-
-    auto r = r_distribution(random_engine);
-    auto g = g_distribution(random_engine);
-    auto b = b_distribution(random_engine);
-    auto a = a_distribution(random_engine);
-
-    auto source_color = sdl3::color(r, g, b, a);
-    
     auto target_color = sdl3::color();
 
     BOOST_TEST(source_color != target_color);
@@ -109,29 +99,32 @@ BOOST_AUTO_TEST_CASE(test_assignment_operator)
     BOOST_TEST(source_color == target_color);
 }
 
-BOOST_AUTO_TEST_CASE(test_addition_is_commutative)
+BOOST_DATA_TEST_CASE(test_addition_is_commutative,
+    sdl3::unit_test::tools::random_color<sdl3::color>() ^
+    sdl3::unit_test::tools::random_color<sdl3::color>() ^
+    boost::unit_test::data::xrange(8),
+    x, y, index)
 {
-    auto random_engine = std::default_random_engine(0);
-    auto color_distribution = sdl3::unit_test::tools::uniform_color_distribution<sdl3::color>();
-    auto x = color_distribution(random_engine);
-    auto y = color_distribution(random_engine);
-
     BOOST_TEST(x + y == y + x);
 }
 
-BOOST_AUTO_TEST_CASE(test_compatibility)
+BOOST_DATA_TEST_CASE(test_multiplication_is_commutative,
+    sdl3::unit_test::tools::random_color<sdl3::color>() ^
+    sdl3::unit_test::tools::random_color<sdl3::color>() ^
+    boost::unit_test::data::xrange(8),
+    x, y, index)
 {
-    auto random_engine = std::default_random_engine(0);
-    auto r_distribution = sdl3::unit_test::tools::uniform_color_distribution<sdl3::r8>();
-    auto g_distribution = sdl3::unit_test::tools::uniform_color_distribution<sdl3::g8>();
-    auto b_distribution = sdl3::unit_test::tools::uniform_color_distribution<sdl3::b8>();
-    auto a_distribution = sdl3::unit_test::tools::uniform_color_distribution<sdl3::a8>();
- 
-    auto r = r_distribution(random_engine);
-    auto g = g_distribution(random_engine);
-    auto b = b_distribution(random_engine);
-    auto a = a_distribution(random_engine);
+    BOOST_TEST(x * y == y * x);
+}
 
+BOOST_DATA_TEST_CASE(test_compatibility,
+    sdl3::unit_test::tools::random_color<sdl3::r8>() ^
+    sdl3::unit_test::tools::random_color<sdl3::g8>() ^
+    sdl3::unit_test::tools::random_color<sdl3::b8>() ^
+    sdl3::unit_test::tools::random_color<sdl3::a8>() ^
+    boost::unit_test::data::xrange(8),
+    r, g, b, a, index)
+{
     sdl3::color test_color(r, g, b, a);
 
     SDL_Color* ri_test_color = reinterpret_cast<SDL_Color*>(&test_color);
