@@ -21,6 +21,8 @@
 #include <random>
 #include <type_traits>
 
+#include <boost/mpl/if.hpp>
+
 #include "SDL3pp/array_color.hpp"
 #include "SDL3pp/base_color.hpp"
 #include "SDL3pp/color.hpp"
@@ -41,23 +43,29 @@ namespace sdl3::unit_test::tools
         using type = unsigned short;
     };
 
-    template<class ClampedInt>
-    requires (is_clamped_integral_v<ClampedInt>)
-    class uniform_clamped_int_distribution
+    template<class ResultT>
+    requires (is_clamped_numeric_v<ResultT>)
+    class uniform_clamped_numeric_distribution
     {
     public:
-        using result_type = ClampedInt;
+        using result_type = ResultT;
 
     private:
-        using int_type = promote<
+        using internal_type = promote<
             typename base_type<result_type>::type
         >::type;
 
+        using distribution_type = boost::mpl::if_<
+            std::is_integral<internal_type>,
+            std::uniform_int_distribution<internal_type>,
+            std::uniform_real_distribution<internal_type>
+        >::type;
+
     public:
-        uniform_clamped_int_distribution()
+        uniform_clamped_numeric_distribution()
         : _distribution(
-            static_cast<int_type>(std::numeric_limits<result_type>::min()),
-            static_cast<int_type>(std::numeric_limits<result_type>::max())
+            static_cast<internal_type>(std::numeric_limits<result_type>::min()),
+            static_cast<internal_type>(std::numeric_limits<result_type>::max())
         )
         { }
 
@@ -68,35 +76,7 @@ namespace sdl3::unit_test::tools
         }
 
     private:
-        std::uniform_int_distribution<int_type> _distribution;
-    };
-
-    template<class ClampedReal>
-    requires (is_clamped_floating_point_v<ClampedReal>)
-    class uniform_clamped_real_distribution
-    {
-    public:
-        using result_type = ClampedReal;
-
-    private:
-        using real_type = base_type<result_type>::type;
-
-    public:
-        uniform_clamped_real_distribution()
-        : _distribution(
-            static_cast<real_type>(std::numeric_limits<result_type>::min()),
-            static_cast<real_type>(std::numeric_limits<result_type>::max())
-        )
-        { }
-
-        template <class Engine>
-        result_type operator()(Engine & engine) /*const*/
-        {
-            return result_type(_distribution(engine));
-        }
-
-    private:
-        std::uniform_real_distribution<real_type> _distribution;
+        distribution_type _distribution;
     };
 
     template<typename Color>
@@ -104,7 +84,7 @@ namespace sdl3::unit_test::tools
     { };
 
     template<typename T, typename Tag>
-    requires (is_clamped_integral_v<T>)
+    requires (is_clamped_numeric_v<T>)
     class uniform_color_distribution<base_color<T, Tag> >
     {
     public:
@@ -118,25 +98,7 @@ namespace sdl3::unit_test::tools
         }
 
     private:
-        uniform_clamped_int_distribution<T> _distribution;
-    };
-
-    template<typename T, typename Tag>
-    requires (is_clamped_floating_point_v<T>)
-    class uniform_color_distribution<base_color<T, Tag> >
-    {
-    public:
-        using result_type = base_color<T, Tag>;
-
-    public:
-        template <class Engine>
-        result_type operator()(Engine & engine) /*const*/
-        {
-            return result_type(_distribution(engine));
-        }
-
-    private:
-        uniform_clamped_real_distribution<T> _distribution;
+        uniform_clamped_numeric_distribution<T> _distribution;
     };
 
     template<>

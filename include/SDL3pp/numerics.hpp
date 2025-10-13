@@ -105,13 +105,13 @@ namespace sdl3
     template<class T>
     struct is_clamped_numeric
     {
-        const bool value = false;
+        static const bool value = false;
     };
 
     template<class T, T Min, T Max>
     struct is_clamped_numeric<clamped_numeric<T, Min, Max> >
     {
-        const bool value = true;
+        static const bool value = true;
     };
 
     template<class T>
@@ -321,13 +321,13 @@ namespace sdl3
     template<class T>
     struct is_tagged_numeric
     {
-        const bool value = false;
+        static const bool value = false;
     };
 
     template<class T, class Tag>
     struct is_tagged_numeric<tagged_numeric<T, Tag> >
     {
-        const bool value = true;
+        static const bool value = true;
     };
 
     template<class T>
