@@ -13,6 +13,14 @@
     "boost-test",
     "boost-units",
     "boost-utility",
-    "sdl3"
+    {
+      "name": "sdl3",
+      "default-features": true,
+      "features": [
+        "vulkan"
+      ]
+    },
+    "vulkan",
+    "vulkan-validationlayers"
   ]
 }
