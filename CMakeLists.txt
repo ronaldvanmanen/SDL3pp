@@ -28,7 +28,7 @@ set(COVERAGE_COMMAND "${LLVM_COV}")
 set(COVERAGE_EXTRA_FLAGS "")
 include(CTest)
 
-add_library("${PROJECT_NAME}"
+add_library("SDL3pp"
   "sources/color.cpp"
   "sources/display_mode.cpp"
   "sources/error.cpp"
@@ -51,30 +51,34 @@ add_library("${PROJECT_NAME}"
 
 find_package(Boost REQUIRED
   COMPONENTS
-  algorithm
-  optional
-  units
-  utility
+    algorithm
+    optional
+    units
+    utility
 )
 
-target_link_libraries("${PROJECT_NAME}"
+target_link_libraries("SDL3pp"
   PRIVATE
-  Boost::algorithm
-  Boost::core
-  Boost::optional
-  Boost::units
-  Boost::utility
+    Boost::algorithm
+    Boost::core
+    Boost::optional
+    Boost::units
+    Boost::utility
 )
 
 find_package(SDL3 CONFIG REQUIRED)
 target_link_libraries("${PROJECT_NAME}"
     PUBLIC
-    $<TARGET_NAME_IF_EXISTS:SDL3::SDL3main>
-    $<IF:$<TARGET_EXISTS:SDL3::SDL3>,SDL3::SDL3,SDL3::SDL3-static>
+      $<TARGET_NAME_IF_EXISTS:SDL3::SDL3main>
+      $<IF:$<TARGET_EXISTS:SDL3::SDL3>,SDL3::SDL3,SDL3::SDL3-static>
 )
 
-target_include_directories("${PROJECT_NAME}" PUBLIC "${PROJECT_BINARY_DIR}" "${PROJECT_SOURCE_DIR}/include")
+target_include_directories("${PROJECT_NAME}"
+  PUBLIC
+    "${PROJECT_BINARY_DIR}"
+    "${PROJECT_SOURCE_DIR}/include"
+)
 
-add_subdirectory("${PROJECT_SOURCE_DIR}/samples")
-add_subdirectory("${PROJECT_SOURCE_DIR}/tests")
-add_subdirectory("${PROJECT_SOURCE_DIR}/tools")
+add_subdirectory("samples")
+add_subdirectory("tests")
+add_subdirectory("tools")

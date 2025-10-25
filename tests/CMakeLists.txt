@@ -1,18 +1,8 @@
-cmake_minimum_required (VERSION 3.30)
-
-# Enable Hot Reload for MSVC compilers if supported.
-if (POLICY CMP0141)
-  cmake_policy(SET CMP0141 NEW)
-  set(CMAKE_MSVC_DEBUG_INFORMATION_FORMAT "$<IF:$<AND:$<C_COMPILER_ID:MSVC>,$<CXX_COMPILER_ID:MSVC>>,$<$<CONFIG:Debug,RelWithDebInfo>:EditAndContinue>,$<$<CONFIG:Debug,RelWithDebInfo>:ProgramDatabase>>")
-endif()
-
-project ("SDL3pp-tests")
-
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/../cmake")
 include(BoostTestDiscoverTests)
 include(CodeCoverage)
 
-add_executable("${PROJECT_NAME}"
+add_executable("SDL3pp-tests"
   "global_fixture.cpp"
   "main.cpp"
   "test_blend_mode.cpp"
@@ -30,22 +20,22 @@ add_executable("${PROJECT_NAME}"
   "test_window.cpp"
 )
 
-set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD 23)
+set_property(TARGET "SDL3pp-tests" PROPERTY CXX_STANDARD 23)
 
 find_package(boost_unit_test_framework REQUIRED CONFIG)
-target_link_libraries("${PROJECT_NAME}"
+target_link_libraries("SDL3pp-tests"
   PRIVATE
     SDL3pp
     Boost::unit_test_framework
 )
 
-add_code_coverage("${PROJECT_NAME}"
+add_code_coverage("SDL3pp-tests"
   WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}"
   PRE_RUN_COVERAGE_TARGET "pre-run-coverage"
   POST_RUN_COVERAGE_TARGET "post-run-coverage"
 )
 
-boost_test_discover_tests("${PROJECT_NAME}"
+boost_test_discover_tests("SDL3pp-tests"
   WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}"
   TEST_PREFIX ""
   TEST_SUFFIX ""
@@ -54,5 +44,5 @@ boost_test_discover_tests("${PROJECT_NAME}"
   DISCOVERY_TIMEOUT 1
   DISCOVERY_MODE PRE_TEST
   PROPERTIES
-    ENVIRONMENT "LLVM_PROFILE_FILE=${PROJECT_NAME}-%m-%p.profraw"
+    ENVIRONMENT "LLVM_PROFILE_FILE=SDL3pp-tests-%m-%p.profraw"
 )

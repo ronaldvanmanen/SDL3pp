@@ -41,8 +41,8 @@
 #include "SDL3pp/texture.hpp"
 #include "SDL3pp/window.hpp"
 
-#include "shared/math.hpp"
-#include "shared/stopwatch.hpp"
+#include "../math.hpp"
+#include "../stopwatch.hpp"
 
 using sdl3::px;
 using sdl3::operator""_r32f;
