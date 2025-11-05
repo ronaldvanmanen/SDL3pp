@@ -28,26 +28,7 @@ set(COVERAGE_COMMAND "${LLVM_COV}")
 set(COVERAGE_EXTRA_FLAGS "")
 include(CTest)
 
-add_library("SDL3pp"
-  "sources/color.cpp"
-  "sources/display_mode.cpp"
-  "sources/error.cpp"
-  "sources/event_queue.cpp"
-  "sources/event.cpp"
-  "sources/indexed_color.cpp"
-  "sources/key_modifier.cpp"
-  "sources/keyboard_event.cpp"
-  "sources/keyboard_state.cpp"
-  "sources/keyboard.cpp"
-  "sources/mouse_wheel_event.cpp"
-  "sources/mouse.cpp"
-  "sources/palette.cpp"
-  "sources/pixel_format_details.cpp"
-  "sources/renderer.cpp"
-  "sources/surface.cpp"
-  "sources/texture.cpp"
-  "sources/window.cpp"
-)
+add_library("SDL3pp" INTERFACE)
 
 find_package(Boost REQUIRED
   COMPONENTS
@@ -58,7 +39,7 @@ find_package(Boost REQUIRED
 )
 
 target_link_libraries("SDL3pp"
-  PRIVATE
+  INTERFACE
     Boost::algorithm
     Boost::core
     Boost::optional
@@ -67,14 +48,15 @@ target_link_libraries("SDL3pp"
 )
 
 find_package(SDL3 CONFIG REQUIRED)
+
 target_link_libraries("${PROJECT_NAME}"
-    PUBLIC
-      $<TARGET_NAME_IF_EXISTS:SDL3::SDL3main>
-      $<IF:$<TARGET_EXISTS:SDL3::SDL3>,SDL3::SDL3,SDL3::SDL3-static>
+  INTERFACE
+    $<TARGET_NAME_IF_EXISTS:SDL3::SDL3main>
+    $<IF:$<TARGET_EXISTS:SDL3::SDL3>,SDL3::SDL3,SDL3::SDL3-static>
 )
 
 target_include_directories("${PROJECT_NAME}"
-  PUBLIC
+  INTERFACE
     "${PROJECT_BINARY_DIR}"
     "${PROJECT_SOURCE_DIR}/include"
 )

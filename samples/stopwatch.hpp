@@ -55,7 +55,78 @@ namespace sdl3
 
     using fractional_seconds = std::chrono::duration<double>;
 
-    fractional_seconds elapsed_seconds(stopwatch & s);
+    inline
+    stopwatch
+    stopwatch::start_now()
+    {
+        stopwatch instance;
+        instance.start();
+        return instance;
+    }
 
-    time<double> elapsed_time(stopwatch & s);
+    inline
+    stopwatch::stopwatch()
+    : _start_time(time_point::min())
+    , _elapsed_time(duration::zero())
+    , _running(false)
+    { }
+
+    inline
+    void
+    stopwatch::start()
+    {
+        if (_running) return;
+        _start_time = clock::now();
+        _running = true;
+    }
+
+    inline
+    void
+    stopwatch::stop()
+    {
+        if (!_running) return;
+        
+        auto end_time = clock::now();
+        auto lap_time = end_time - _start_time;
+        _elapsed_time += lap_time;
+        _running = false;
+    }
+
+    inline
+    void
+    stopwatch::reset()
+    {
+        _start_time = clock::now();
+        _elapsed_time = duration::zero();
+    }
+
+    inline
+    stopwatch::duration
+    stopwatch::elapsed()
+    {
+        auto elapsed_time = _elapsed_time;
+        if (_running)
+        {
+            auto now = clock::now();
+            auto lap_time = now - _start_time;
+            elapsed_time += lap_time;
+        }
+        return elapsed_time;
+    }
+
+    inline
+    fractional_seconds
+    elapsed_seconds(stopwatch & instance)
+    {
+        return std::chrono::duration_cast<
+            fractional_seconds
+        >(instance.elapsed());
+    }
+
+    inline
+    time<double>
+    elapsed_time(stopwatch & instance)
+    {
+        return sdl3::time<double>(sdl3::elapsed_seconds(instance).count() * sdl3::seconds);
+    }
 }

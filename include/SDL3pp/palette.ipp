@@ -20,11 +20,12 @@
 
 #include <utility>
 
-#include "SDL3pp/error.hpp"
-#include "SDL3pp/palette.hpp"
+#include "error.hpp"
+#include "palette.hpp"
 
 namespace sdl3
 {
+    inline
     void set_palette_colors(SDL_Palette * palette, SDL_Color const* colors, int first_color, int num_colors)
     {
         throw_last_error(
@@ -32,6 +33,7 @@ namespace sdl3
         );
     }
 
+    inline
     void set_palette_colors(SDL_Palette * palette, color const* colors, std::size_t first_color, std::size_t num_colors)
     {
         set_palette_colors(
@@ -43,11 +45,13 @@ namespace sdl3
     }
 }
 
+inline
 sdl3::palette::palette(std::size_t size)
 : _native_handle(SDL_CreatePalette(static_cast<int>(size)))
 , _free_handle(true)
 { }
 
+inline
 sdl3::palette::palette(std::initializer_list<color> colors)
 : _native_handle(SDL_CreatePalette(static_cast<int>(colors.size())))
 , _free_handle(true)
@@ -55,6 +59,7 @@ sdl3::palette::palette(std::initializer_list<color> colors)
     set_palette_colors(_native_handle, colors.begin(), 0, colors.size());
 }
 
+inline
 sdl3::palette::palette(std::vector<color> const& colors)
 : _native_handle(SDL_CreatePalette(static_cast<int>(colors.size())))
 , _free_handle(true)
@@ -62,6 +67,7 @@ sdl3::palette::palette(std::vector<color> const& colors)
     set_palette_colors(_native_handle, &colors[0], 0, colors.size());
 }
 
+inline
 sdl3::palette::palette(sdl3::palette const& other)
 : _native_handle(SDL_CreatePalette(static_cast<int>(other.size())))
 , _free_handle(true)
@@ -69,16 +75,19 @@ sdl3::palette::palette(sdl3::palette const& other)
     set_palette_colors(_native_handle, other._native_handle->colors, 0, other._native_handle->ncolors);
 }
 
+inline
 sdl3::palette::palette(sdl3::palette && other)
 : _native_handle(std::exchange(other._native_handle, nullptr))
 , _free_handle(std::exchange(other._free_handle, false))
 { }
 
+inline
 sdl3::palette::palette(SDL_Palette *native_handle, bool free_handle)
 : _native_handle(native_handle)
 , _free_handle(free_handle)
 { }
 
+inline
 sdl3::palette::~palette()
 {
     if (_free_handle && _native_handle != nullptr)
@@ -87,6 +96,7 @@ sdl3::palette::~palette()
     }
 } 
 
+inline
 sdl3::palette &
 sdl3::palette::operator=(std::initializer_list<sdl3::color> colors)
 {
@@ -95,6 +105,7 @@ sdl3::palette::operator=(std::initializer_list<sdl3::color> colors)
     return *this;
 }
 
+inline
 sdl3::palette &
 sdl3::palette::operator=(std::vector<sdl3::color> const& colors)
 {
@@ -103,6 +114,7 @@ sdl3::palette::operator=(std::vector<sdl3::color> const& colors)
     return *this;
 }
 
+inline
 sdl3::palette::indexed_color
 sdl3::palette::operator[](std::size_t index)
 {
@@ -113,6 +125,7 @@ sdl3::palette::operator[](std::size_t index)
     return sdl3::palette::indexed_color(this, index);
 }
 
+inline
 sdl3::palette::const_indexed_color
 sdl3::palette::operator[](std::size_t index) const
 {
@@ -123,33 +136,39 @@ sdl3::palette::operator[](std::size_t index) const
     return sdl3::palette::const_indexed_color(this, index);
 }
 
+inline
 std::size_t
 sdl3::palette::size() const
 {
     return _native_handle->ncolors;
 }
 
+inline
 SDL_Palette*
 sdl3::palette::native_handle()
 {
     return _native_handle;
 }
 
+inline
 sdl3::palette::indexed_color::indexed_color(sdl3::palette * owner, std::size_t index)
 : _owner(owner)
 , _index(index)
 { }
 
+inline
 sdl3::palette::indexed_color::indexed_color(sdl3::palette::indexed_color const& other)
 : _owner(other._owner)
 , _index(other._index)
 { }
 
+inline
 sdl3::palette::indexed_color::indexed_color(sdl3::palette::indexed_color && other)
 : _owner(std::exchange(other._owner, nullptr))
 , _index(std::exchange(other._index, -1))
 { }
 
+inline
 sdl3::palette::indexed_color&
 sdl3::palette::indexed_color::operator=(sdl3::color const& value)
 {
@@ -158,74 +177,87 @@ sdl3::palette::indexed_color::operator=(sdl3::color const& value)
     return *this;
 }
 
+inline
 sdl3::color const&
 sdl3::palette::indexed_color::get() const
 {
     return reinterpret_cast<sdl3::color const&>(_owner->_native_handle->colors[_index]);
 }
 
+inline
 sdl3::palette::indexed_color::operator sdl3::color const&() const
 {
     return get();
 }
 
+inline
 sdl3::palette::const_indexed_color::const_indexed_color(sdl3::palette const * owner, std::size_t index)
 : _owner(owner)
 , _index(index)
 { }
 
+inline
 sdl3::palette::const_indexed_color::const_indexed_color(sdl3::palette::const_indexed_color const& other)
 : _owner(other._owner)
 , _index(other._index)
 { }
 
+inline
 sdl3::color const&
 sdl3::palette::const_indexed_color::get() const
 {
     return reinterpret_cast<sdl3::color const&>(_owner->_native_handle->colors[_index]);
 }
 
+inline
 sdl3::palette::const_indexed_color::operator sdl3::color const&() const
 {
     return get();
 }
 
+inline
 bool
 sdl3::operator==(sdl3::palette::indexed_color const& left, sdl3::palette::indexed_color const& right)
 {
     return left.get() == right.get();
 }
 
+inline
 bool
 sdl3::operator!=(sdl3::palette::indexed_color const& left, sdl3::palette::indexed_color const& right)
 {
     return !(left == right);
 }
 
+inline
 bool
 sdl3::operator==(sdl3::palette::indexed_color const& left, sdl3::color const& right)
 {
     return left.get() == right;
 }
 
+inline
 bool
 sdl3::operator!=(sdl3::palette::indexed_color const& left, sdl3::color const& right)
 {
     return !(left == right);
 }
 
+inline
 bool
 sdl3::operator==(sdl3::color const& left, sdl3::palette::indexed_color const& right)
 {
     return left == right.get();
 }
 
+inline
 bool
 sdl3::operator!=(sdl3::color const& left, sdl3::palette::indexed_color const& right)
 {
     return !(left == right);
 }
 
+inline
 std::ostream &
 sdl3::operator<<(std::ostream & stream, sdl3::palette::indexed_color const& value)
 {

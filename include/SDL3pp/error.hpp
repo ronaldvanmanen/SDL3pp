@@ -22,6 +22,8 @@
 
 #include <stdexcept>
 
+#include <SDL3/SDL_error.h>
+
 namespace sdl3
 {
     class error : public std::runtime_error
@@ -29,12 +31,46 @@ namespace sdl3
     public:
         error(std::string const& what_arg);
 
-        error(const char *what_arg);
+        error(const char* what_arg);
 
         error(error const& other);
 
         error & operator=(error const& other);
     };
 
-    void throw_last_error(bool condition);
+    inline
+    error::error(std::string const& what_arg)
+    : std::runtime_error(what_arg)
+    { }
+
+    inline
+    error::error(const char* what_arg)
+    : std::runtime_error(what_arg)
+    { }
+
+    inline
+    error::error(error const& other)
+    : std::runtime_error(other)
+    { }
+
+    inline
+    error &
+    error::operator=(error const& other)
+    {
+        if (this != &other)
+        {
+            std::runtime_error::operator= (other);
+        }
+        return *this;
+    }
+
+    inline
+    void
+    throw_last_error(bool condition)
+    {
+        if (!condition)
+        {
+            throw error(SDL_GetError());
+        }
+    }
 }

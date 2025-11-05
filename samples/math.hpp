@@ -25,7 +25,11 @@
 
 namespace sdl3
 {
-    bool is_power_of_two(std::int32_t value);
+    inline
+    bool is_power_of_two(std::int32_t value)
+    {
+        return (value > 0) && ((value & (value - 1)) == 0);
+    }
 
     template<typename Unit>
     inline
@@ -37,7 +41,18 @@ namespace sdl3
         );
     }
 
-    std::int32_t next_power_of_two(std::int32_t value);
+    inline
+    std::int32_t next_power_of_two(std::int32_t value)
+    {
+        --value;
+        value |= value >> 1;
+        value |= value >> 2;
+        value |= value >> 4;
+        value |= value >> 8;
+        value |= value >> 16;
+        ++value;
+        return value;
+    }
 
     template<typename Unit>
     inline

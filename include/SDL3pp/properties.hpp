@@ -29,143 +29,205 @@ namespace sdl3
     class property_group
     {
     public:
-        property_group()
-        : _native_handle(SDL_CreateProperties())
-        { }
+        property_group();
 
-        property_group(SDL_PropertiesID properties_id)
-        : _native_handle(properties_id)
-        { }
+        property_group(SDL_PropertiesID properties_id);
 
-        ~property_group()
-        {
-            SDL_DestroyProperties(_native_handle);
-        }
+        ~property_group();
 
         template<typename T>
-        void set(const char* name, T* value)
-        {
-            throw_last_error(
-                SDL_SetPointerProperty(
-                    _native_handle,
-                    name,
-                    static_cast<void*>(value)
-                )
-            );
-        }
+        void set(const char* name, T* value);
 
-        void set(const char* name, const char* value)
-        {
-            throw_last_error(
-                SDL_SetStringProperty(
-                    _native_handle,
-                    name,
-                    value
-                )
-            );
-        }
+        void set(const char* name, const char* value);
 
         template<typename T>
-        void set(const char* name, T value)
-        {
-            throw_last_error(
-                SDL_SetNumberProperty(
-                    _native_handle,
-                    name,
-                    static_cast<std::int64_t>(value)
-                )
-            );
-        }
+        void set(const char* name, T value);
 
-        void set(const char* name, float value)
-        {
-            throw_last_error(
-                SDL_SetFloatProperty(
-                    _native_handle,
-                    name,
-                    value
-                )
-            );
-        }
+        void set(const char* name, float value);
 
-        void set(const char* name, bool value)
-        {
-            throw_last_error(
-                SDL_SetBooleanProperty(
-                    _native_handle,
-                    name,
-                    value
-                )
-            );
-        }
+        void set(const char* name, bool value);
 
         template<typename T>
-        T* get(const char* name, T* default_value) const
-        {
-            return static_cast<T*>(
-                SDL_GetPointerProperty(
-                    _native_handle,
-                    name,
-                    static_cast<void*>(default_value)
-                )
-            );
-        }
+        T* get(const char* name, T* default_value) const;
 
-        const char* get(const char* name, const char* default_value) const
-        {
-            return SDL_GetStringProperty(
-                _native_handle,
-                name,
-                default_value
-            );
-        }
+        const char* get(const char* name, const char* default_value) const;
 
         template<typename T>
-        T get(const char* name, T default_value) const
-        {
-            return static_cast<T>(
-                SDL_GetNumberProperty(
-                    _native_handle,
-                    name,
-                    static_cast<std::int64_t>(default_value)
-                )
-            );
-        }
+        T get(const char* name, T default_value) const;
 
-        float get(const char* name, float default_value) const
-        {
-            return SDL_GetFloatProperty(
-                _native_handle,
-                name,
-                default_value
-            );
-        }
+        float get(const char* name, float default_value) const;
 
-        bool get(const char* name, bool default_value) const
-        {
-            return SDL_GetBooleanProperty(
-                _native_handle,
-                name,
-                default_value
-            );
-        }
+        bool get(const char* name, bool default_value) const;
 
-        bool has(const char* name) const
-        {
-            return SDL_HasProperty(_native_handle, name);
-        }
+        bool has(const char* name) const;
 
-        void clear(const char* name)
-        {
-            SDL_ClearProperty(_native_handle, name);
-        }
+        void clear(const char* name);
         
-        SDL_PropertiesID native_handle()
-        {
-            return _native_handle;
-        }
+        SDL_PropertiesID native_handle();
 
     private:
         SDL_PropertiesID _native_handle;
     };
+
+    inline
+    property_group::property_group()
+    : _native_handle(SDL_CreateProperties())
+    { }
+
+    inline
+    property_group::property_group(SDL_PropertiesID properties_id)
+    : _native_handle(properties_id)
+    { }
+
+    inline
+    property_group::~property_group()
+    {
+        SDL_DestroyProperties(_native_handle);
+    }
+
+    template<typename T>
+    void
+    property_group::set(const char* name, T* value)
+    {
+        throw_last_error(
+            SDL_SetPointerProperty(
+                _native_handle,
+                name,
+                static_cast<void*>(value)
+            )
+        );
+    }
+
+    inline
+    void
+    property_group::set(const char* name, const char* value)
+    {
+        throw_last_error(
+            SDL_SetStringProperty(
+                _native_handle,
+                name,
+                value
+            )
+        );
+    }
+
+    template<typename T>
+    void
+    property_group::set(const char* name, T value)
+    {
+        throw_last_error(
+            SDL_SetNumberProperty(
+                _native_handle,
+                name,
+                static_cast<std::int64_t>(value)
+            )
+        );
+    }
+
+    inline
+    void
+    property_group::set(const char* name, float value)
+    {
+        throw_last_error(
+            SDL_SetFloatProperty(
+                _native_handle,
+                name,
+                value
+            )
+        );
+    }
+
+    inline
+    void
+    property_group::set(const char* name, bool value)
+    {
+        throw_last_error(
+            SDL_SetBooleanProperty(
+                _native_handle,
+                name,
+                value
+            )
+        );
+    }
+
+    template<typename T>
+    T*
+    property_group::get(const char* name, T* default_value) const
+    {
+        return static_cast<T*>(
+            SDL_GetPointerProperty(
+                _native_handle,
+                name,
+                static_cast<void*>(default_value)
+            )
+        );
+    }
+
+    inline
+    const char*
+    property_group::get(const char* name, const char* default_value) const
+    {
+        return SDL_GetStringProperty(
+            _native_handle,
+            name,
+            default_value
+        );
+    }
+
+    template<typename T>
+    T
+    property_group::get(const char* name, T default_value) const
+    {
+        return static_cast<T>(
+            SDL_GetNumberProperty(
+                _native_handle,
+                name,
+                static_cast<std::int64_t>(default_value)
+            )
+        );
+    }
+
+    inline
+    float
+    property_group::get(const char* name, float default_value) const
+    {
+        return SDL_GetFloatProperty(
+            _native_handle,
+            name,
+            default_value
+        );
+    }
+
+    inline
+    bool
+    property_group::get(const char* name, bool default_value) const
+    {
+        return SDL_GetBooleanProperty(
+            _native_handle,
+            name,
+            default_value
+        );
+    }
+
+    inline
+    bool
+    property_group::has(const char* name) const
+    {
+        return SDL_HasProperty(_native_handle, name);
+    }
+
+    inline
+    void
+    property_group::clear(const char* name)
+    {
+        SDL_ClearProperty(_native_handle, name);
+    }
+    
+    inline
+    SDL_PropertiesID
+    property_group::native_handle()
+    {
+        return _native_handle;
+    }
+
 }

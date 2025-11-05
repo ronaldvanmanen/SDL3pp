@@ -25,6 +25,7 @@
 
 #include <SDL3/SDL_pixels.h>
 
+#include "error.hpp"
 #include "numerics.hpp"
 
 namespace sdl3
@@ -288,46 +289,111 @@ namespace sdl3
         return stream;
     }
 
+    namespace details
+    {
+        inline
+        SDL_PixelFormatDetails const*
+        get_pixel_format_details(sdl3::pixel_format format)
+        {
+            auto native_handle = SDL_GetPixelFormatDetails(static_cast<SDL_PixelFormat>(format));
+            throw_last_error(native_handle != nullptr);
+            return native_handle;
+        }
+    }
+
     class pixel_format_details
     {
     public:
-        pixel_format_details(pixel_format format);
+        pixel_format_details(pixel_format format)
+        : _native_handle(details::get_pixel_format_details(format))
+        { }
 
-        pixel_format_details(SDL_PixelFormatDetails const* native_handle);
+        pixel_format_details(SDL_PixelFormatDetails const* native_handle)
+        : _native_handle(native_handle)
+        { }
 
-        pixel_format_details(pixel_format_details const& other);
+        pixel_format_details(pixel_format_details const& other)
+        : _native_handle(other._native_handle)
+        { }
 
-        pixel_format_details(pixel_format_details && other);
+        pixel_format_details(pixel_format_details && other)
+        : _native_handle(other._native_handle)
+        { }
 
-        std::uint8_t bits_per_pixel() const;
+        std::uint8_t bits_per_pixel() const
+        {
+            return _native_handle->bits_per_pixel;
+        }
 
-        std::uint8_t bytes_per_pixel() const;
+        std::uint8_t bytes_per_pixel() const
+        {
+            return _native_handle->bytes_per_pixel;
+        }
 
-        std::uint32_t r_mask() const;
+        std::uint32_t r_mask() const
+        {
+            return _native_handle->Rmask;
+        }
 
-        std::uint32_t g_mask() const;
+        std::uint32_t g_mask() const
+        {
+            return _native_handle->Gmask;
+        }
 
-        std::uint32_t b_mask() const;
+        std::uint32_t b_mask() const
+        {
+            return _native_handle->Bmask;
+        }
 
-        std::uint32_t a_mask() const;
+        std::uint32_t a_mask() const
+        {
+            return _native_handle->Amask;
+        }
 
-        std::uint8_t g_bits() const;
+        std::uint8_t g_bits() const
+        {
+            return _native_handle->Gbits;
+        }
 
-        std::uint8_t r_bits() const;
+        std::uint8_t r_bits() const
+        {
+            return _native_handle->Rbits;
+        }
 
-        std::uint8_t b_bits() const;
+        std::uint8_t b_bits() const
+        {
+            return _native_handle->Bbits;
+        }
 
-        std::uint8_t a_bits() const;
+        std::uint8_t a_bits() const
+        {
+            return _native_handle->Abits;
+        }
 
-        std::uint8_t r_shift() const;
+        std::uint8_t r_shift() const
+        {
+            return _native_handle->Rshift;
+        }
 
-        std::uint8_t g_shift() const;
+        std::uint8_t g_shift() const
+        {
+            return _native_handle->Gshift;
+        }
 
-        std::uint8_t b_shift() const;
+        std::uint8_t b_shift() const
+        {
+            return _native_handle->Bshift;
+        }
 
-        std::uint8_t a_shift() const;
-        
-        SDL_PixelFormatDetails const* native_handle();
+        std::uint8_t a_shift() const
+        {
+            return _native_handle->Ashift;
+        }
+
+        SDL_PixelFormatDetails const* native_handle()
+        {
+            return _native_handle;
+        }
 
     private:
         SDL_PixelFormatDetails const* _native_handle;

@@ -26,19 +26,19 @@ namespace sdl3
 }
 
 #include <cstdint>
-#include <utility>
 
 #include <boost/units/quantity.hpp>
 #include <boost/units/systems/si/length.hpp>
 
 #include <SDL3/SDL_render.h>
 
+#include "blend_mode.hpp"
+#include "color.hpp"
 #include "error.hpp"
 #include "pixels.hpp"
 #include "properties.hpp"
-#include "renderer.hpp"
 #include "size.hpp"
-#include "surface.hpp"
+#include "window.hpp"
 
 namespace sdl3
 {
@@ -74,7 +74,7 @@ namespace sdl3
     protected:
         SDL_Texture* _native_handle;
     };
-
+    
     template<pixel_format P, texture_access A, color_space C = default_color_space<P>()>
     requires (is_compatible_color_space<P, C>())
     class texture : public texture_base
@@ -113,78 +113,6 @@ namespace sdl3
 
     template<pixel_format P, color_space C = default_color_space<P>()>
     using target_texture = texture<P, texture_access::target_access, C>;
-
-    namespace details
-    {
-        inline
-        property_group make_texture_properties(pixel_format format, color_space color_space, texture_access access, length<std::int32_t> width, length<std::int32_t> height)
-        {
-            property_group properties;
-            properties.set(SDL_PROP_TEXTURE_CREATE_FORMAT_NUMBER, static_cast<SDL_PixelFormat>(format));
-            properties.set(SDL_PROP_TEXTURE_CREATE_COLORSPACE_NUMBER, static_cast<SDL_Colorspace>(color_space));
-            properties.set(SDL_PROP_TEXTURE_CREATE_ACCESS_NUMBER, static_cast<SDL_TextureAccess>(access));
-            properties.set(SDL_PROP_TEXTURE_CREATE_WIDTH_NUMBER, quantity_cast<std::int32_t>(width));
-            properties.set(SDL_PROP_TEXTURE_CREATE_HEIGHT_NUMBER, quantity_cast<std::int32_t>(height));
-            return properties;
-        }
-    }
-
-    template<pixel_format P, texture_access A, color_space C>
-    requires (is_compatible_color_space<P, C>())
-    texture<P, A, C>::texture(renderer & owner, length<std::int32_t> width, length<std::int32_t> height)
-    : texture_base(owner, details::make_texture_properties(format, color_space, access, width, height))
-    { }
-
-    template<pixel_format P, texture_access A, color_space C>
-    requires (is_compatible_color_space<P, C>())
-    texture<P, A, C>::texture(renderer & owner, size_2d<std::int32_t> const& size)
-    : texture_base(owner, details::make_texture_properties(format, color_space, access, size.width, size.height))
-    { }
-
-    template<pixel_format P, texture_access A, color_space C>
-    requires (is_compatible_color_space<P, C>())
-    texture<P, A, C>::texture(texture<P, A, C> && other)
-    : texture_base(other)
-    { }
-
-    template<pixel_format P, texture_access A, color_space C>
-    requires (is_compatible_color_space<P, C>())
-    void
-    texture<P, A, C>::update(surface<P, C> const& pixels)
-    {
-        throw_last_error(
-            SDL_UpdateTexture(
-                _native_handle,
-                nullptr,
-                pixels.pixels(),
-                pixels.pitch()
-            )
-        );
-    }
-
-    template<pixel_format P, texture_access A, color_space C>
-    requires (is_compatible_color_space<P, C>())
-    template<typename CallbackFunction>
-    void
-    texture<P, A, C>::with_lock(CallbackFunction callback)
-    {
-        using pixel_type = surface<P, C>::type;
-
-        void* pixels;
-        std::int32_t pitch;
-        throw_last_error(
-            SDL_LockTexture(_native_handle, nullptr, &pixels, &pitch)
-        );
-
-        surface<P, C> surface(
-            _native_handle->w * px,
-            _native_handle->h * px,
-            static_cast<pixel_type*>(pixels),
-            pitch
-        );
-
-        callback(surface);
-
-        SDL_UnlockTexture(_native_handle);
-    }
 }
+
+#include "texture.ipp"

@@ -69,6 +69,138 @@ namespace sdl3
         bool _free_handle;
     };
 
+    namespace details
+    {
+        inline
+        SDL_Surface* create_surface(length<std::int32_t> const& width, length<std::int32_t> const& height, pixel_format format)
+        {
+            SDL_Surface* native_handle = SDL_CreateSurface(
+                boost::units::quantity_cast<std::int32_t>(width),
+                boost::units::quantity_cast<std::int32_t>(height),
+                static_cast<SDL_PixelFormat>(format)
+            );
+            throw_last_error(native_handle != nullptr);
+            return native_handle;
+        }
+
+        inline
+        SDL_Surface* create_surface(length<std::int32_t> const& width, length<std::int32_t> const& height, pixel_format format, void* pixels, std::int32_t pitch)
+        {
+            SDL_Surface* native_handle = SDL_CreateSurfaceFrom(
+                boost::units::quantity_cast<std::int32_t>(width),
+                boost::units::quantity_cast<std::int32_t>(height),
+                static_cast<SDL_PixelFormat>(format),
+                pixels,
+                pitch
+            );
+            throw_last_error(native_handle != nullptr);
+            return native_handle;
+        }
+    }
+
+    inline
+    surface_base::surface_base(length<std::int32_t> const& width, length<std::int32_t> const& height, pixel_format format)
+    : _native_handle(details::create_surface(width, height, format))
+    , _free_handle(true)
+    {
+        throw_last_error(_native_handle != nullptr);
+    }
+
+    inline
+    surface_base::surface_base(size_2d<std::int32_t> const& size, pixel_format format)
+    : _native_handle(details::create_surface(size.width, size.height, format))
+    , _free_handle(true)
+    {
+        throw_last_error(_native_handle != nullptr);
+    }
+
+    inline
+    surface_base::surface_base(length<std::int32_t> const& width, length<std::int32_t> const& height, pixel_format format, void* pixels, std::int32_t pitch)
+    : _native_handle(details::create_surface(width, height, format, pixels, pitch))
+    , _free_handle(true)
+    { }
+
+    inline
+    surface_base::surface_base(SDL_Surface * native_handle, bool free_handle)
+    : _native_handle(native_handle)
+    , _free_handle(free_handle)
+    {
+        throw_last_error(_native_handle != nullptr);
+    }
+
+    inline
+    surface_base::surface_base(surface_base const& other)
+    : _native_handle(
+        SDL_CreateSurface(
+            other._native_handle->w,
+            other._native_handle->h,
+            other._native_handle->format
+        )
+    )
+    , _free_handle(true)
+    {
+        throw_last_error(
+            SDL_BlitSurface(other._native_handle, nullptr, _native_handle, nullptr)
+        );
+    }
+
+    inline
+    surface_base::~surface_base()
+    {
+        if (_free_handle && _native_handle != nullptr)
+        {
+            SDL_DestroySurface(_native_handle);
+        }
+    }
+
+    inline
+    length<std::int32_t>
+    surface_base::width() const
+    {
+        return _native_handle->w * px;
+    }
+
+    inline
+    length<std::int32_t>
+    surface_base::height() const
+    {
+        return _native_handle->h * px;
+    }
+
+    inline
+    void
+    surface_base::color_space(sdl3::color_space const& value)
+    {
+        SDL_SetSurfaceColorspace(_native_handle, static_cast<SDL_Colorspace>(value));
+    }
+
+    inline
+    color_space
+    surface_base::color_space() const
+    {
+        return static_cast<sdl3::color_space>(SDL_GetSurfaceColorspace(_native_handle));
+    }
+
+    inline
+    SDL_Surface*
+    surface_base::native_handle()
+    {
+        return _native_handle;
+    }
+
+    inline
+    void
+    surface_base::blit(surface_base & source)
+    {
+        auto source_handle = source.native_handle();
+        auto source_rect = SDL_Rect { 0, 0, source_handle->w, source_handle->h };
+        auto target_handle = this->native_handle();
+        auto target_rect = SDL_Rect { 0, 0, target_handle->w, target_handle->h };
+        throw_last_error(
+            SDL_BlitSurface(source_handle, &source_rect, target_handle, &target_rect)
+        );
+    }
+
     template<pixel_format P, color_space C = default_color_space<P>()>
     requires (is_compatible_color_space<P, C>())
     class surface : public surface_base

@@ -35,6 +35,7 @@
 #include "SDL3pp/renderer.hpp"
 #include "SDL3pp/size.hpp"
 #include "SDL3pp/surface.hpp"
+#include "SDL3pp/texture.hpp"
 #include "SDL3pp/window.hpp"
 
 #include "../math.hpp"

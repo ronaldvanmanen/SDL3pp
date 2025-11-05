@@ -40,9 +40,9 @@ namespace sdl3
     {
     public:
         display_mode(SDL_DisplayMode const* native_handle);
-       
+
         pixel_format format() const;
-        
+                
         length<std::int32_t> width() const;
 
         length<std::int32_t> height() const;
@@ -52,4 +52,37 @@ namespace sdl3
     private:
         SDL_DisplayMode const* _native_handle;
     };
+
+    inline
+    display_mode::display_mode(SDL_DisplayMode const* native_handle)
+    : _native_handle(native_handle)
+    {}
+
+    inline
+    pixel_format
+    display_mode::format() const
+    {
+        return static_cast<pixel_format>(_native_handle->format);
+    }
+            
+    inline
+    length<std::int32_t>
+    display_mode::width() const
+    {
+        return _native_handle->w * px;
+    }
+
+    inline
+    length<std::int32_t>
+    display_mode::height() const
+    {
+        return _native_handle->h * px;
+    }
+
+    inline
+    display_rate
+    display_mode::refresh_rate() const
+    {
+        return _native_handle->refresh_rate * boost::units::si::hertz;
+    }
 }

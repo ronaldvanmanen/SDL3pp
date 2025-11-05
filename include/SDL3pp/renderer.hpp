@@ -38,7 +38,6 @@ namespace sdl3
 #include "pixels.hpp"
 #include "properties.hpp"
 #include "size.hpp"
-#include "texture.hpp"
 #include "window.hpp"
 
 namespace sdl3
@@ -76,7 +75,7 @@ namespace sdl3
 
         void present();
 
-        void copy(texture_base const& texture);
+        void copy(texture_base & texture);
 
         SDL_Renderer* native_handle();
 
@@ -84,3 +83,5 @@ namespace sdl3
         SDL_Renderer* _native_handle;
     };
 }
+
+#include "renderer.ipp"

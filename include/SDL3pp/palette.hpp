@@ -148,3 +148,5 @@ namespace sdl3
 
     std::ostream & operator<<(std::ostream & stream, palette::indexed_color const& value);
 }
+
+#include "palette.ipp"

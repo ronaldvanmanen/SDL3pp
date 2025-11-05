@@ -1,8 +1,6 @@
 add_sample("sw_ray_tracer"
   SOURCES
     "sw_ray_tracer.cpp"
-    "../math.cpp"
-    "../stopwatch.cpp"
   PACKAGES
     boost_poly_collection
     boost_qvm

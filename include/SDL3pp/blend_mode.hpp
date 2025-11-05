@@ -23,7 +23,7 @@
 #include <iostream>
 #include <cstdint>
 
-#include <SDL3/SDL_blendmode.h>
+#include <SDL3/SDL.h>
 
 namespace sdl3
 {

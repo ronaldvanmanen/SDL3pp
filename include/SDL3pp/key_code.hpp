@@ -363,11 +363,128 @@ namespace sdl3
         friend key_modifier_set operator~(key_modifier value);
     };
 
-    key_modifier_set operator|(key_modifier left, key_modifier right);
+    inline
+    key_modifier_set::key_modifier_set(std::uint16_t values)
+    : _values(values)
+    { }
 
-    key_modifier_set operator&(key_modifier left, key_modifier right);
+    inline
+    key_modifier_set::key_modifier_set()
+    : key_modifier_set(static_cast<std::uint16_t>(key_modifier::none))
+    { }
 
-    key_modifier_set operator^(key_modifier left, key_modifier right);
+    inline
+    key_modifier_set::key_modifier_set(key_modifier value)
+    : _values(static_cast<std::uint16_t>(value))
+    { }
 
-    key_modifier_set operator~(key_modifier value);
+    inline
+    key_modifier_set&
+    key_modifier_set::operator|=(key_modifier_set const& other)
+    {
+        _values |= other._values;
+        return *this;
+    }
+
+    inline
+    key_modifier_set&
+    key_modifier_set::operator&=(key_modifier_set const& other)
+    {
+        _values &= other._values;
+        return *this;
+    }
+
+    inline
+    key_modifier_set&
+    key_modifier_set::operator^=(key_modifier_set const& other)
+    {
+        _values ^= other._values;
+        return *this;
+    }
+
+    inline
+    key_modifier_set&
+    key_modifier_set::operator|=(key_modifier const& value)
+    {
+        _values |= static_cast<std::uint16_t>(value);
+        return *this;
+    }
+
+    inline
+    key_modifier_set&
+    key_modifier_set::operator&=(key_modifier const& value)
+    {
+        _values &= static_cast<std::uint16_t>(value);
+        return *this;
+    }
+
+    inline
+    key_modifier_set&
+    key_modifier_set::operator^=(key_modifier const& value)
+    {
+        _values ^= static_cast<std::uint16_t>(value);
+        return *this;
+    }
+
+    inline
+    key_modifier_set
+    key_modifier_set::operator~() const
+    {
+        return key_modifier_set(~_values);
+    }
+
+    inline
+    bool
+    key_modifier_set::operator==(key_modifier_set const& other) const
+    {
+        return _values == other._values;
+    }
+
+    inline
+    bool
+    key_modifier_set::operator==(key_modifier const& value) const
+    {
+        return _values == static_cast<std::uint16_t>(value);
+    }
+
+    inline
+    bool
+    key_modifier_set::test(key_modifier value) const
+    {
+        return _values & static_cast<std::uint16_t>(value);
+    }
+
+    inline
+    key_modifier_set
+    operator|(key_modifier left, key_modifier right)
+    {
+        return key_modifier_set(
+            static_cast<std::uint16_t>(left) | static_cast<std::uint16_t>(right)
+        );
+    }
+
+    inline
+    key_modifier_set
+    operator&(key_modifier left, key_modifier right)
+    {
+        return key_modifier_set(
+            static_cast<std::uint16_t>(left) & static_cast<std::uint16_t>(right)
+        );
+    }
+
+    inline
+    key_modifier_set
+    operator^(key_modifier left, key_modifier right)
+    {
+        return key_modifier_set(
+            static_cast<std::uint16_t>(left) ^ static_cast<std::uint16_t>(right)
+        );
+    }
+
+    inline
+    key_modifier_set
+    operator~(key_modifier value)
+    {
+        return sdl3::key_modifier_set(~static_cast<uint16_t>(value));
+    }
 }

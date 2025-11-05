@@ -65,6 +65,82 @@ namespace sdl3
         std::uint8_t _value;
     };
 
+    inline
+    index8::index8() { }
+
+    inline
+    index8::index8(std::uint8_t value)
+    : _value(value)
+    { }
+
+    inline
+    index8::index8(index8 const& other)
+    : _value(other._value)
+    { }
+
+    inline
+    index8 &
+    index8::operator=(index8 const& other)
+    {
+        if (this != &other)
+        {
+            _value = other._value;
+        }
+        return *this;    
+    }
+
+    inline
+    index8 &
+    index8::operator+=(index8 const& other)
+    {
+        _value += other._value;
+        return *this;    
+    }
+
+    inline
+    index8 &
+    index8::operator-=(index8 const& other)
+    {
+        _value += other._value;
+        return *this;    
+    }
+
+    inline
+    index8 &
+    index8::operator++()
+    {
+        ++_value;
+        return *this;
+    }
+
+    inline
+    index8 &
+    index8::operator--()
+    {
+        --_value;
+        return *this;
+    }
+
+    inline
+    bool
+    index8::operator==(index8 const& other) const
+    {
+        return _value == other._value;
+    }
+
+    inline
+    bool
+    index8::operator<(index8 const& other) const
+    {
+        return _value < other._value;
+    }
+
+    inline
+    index8::operator std::uint8_t() const
+    {
+        return _value;
+    }
+
     template<color_space C>
     requires (is_rgb_color_space<C>())
     struct pixel_color<pixel_format::index8, C>

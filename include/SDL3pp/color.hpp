@@ -25,7 +25,7 @@
 
 #include <boost/operators.hpp>
 
-#include <SDL3/SDL_pixels.h>
+#include <SDL3/SDL.h>
 
 #include "base_color.hpp"
 
@@ -78,6 +78,118 @@ namespace sdl3
         b8 b;
         a8 a;
     };
+
+    inline const color color::black(0_r8, 0_g8, 0_b8, 255_a8);
+
+    inline const color color::white(255_r8, 255_g8, 255_b8, 255_a8);
+
+    inline const color color::red(255_r8, 0_g8, 0_b8, 255_a8);
+
+    inline const color color::green(0_r8, 255_g8, 0_b8, 255_a8);
+
+    inline const color color::blue(0_r8, 0_g8, 255_b8, 255_a8);
+
+    inline
+    color::color()
+    : r(0_r8), g(0_g8), b(0_b8), a(0_a8)
+    { }
+
+    inline
+    color::color(r8 r, g8 g, b8 b, a8 a)
+    : r(r), g(g), b(b), a(a)
+    { }
+
+    inline
+    color::color(color const& other)
+    : r(other.r), g(other.g), b(other.b), a(other.a)
+    { }
+
+    inline
+    color &
+    color::operator=(color const& other)
+    {
+        if (*this != other)
+        {
+            r = other.r;
+            g = other.g;
+            b = other.b;
+            a = other.a;
+        }
+        return *this;
+    }
+
+    inline
+    color &
+    color::operator*=(color const& other)
+    {
+        r *= other.r;
+        g *= other.g;
+        b *= other.b;
+        a *= other.a;
+        return *this;
+    }
+
+    inline
+    color &
+    color::operator/=(color const& other)
+    {
+        r /= other.r;
+        g /= other.g;
+        b /= other.b;
+        a /= other.a;
+        return *this;
+    }
+
+    inline
+    color &
+    color::operator+=(color const& other)
+    {
+        r += other.r;
+        g += other.g;
+        b += other.b;
+        a += other.a;
+        return *this;
+    }
+
+    inline
+    color &
+    color::operator-=(color const& other)
+    {
+        r -= other.r;
+        g -= other.g;
+        b -= other.b;
+        a -= other.a;
+        return *this;
+    }
+
+    inline
+    color &
+    color::operator*=(clamped_uint8_t scalar)
+    {
+        r *= scalar;
+        g *= scalar;
+        b *= scalar;
+        a *= scalar;
+        return *this;
+    }
+
+    inline
+    color &
+    color::operator/=(clamped_uint8_t scalar)
+    {
+        r /= scalar;
+        g /= scalar;
+        b /= scalar;
+        a /= scalar;
+        return *this;
+    }
+
+    inline
+    bool
+    color::operator==(color const& other) const
+    {
+        return r == other.r && g == other.g && b == other.b && a == other.a;
+    }
 
     template<class CharT, class Traits>
     std::basic_ostream<CharT, Traits>&
