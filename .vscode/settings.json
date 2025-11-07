@@ -1,5 +1,7 @@
 {
     "C_Cpp.default.cppStandard": "c++23",
+    "C_Cpp.enhancedColorization": "enabled",
+    "C_Cpp.inlayHints.parameterNames.enabled": true,
     "cmake.ctest.debugLaunchTarget": "(Windows) Launch ctest",
     "cmake.ctest.testSuiteDelimiter": "::",
     "cmake.useCMakePresets": "always",
@@ -9,6 +11,7 @@
     "cmake.coverageInfoFiles": [
         "${workspaceFolder}/artifacts/build/coverage.info"
     ],
+    "editor.inlayHints.enabled": "on",
     "files.associations": {
         "ostream": "cpp",
         "utility": "cpp",
