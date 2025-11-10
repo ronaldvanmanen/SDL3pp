@@ -81,7 +81,7 @@ namespace sdl3
         requires(is_indexed<P>())
     {
         auto result = SDL_CreateSurfacePalette(owner.native_handle());
-        sdl3::throw_last_error(result != nullptr);
+        sdl3::check_result(result != nullptr);
         return sdl3::palette(result, false);
     }
 

@@ -61,11 +61,30 @@ namespace sdl3
     }
 
     inline void
-    throw_last_error(bool condition)
+    throw_last_error()
     {
-        if (!condition)
+        throw error(SDL_GetError());
+    }
+
+    template <class T>
+    void
+    check_result(T result)
+    {
+        if (!result)
         {
-            throw error(SDL_GetError());
+            throw_last_error();
         }
+    }
+
+    template <class T>
+    [[nodiscard]]
+    T *
+    check_pointer(T * pointer)
+    {
+        if (pointer == nullptr)
+        {
+            throw_last_error();
+        }
+        return pointer;
     }
 }  // namespace sdl3

@@ -86,32 +86,32 @@ namespace sdl3
     void
     property_group::set(const char * name, T * value)
     {
-        throw_last_error(SDL_SetPointerProperty(_native_handle, name, static_cast<void *>(value)));
+        check_result(SDL_SetPointerProperty(_native_handle, name, static_cast<void *>(value)));
     }
 
     inline void
     property_group::set(const char * name, const char * value)
     {
-        throw_last_error(SDL_SetStringProperty(_native_handle, name, value));
+        check_result(SDL_SetStringProperty(_native_handle, name, value));
     }
 
     template <typename T>
     void
     property_group::set(const char * name, T value)
     {
-        throw_last_error(SDL_SetNumberProperty(_native_handle, name, static_cast<std::int64_t>(value)));
+        check_result(SDL_SetNumberProperty(_native_handle, name, static_cast<std::int64_t>(value)));
     }
 
     inline void
     property_group::set(const char * name, float value)
     {
-        throw_last_error(SDL_SetFloatProperty(_native_handle, name, value));
+        check_result(SDL_SetFloatProperty(_native_handle, name, value));
     }
 
     inline void
     property_group::set(const char * name, bool value)
     {
-        throw_last_error(SDL_SetBooleanProperty(_native_handle, name, value));
+        check_result(SDL_SetBooleanProperty(_native_handle, name, value));
     }
 
     template <typename T>

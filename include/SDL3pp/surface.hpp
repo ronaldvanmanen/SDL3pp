@@ -75,58 +75,27 @@ namespace sdl3
         bool _free_handle;
     };
 
-    namespace details
-    {
-        inline SDL_Surface *
-        create_surface(length<std::int32_t> const & width, length<std::int32_t> const & height, pixel_format format)
-        {
-            SDL_Surface * native_handle = SDL_CreateSurface(
-                boost::units::quantity_cast<std::int32_t>(width),
-                boost::units::quantity_cast<std::int32_t>(height),
-                static_cast<SDL_PixelFormat>(format)
-            );
-            throw_last_error(native_handle != nullptr);
-            return native_handle;
-        }
-
-        inline SDL_Surface *
-        create_surface(
-            length<std::int32_t> const & width,
-            length<std::int32_t> const & height,
-            pixel_format format,
-            void * pixels,
-            std::int32_t pitch
-        )
-        {
-            SDL_Surface * native_handle = SDL_CreateSurfaceFrom(
-                boost::units::quantity_cast<std::int32_t>(width),
-                boost::units::quantity_cast<std::int32_t>(height),
-                static_cast<SDL_PixelFormat>(format),
-                pixels,
-                pitch
-            );
-            throw_last_error(native_handle != nullptr);
-            return native_handle;
-        }
-    }  // namespace details
-
     inline surface_base::surface_base(
         length<std::int32_t> const & width,
         length<std::int32_t> const & height,
         pixel_format format
     )
-    : _native_handle(details::create_surface(width, height, format))
+    : _native_handle(check_pointer(SDL_CreateSurface(
+          boost::units::quantity_cast<std::int32_t>(width),
+          boost::units::quantity_cast<std::int32_t>(height),
+          static_cast<SDL_PixelFormat>(format)
+      )))
     , _free_handle(true)
-    {
-        throw_last_error(_native_handle != nullptr);
-    }
+    { }
 
     inline surface_base::surface_base(size_2d<std::int32_t> const & size, pixel_format format)
-    : _native_handle(details::create_surface(size.width, size.height, format))
+    : _native_handle(check_pointer(SDL_CreateSurface(
+          boost::units::quantity_cast<std::int32_t>(size.width),
+          boost::units::quantity_cast<std::int32_t>(size.height),
+          static_cast<SDL_PixelFormat>(format)
+      )))
     , _free_handle(true)
-    {
-        throw_last_error(_native_handle != nullptr);
-    }
+    { }
 
     inline surface_base::surface_base(
         length<std::int32_t> const & width,
@@ -135,7 +104,13 @@ namespace sdl3
         void * pixels,
         std::int32_t pitch
     )
-    : _native_handle(details::create_surface(width, height, format, pixels, pitch))
+    : _native_handle(check_pointer(SDL_CreateSurfaceFrom(
+          boost::units::quantity_cast<std::int32_t>(width),
+          boost::units::quantity_cast<std::int32_t>(height),
+          static_cast<SDL_PixelFormat>(format),
+          pixels,
+          pitch
+      )))
     , _free_handle(true)
     { }
 
@@ -143,14 +118,14 @@ namespace sdl3
     : _native_handle(native_handle)
     , _free_handle(free_handle)
     {
-        throw_last_error(_native_handle != nullptr);
+        check_result(_native_handle != nullptr);
     }
 
     inline surface_base::surface_base(surface_base const & other)
     : _native_handle(SDL_CreateSurface(other._native_handle->w, other._native_handle->h, other._native_handle->format))
     , _free_handle(true)
     {
-        throw_last_error(SDL_BlitSurface(other._native_handle, nullptr, _native_handle, nullptr));
+        check_result(SDL_BlitSurface(other._native_handle, nullptr, _native_handle, nullptr));
     }
 
     inline surface_base::~surface_base()
@@ -198,7 +173,7 @@ namespace sdl3
         auto source_rect = SDL_Rect{0, 0, source_handle->w, source_handle->h};
         auto target_handle = this->native_handle();
         auto target_rect = SDL_Rect{0, 0, target_handle->w, target_handle->h};
-        throw_last_error(SDL_BlitSurface(source_handle, &source_rect, target_handle, &target_rect));
+        check_result(SDL_BlitSurface(source_handle, &source_rect, target_handle, &target_rect));
     }
 
     template <pixel_format P, color_space C = default_color_space<P>()>
@@ -317,7 +292,7 @@ namespace sdl3
 
         if (must_lock)
         {
-            throw_last_error(SDL_LockSurface(_native_handle));
+            check_result(SDL_LockSurface(_native_handle));
         }
 
         callback(*this);

@@ -290,22 +290,11 @@ namespace sdl3
         return stream;
     }
 
-    namespace details
-    {
-        inline SDL_PixelFormatDetails const *
-        get_pixel_format_details(sdl3::pixel_format format)
-        {
-            auto native_handle = SDL_GetPixelFormatDetails(static_cast<SDL_PixelFormat>(format));
-            throw_last_error(native_handle != nullptr);
-            return native_handle;
-        }
-    }  // namespace details
-
     class pixel_format_details
     {
     public:
         pixel_format_details(pixel_format format)
-        : _native_handle(details::get_pixel_format_details(format))
+        : _native_handle(check_pointer(SDL_GetPixelFormatDetails(static_cast<SDL_PixelFormat>(format))))
         { }
 
         pixel_format_details(SDL_PixelFormatDetails const * native_handle)

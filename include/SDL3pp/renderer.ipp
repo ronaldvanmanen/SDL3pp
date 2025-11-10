@@ -25,31 +25,12 @@
 
 namespace sdl3
 {
-    namespace details
-    {
-        inline SDL_Renderer *
-        create_renderer(window & owner)
-        {
-            SDL_Renderer * native_handle = SDL_CreateRenderer(owner.native_handle(), nullptr);
-            throw_last_error(native_handle != nullptr);
-            return native_handle;
-        }
-
-        inline SDL_Renderer *
-        create_renderer(window & owner, std::string const & name)
-        {
-            SDL_Renderer * native_handle = SDL_CreateRenderer(owner.native_handle(), name.c_str());
-            throw_last_error(native_handle != nullptr);
-            return native_handle;
-        }
-    }  // namespace details
-
     inline renderer::renderer(window & owner)
-    : _native_handle(details::create_renderer(owner))
+    : _native_handle(check_pointer(SDL_CreateRenderer(owner.native_handle(), nullptr)))
     { }
 
     inline renderer::renderer(window & owner, std::string const & name)
-    : _native_handle(details::create_renderer(owner, name))
+    : _native_handle(check_pointer(SDL_CreateRenderer(owner.native_handle(), name.c_str())))
     { }
 
     inline renderer::renderer(renderer && other)
@@ -68,7 +49,7 @@ namespace sdl3
     renderer::name() const
     {
         char const * retval = SDL_GetRendererName(_native_handle);
-        throw_last_error(retval != nullptr);
+        check_result(retval != nullptr);
         return std::string(retval);
     }
 
@@ -82,7 +63,7 @@ namespace sdl3
     renderer::output_size() const
     {
         int width, height;
-        throw_last_error(SDL_GetCurrentRenderOutputSize(_native_handle, &width, &height));
+        check_result(SDL_GetCurrentRenderOutputSize(_native_handle, &width, &height));
         return size_2d<std::int32_t>(width * px, height * px);
     }
 
@@ -90,36 +71,34 @@ namespace sdl3
     renderer::draw_color() const
     {
         std::uint8_t r, g, b, a;
-        throw_last_error(SDL_GetRenderDrawColor(_native_handle, &r, &g, &b, &a));
+        check_result(SDL_GetRenderDrawColor(_native_handle, &r, &g, &b, &a));
         return color(r8(r), g8(g), b8(b), a8(a));
     }
 
     inline void
     renderer::draw_color(color const & draw_color)
     {
-        throw_last_error(
-            SDL_SetRenderDrawColor(_native_handle, draw_color.r, draw_color.g, draw_color.b, draw_color.a)
-        );
+        check_result(SDL_SetRenderDrawColor(_native_handle, draw_color.r, draw_color.g, draw_color.b, draw_color.a));
     }
 
     inline blend_mode
     renderer::draw_blend_mode() const
     {
         SDL_BlendMode mode;
-        throw_last_error(SDL_GetRenderDrawBlendMode(_native_handle, &mode));
+        check_result(SDL_GetRenderDrawBlendMode(_native_handle, &mode));
         return static_cast<blend_mode>(mode);
     }
 
     inline void
     renderer::draw_blend_mode(blend_mode mode)
     {
-        throw_last_error(SDL_SetRenderDrawBlendMode(_native_handle, static_cast<SDL_BlendMode>(mode)));
+        check_result(SDL_SetRenderDrawBlendMode(_native_handle, static_cast<SDL_BlendMode>(mode)));
     }
 
     inline void
     renderer::clear()
     {
-        throw_last_error(SDL_RenderClear(_native_handle));
+        check_result(SDL_RenderClear(_native_handle));
     }
 
     inline void
@@ -131,7 +110,7 @@ namespace sdl3
     inline void
     renderer::copy(texture_base & texture)
     {
-        throw_last_error(SDL_RenderTexture(_native_handle, texture.native_handle(), nullptr, nullptr));
+        check_result(SDL_RenderTexture(_native_handle, texture.native_handle(), nullptr, nullptr));
     }
 
     inline SDL_Renderer *

@@ -23,50 +23,40 @@
 #include "error.hpp"
 #include "palette.hpp"
 
-namespace sdl3
-{
-    inline void
-    set_palette_colors(SDL_Palette * palette, SDL_Color const * colors, int first_color, int num_colors)
-    {
-        throw_last_error(SDL_SetPaletteColors(palette, colors, first_color, num_colors));
-    }
-
-    inline void
-    set_palette_colors(SDL_Palette * palette, color const * colors, std::size_t first_color, std::size_t num_colors)
-    {
-        set_palette_colors(
-            palette,
-            reinterpret_cast<SDL_Color const *>(colors),
-            static_cast<int>(first_color),
-            static_cast<int>(num_colors)
-        );
-    }
-}  // namespace sdl3
-
 inline sdl3::palette::palette(std::size_t size)
-: _native_handle(SDL_CreatePalette(static_cast<int>(size)))
+: _native_handle(check_pointer(SDL_CreatePalette(static_cast<int>(size))))
 , _free_handle(true)
 { }
 
 inline sdl3::palette::palette(std::initializer_list<color> colors)
-: _native_handle(SDL_CreatePalette(static_cast<int>(colors.size())))
+: _native_handle(check_pointer(SDL_CreatePalette(static_cast<int>(colors.size()))))
 , _free_handle(true)
 {
-    set_palette_colors(_native_handle, colors.begin(), 0, colors.size());
+    check_result(SDL_SetPaletteColors(
+        _native_handle,
+        reinterpret_cast<SDL_Color const *>(colors.begin()),
+        static_cast<int>(0),
+        static_cast<int>(colors.size())
+    ));
 }
 
 inline sdl3::palette::palette(std::vector<color> const & colors)
-: _native_handle(SDL_CreatePalette(static_cast<int>(colors.size())))
+: _native_handle(check_pointer(SDL_CreatePalette(static_cast<int>(colors.size()))))
 , _free_handle(true)
 {
-    set_palette_colors(_native_handle, &colors[0], 0, colors.size());
+    check_result(SDL_SetPaletteColors(
+        _native_handle,
+        reinterpret_cast<SDL_Color const *>(&colors[0]),
+        static_cast<int>(0),
+        static_cast<int>(colors.size())
+    ));
 }
 
 inline sdl3::palette::palette(sdl3::palette const & other)
-: _native_handle(SDL_CreatePalette(static_cast<int>(other.size())))
+: _native_handle(check_pointer(SDL_CreatePalette(static_cast<int>(other.size()))))
 , _free_handle(true)
 {
-    set_palette_colors(_native_handle, other._native_handle->colors, 0, other._native_handle->ncolors);
+    check_result(SDL_SetPaletteColors(_native_handle, other._native_handle->colors, 0, other._native_handle->ncolors));
 }
 
 inline sdl3::palette::palette(sdl3::palette && other)
@@ -90,16 +80,24 @@ inline sdl3::palette::~palette()
 inline sdl3::palette &
 sdl3::palette::operator=(std::initializer_list<sdl3::color> colors)
 {
-    set_palette_colors(_native_handle, colors.begin(), 0, colors.size());
-
+    check_result(SDL_SetPaletteColors(
+        _native_handle,
+        reinterpret_cast<SDL_Color const *>(colors.begin()),
+        static_cast<int>(0),
+        static_cast<int>(colors.size())
+    ));
     return *this;
 }
 
 inline sdl3::palette &
 sdl3::palette::operator=(std::vector<sdl3::color> const & colors)
 {
-    set_palette_colors(_native_handle, &colors[0], 0, colors.size());
-
+    check_result(SDL_SetPaletteColors(
+        _native_handle,
+        reinterpret_cast<SDL_Color const *>(&colors[0]),
+        static_cast<int>(0),
+        static_cast<int>(colors.size())
+    ));
     return *this;
 }
 
@@ -153,7 +151,12 @@ inline sdl3::palette::indexed_color::indexed_color(sdl3::palette::indexed_color 
 inline sdl3::palette::indexed_color &
 sdl3::palette::indexed_color::operator=(sdl3::color const & value)
 {
-    sdl3::set_palette_colors(_owner->_native_handle, &value, _index, 1);
+    check_result(SDL_SetPaletteColors(
+        _owner->_native_handle,
+        reinterpret_cast<SDL_Color const *>(&value),
+        static_cast<int>(_index),
+        static_cast<int>(1)
+    ));
 
     return *this;
 }
