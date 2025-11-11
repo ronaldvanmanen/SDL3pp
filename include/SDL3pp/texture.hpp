@@ -5,7 +5,7 @@
 // This software is provided 'as-is', without any express or implied
 // warranty.  In no event will the authors be held liable for any damages
 // arising from the use of this software.
-// 
+//
 // Permission is granted to anyone to use this software for any purpose,
 // including commercial applications, and to alter it and redistribute it
 // freely, subject to the following restrictions:
@@ -52,31 +52,37 @@ namespace sdl3
     class texture_base
     {
     protected:
-        texture_base(renderer & owner, pixel_format format, texture_access access, length<int32_t> width, length<int32_t> height);
-        
+        texture_base(
+            renderer & owner,
+            pixel_format format,
+            texture_access access,
+            length<int32_t> width,
+            length<int32_t> height
+        );
+
         texture_base(renderer & owner, property_group & properties);
 
         texture_base(renderer & owner, property_group && properties);
 
-        texture_base(texture_base const& other) = delete;
+        texture_base(texture_base const & other) = delete;
 
         texture_base(texture_base && other);
 
         ~texture_base();
 
-        texture_base & operator=(texture_base const& other) = delete;
+        texture_base & operator=(texture_base const & other) = delete;
 
     public:
         property_group properties() const;
 
-        SDL_Texture* native_handle();
+        SDL_Texture * native_handle();
 
     protected:
-        SDL_Texture* _native_handle;
+        SDL_Texture * _native_handle;
     };
-    
-    template<pixel_format P, texture_access A, color_space C = default_color_space<P>()>
-    requires (is_compatible_color_space<P, C>())
+
+    template <pixel_format P, texture_access A, color_space C = default_color_space<P>()>
+        requires(is_compatible_color_space<P, C>())
     class texture : public texture_base
     {
     public:
@@ -91,28 +97,28 @@ namespace sdl3
     public:
         texture(renderer & owner, length<std::int32_t> width, length<std::int32_t> height);
 
-        texture(renderer & owner, size_2d<std::int32_t> const& size);
+        texture(renderer & owner, size_2d<std::int32_t> const & size);
 
-        texture(texture<P, A, C> const& other) = delete;
+        texture(texture<P, A, C> const & other) = delete;
 
         texture(texture<P, A, C> && other);
 
-        texture<P, A, C> & operator=(texture<P, A, C> const& other) = delete;
+        texture<P, A, C> & operator=(texture<P, A, C> const & other) = delete;
 
-        void update(surface<P, C> const& pixels);
+        void update(surface<P, C> const & pixels);
 
-        template<typename CallbackFunction>
+        template <typename CallbackFunction>
         void with_lock(CallbackFunction callback);
     };
 
-    template<pixel_format P, color_space C = default_color_space<P>()>
+    template <pixel_format P, color_space C = default_color_space<P>()>
     using static_texture = texture<P, texture_access::static_access, C>;
 
-    template<pixel_format P, color_space C = default_color_space<P>()>
+    template <pixel_format P, color_space C = default_color_space<P>()>
     using streaming_texture = texture<P, texture_access::streaming_access, C>;
 
-    template<pixel_format P, color_space C = default_color_space<P>()>
+    template <pixel_format P, color_space C = default_color_space<P>()>
     using target_texture = texture<P, texture_access::target_access, C>;
-}
+}  // namespace sdl3
 
 #include "texture.ipp"

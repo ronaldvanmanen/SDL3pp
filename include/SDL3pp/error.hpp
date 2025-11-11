@@ -5,7 +5,7 @@
 // This software is provided 'as-is', without any express or implied
 // warranty.  In no event will the authors be held liable for any damages
 // arising from the use of this software.
-// 
+//
 // Permission is granted to anyone to use this software for any purpose,
 // including commercial applications, and to alter it and redistribute it
 // freely, subject to the following restrictions:
@@ -29,43 +29,38 @@ namespace sdl3
     class error : public std::runtime_error
     {
     public:
-        error(std::string const& what_arg);
+        error(std::string const & what_arg);
 
-        error(const char* what_arg);
+        error(const char * what_arg);
 
-        error(error const& other);
+        error(error const & other);
 
-        error & operator=(error const& other);
+        error & operator=(error const & other);
     };
 
-    inline
-    error::error(std::string const& what_arg)
+    inline error::error(std::string const & what_arg)
     : std::runtime_error(what_arg)
     { }
 
-    inline
-    error::error(const char* what_arg)
+    inline error::error(const char * what_arg)
     : std::runtime_error(what_arg)
     { }
 
-    inline
-    error::error(error const& other)
+    inline error::error(error const & other)
     : std::runtime_error(other)
     { }
 
-    inline
-    error &
-    error::operator=(error const& other)
+    inline error &
+    error::operator=(error const & other)
     {
         if (this != &other)
         {
-            std::runtime_error::operator= (other);
+            std::runtime_error::operator=(other);
         }
         return *this;
     }
 
-    inline
-    void
+    inline void
     throw_last_error(bool condition)
     {
         if (!condition)
@@ -73,4 +68,4 @@ namespace sdl3
             throw error(SDL_GetError());
         }
     }
-}
+}  // namespace sdl3

@@ -5,7 +5,7 @@
 // This software is provided 'as-is', without any express or implied
 // warranty.  In no event will the authors be held liable for any damages
 // arising from the use of this software.
-// 
+//
 // Permission is granted to anyone to use this software for any purpose,
 // including commercial applications, and to alter it and redistribute it
 // freely, subject to the following restrictions:
@@ -44,7 +44,7 @@ namespace sdl3
         array_u16 = SDL_PIXELTYPE_ARRAYU16,
         array_u32 = SDL_PIXELTYPE_ARRAYU32,
         array_f16 = SDL_PIXELTYPE_ARRAYF16,
-        array_f32 = SDL_PIXELTYPE_ARRAYF32,
+        array_f32 = SDL_PIXELTYPE_ARRAYF32
     };
 
     enum class bitmap_order
@@ -159,78 +159,79 @@ namespace sdl3
         p010 = SDL_PIXELFORMAT_P010,
         external_oes = SDL_PIXELFORMAT_EXTERNAL_OES,
 
-        mjpg = SDL_PIXELFORMAT_MJPG,
+        mjpg = SDL_PIXELFORMAT_MJPG
     };
 
-    template<class CharT, class Traits = std::char_traits<CharT>, class Allocator = std::allocator<CharT> >
-    std::basic_string<CharT, Traits, Allocator> name(pixel_format const& value)
+    template <class CharT, class Traits = std::char_traits<CharT>, class Allocator = std::allocator<CharT>>
+    std::basic_string<CharT, Traits, Allocator>
+    name(pixel_format const & value)
     {
         switch (value)
         {
-            case pixel_format::unknown: return "unknown";
-            case pixel_format::index1lsb: return "index1lsb";
-            case pixel_format::index1msb: return "index1msb";
-            case pixel_format::index2lsb: return "index2lsb";
-            case pixel_format::index2msb: return "index2msb";
-            case pixel_format::index4lsb: return "index4lsb";
-            case pixel_format::index4msb: return "index4msb";
-            case pixel_format::index8: return "index8";
-            case pixel_format::rgb332: return "rgb332";
-            case pixel_format::xrgb4444: return "xrgb4444";
-            case pixel_format::xbgr4444: return "xbgr4444";
-            case pixel_format::xrgb1555: return "xrgb1555";
-            case pixel_format::xbgr1555: return "xbgr1555";
-            case pixel_format::argb4444: return "argb4444";
-            case pixel_format::rgba4444: return "rgba4444";
-            case pixel_format::abgr4444: return "abgr4444";
-            case pixel_format::bgra4444: return "bgra4444";
-            case pixel_format::argb1555: return "argb1555";
-            case pixel_format::rgba5551: return "rgba5551";
-            case pixel_format::abgr1555: return "abgr1555";
-            case pixel_format::bgra5551: return "bgra5551";
-            case pixel_format::rgb565: return "rgb565";
-            case pixel_format::bgr565: return "bgr565";
-            case pixel_format::rgb24: return "rgb24";
-            case pixel_format::bgr24: return "bgr24";
-            case pixel_format::xrgb8888: return "xrgb8888";
-            case pixel_format::rgbx8888: return "rgbx8888";
-            case pixel_format::xbgr8888: return "xbgr8888";
-            case pixel_format::bgrx8888: return "bgrx8888";
-            case pixel_format::argb8888: return "argb8888";
-            case pixel_format::rgba8888: return "rgba8888";
-            case pixel_format::abgr8888: return "abgr8888";
-            case pixel_format::bgra8888: return "bgra8888";
+            case pixel_format::unknown:     return "unknown";
+            case pixel_format::index1lsb:   return "index1lsb";
+            case pixel_format::index1msb:   return "index1msb";
+            case pixel_format::index2lsb:   return "index2lsb";
+            case pixel_format::index2msb:   return "index2msb";
+            case pixel_format::index4lsb:   return "index4lsb";
+            case pixel_format::index4msb:   return "index4msb";
+            case pixel_format::index8:      return "index8";
+            case pixel_format::rgb332:      return "rgb332";
+            case pixel_format::xrgb4444:    return "xrgb4444";
+            case pixel_format::xbgr4444:    return "xbgr4444";
+            case pixel_format::xrgb1555:    return "xrgb1555";
+            case pixel_format::xbgr1555:    return "xbgr1555";
+            case pixel_format::argb4444:    return "argb4444";
+            case pixel_format::rgba4444:    return "rgba4444";
+            case pixel_format::abgr4444:    return "abgr4444";
+            case pixel_format::bgra4444:    return "bgra4444";
+            case pixel_format::argb1555:    return "argb1555";
+            case pixel_format::rgba5551:    return "rgba5551";
+            case pixel_format::abgr1555:    return "abgr1555";
+            case pixel_format::bgra5551:    return "bgra5551";
+            case pixel_format::rgb565:      return "rgb565";
+            case pixel_format::bgr565:      return "bgr565";
+            case pixel_format::rgb24:       return "rgb24";
+            case pixel_format::bgr24:       return "bgr24";
+            case pixel_format::xrgb8888:    return "xrgb8888";
+            case pixel_format::rgbx8888:    return "rgbx8888";
+            case pixel_format::xbgr8888:    return "xbgr8888";
+            case pixel_format::bgrx8888:    return "bgrx8888";
+            case pixel_format::argb8888:    return "argb8888";
+            case pixel_format::rgba8888:    return "rgba8888";
+            case pixel_format::abgr8888:    return "abgr8888";
+            case pixel_format::bgra8888:    return "bgra8888";
             case pixel_format::xrgb2101010: return "xrgb2101010";
             case pixel_format::xbgr2101010: return "xbgr2101010";
             case pixel_format::argb2101010: return "argb2101010";
             case pixel_format::abgr2101010: return "abgr2101010";
-            case pixel_format::rgb48: return "rgb48";
-            case pixel_format::bgr48: return "bgr48";
-            case pixel_format::rgba64: return "rgba64";
-            case pixel_format::argb64: return "argb64";
-            case pixel_format::bgra64: return "bgra64";
-            case pixel_format::abgr64: return "abgr64";
-            case pixel_format::rgb48f: return "rgb48f";
-            case pixel_format::bgr48f: return "bgr48f";
-            case pixel_format::rgba64f: return "rgba64f";
-            case pixel_format::argb64f: return "argb64f";
-            case pixel_format::bgra64f: return "bgra64f";
-            case pixel_format::abgr64f: return "abgr64f";
-            case pixel_format::rgb96f: return "rgb96f";
-            case pixel_format::bgr96f: return "bgr96f";
-            case pixel_format::rgba128f: return "rgba128f";
-            case pixel_format::argb128f: return "argb128f";
-            case pixel_format::bgra128f: return "bgra128f";
-            case pixel_format::abgr128f: return "abgr128f";
+            case pixel_format::rgb48:       return "rgb48";
+            case pixel_format::bgr48:       return "bgr48";
+            case pixel_format::rgba64:      return "rgba64";
+            case pixel_format::argb64:      return "argb64";
+            case pixel_format::bgra64:      return "bgra64";
+            case pixel_format::abgr64:      return "abgr64";
+            case pixel_format::rgb48f:      return "rgb48f";
+            case pixel_format::bgr48f:      return "bgr48f";
+            case pixel_format::rgba64f:     return "rgba64f";
+            case pixel_format::argb64f:     return "argb64f";
+            case pixel_format::bgra64f:     return "bgra64f";
+            case pixel_format::abgr64f:     return "abgr64f";
+            case pixel_format::rgb96f:      return "rgb96f";
+            case pixel_format::bgr96f:      return "bgr96f";
+            case pixel_format::rgba128f:    return "rgba128f";
+            case pixel_format::argb128f:    return "argb128f";
+            case pixel_format::bgra128f:    return "bgra128f";
+            case pixel_format::abgr128f:    return "abgr128f";
 
-            case pixel_format::yv12: return "yv12";
-            case pixel_format::iyuv: return "iyuv";
-            case pixel_format::yuy2: return "yuy2";
-            case pixel_format::uyvy: return "uyvy";
-            case pixel_format::yvyu: return "yvyu";
-            case pixel_format::nv12: return "nv12";
-            case pixel_format::nv21: return "nv21";
-            case pixel_format::p010: return "p010";
+            case pixel_format::yv12:         return "yv12";
+            case pixel_format::iyuv:         return "iyuv";
+            case pixel_format::yuy2:         return "yuy2";
+            case pixel_format::uyvy:         return "uyvy";
+            case pixel_format::yvyu:         return "yvyu";
+            case pixel_format::nv12:         return "nv12";
+            case pixel_format::nv21:         return "nv21";
+            case pixel_format::p010:         return "p010";
             case pixel_format::external_oes: return "external_oes";
 
             case pixel_format::mjpg: return "mjpg";
@@ -239,13 +240,13 @@ namespace sdl3
         }
     }
 
-    template<class CharT, class Traits>
+    template <class CharT, class Traits>
     std::basic_ostream<CharT, Traits> &
-    operator<<(std::basic_ostream<CharT, Traits>& stream, pixel_format const& value)
+    operator<<(std::basic_ostream<CharT, Traits> & stream, pixel_format const & value)
     {
         return stream << name<CharT, Traits>(value);
     }
-    
+
     enum class color_type
     {
         unknown = SDL_COLOR_TYPE_UNKNOWN,
@@ -265,41 +266,40 @@ namespace sdl3
         bt709_limited = SDL_COLORSPACE_BT709_LIMITED,
         bt709_full = SDL_COLORSPACE_BT709_FULL,
         bt2020_limited = SDL_COLORSPACE_BT2020_LIMITED,
-        bt2020_full = SDL_COLORSPACE_BT2020_FULL,
+        bt2020_full = SDL_COLORSPACE_BT2020_FULL
     };
 
-    template<class CharT, class Traits>
-    std::basic_ostream<CharT, Traits>&
-    operator<<(std::basic_ostream<CharT, Traits>& stream, color_space const& value)
+    template <class CharT, class Traits>
+    std::basic_ostream<CharT, Traits> &
+    operator<<(std::basic_ostream<CharT, Traits> & stream, color_space const & value)
     {
-        switch(value)
+        switch (value)
         {
-            case color_space::unknown: stream << "unknown";
-            case color_space::srgb: stream << "srgb";
-            case color_space::srgb_linear: stream << "srgb_linear";
-            case color_space::hdr10: stream << "hdr10";
-            case color_space::jpeg: stream << "jpeg";
-            case color_space::bt601_limited: stream << "bt601_limited";
-            case color_space::bt601_full: stream << "bt601_full";
-            case color_space::bt709_limited: stream << "bt709_limited";
-            case color_space::bt709_full: stream << "bt709_full";
+            case color_space::unknown:        stream << "unknown";
+            case color_space::srgb:           stream << "srgb";
+            case color_space::srgb_linear:    stream << "srgb_linear";
+            case color_space::hdr10:          stream << "hdr10";
+            case color_space::jpeg:           stream << "jpeg";
+            case color_space::bt601_limited:  stream << "bt601_limited";
+            case color_space::bt601_full:     stream << "bt601_full";
+            case color_space::bt709_limited:  stream << "bt709_limited";
+            case color_space::bt709_full:     stream << "bt709_full";
             case color_space::bt2020_limited: stream << "bt2020_limited";
-            case color_space::bt2020_full: stream << "bt2020_full";
+            case color_space::bt2020_full:    stream << "bt2020_full";
         }
         return stream;
     }
 
     namespace details
     {
-        inline
-        SDL_PixelFormatDetails const*
+        inline SDL_PixelFormatDetails const *
         get_pixel_format_details(sdl3::pixel_format format)
         {
             auto native_handle = SDL_GetPixelFormatDetails(static_cast<SDL_PixelFormat>(format));
             throw_last_error(native_handle != nullptr);
             return native_handle;
         }
-    }
+    }  // namespace details
 
     class pixel_format_details
     {
@@ -308,11 +308,11 @@ namespace sdl3
         : _native_handle(details::get_pixel_format_details(format))
         { }
 
-        pixel_format_details(SDL_PixelFormatDetails const* native_handle)
+        pixel_format_details(SDL_PixelFormatDetails const * native_handle)
         : _native_handle(native_handle)
         { }
 
-        pixel_format_details(pixel_format_details const& other)
+        pixel_format_details(pixel_format_details const & other)
         : _native_handle(other._native_handle)
         { }
 
@@ -320,227 +320,230 @@ namespace sdl3
         : _native_handle(other._native_handle)
         { }
 
-        std::uint8_t bits_per_pixel() const
+        std::uint8_t
+        bits_per_pixel() const
         {
             return _native_handle->bits_per_pixel;
         }
 
-        std::uint8_t bytes_per_pixel() const
+        std::uint8_t
+        bytes_per_pixel() const
         {
             return _native_handle->bytes_per_pixel;
         }
 
-        std::uint32_t r_mask() const
+        std::uint32_t
+        r_mask() const
         {
             return _native_handle->Rmask;
         }
 
-        std::uint32_t g_mask() const
+        std::uint32_t
+        g_mask() const
         {
             return _native_handle->Gmask;
         }
 
-        std::uint32_t b_mask() const
+        std::uint32_t
+        b_mask() const
         {
             return _native_handle->Bmask;
         }
 
-        std::uint32_t a_mask() const
+        std::uint32_t
+        a_mask() const
         {
             return _native_handle->Amask;
         }
 
-        std::uint8_t g_bits() const
+        std::uint8_t
+        g_bits() const
         {
             return _native_handle->Gbits;
         }
 
-        std::uint8_t r_bits() const
+        std::uint8_t
+        r_bits() const
         {
             return _native_handle->Rbits;
         }
 
-        std::uint8_t b_bits() const
+        std::uint8_t
+        b_bits() const
         {
             return _native_handle->Bbits;
         }
 
-        std::uint8_t a_bits() const
+        std::uint8_t
+        a_bits() const
         {
             return _native_handle->Abits;
         }
 
-        std::uint8_t r_shift() const
+        std::uint8_t
+        r_shift() const
         {
             return _native_handle->Rshift;
         }
 
-        std::uint8_t g_shift() const
+        std::uint8_t
+        g_shift() const
         {
             return _native_handle->Gshift;
         }
 
-        std::uint8_t b_shift() const
+        std::uint8_t
+        b_shift() const
         {
             return _native_handle->Bshift;
         }
 
-        std::uint8_t a_shift() const
+        std::uint8_t
+        a_shift() const
         {
             return _native_handle->Ashift;
         }
 
-        SDL_PixelFormatDetails const* native_handle()
+        SDL_PixelFormatDetails const *
+        native_handle()
         {
             return _native_handle;
         }
 
     private:
-        SDL_PixelFormatDetails const* _native_handle;
+        SDL_PixelFormatDetails const * _native_handle;
     };
 
-    using pixel_bit_depth = tagged_numeric<std::size_t, struct pixel_bit_depth_tag>;    
+    using pixel_bit_depth = tagged_numeric<std::size_t, struct pixel_bit_depth_tag>;
 
-    using pixel_byte_depth = tagged_numeric<std::size_t, struct pixel_byte_depth_tag>;    
+    using pixel_byte_depth = tagged_numeric<std::size_t, struct pixel_byte_depth_tag>;
 
-    template<pixel_format P>
-    static constexpr pixel_type get_pixel_type() noexcept
+    template <pixel_format P>
+    static constexpr pixel_type
+    get_pixel_type() noexcept
     {
-        return static_cast<pixel_type>(
-            SDL_PIXELTYPE(static_cast<SDL_PixelFormat>(P))
-        );
+        return static_cast<pixel_type>(SDL_PIXELTYPE(static_cast<SDL_PixelFormat>(P)));
     }
 
-    template<pixel_format P>
-    static constexpr pixel_bit_depth bits_per_pixel() noexcept
+    template <pixel_format P>
+    static constexpr pixel_bit_depth
+    bits_per_pixel() noexcept
     {
-        return static_cast<pixel_bit_depth>(
-            SDL_BITSPERPIXEL(static_cast<SDL_PixelFormat>(P))
-        );
+        return static_cast<pixel_bit_depth>(SDL_BITSPERPIXEL(static_cast<SDL_PixelFormat>(P)));
     }
 
-    template<pixel_format P>
-    static constexpr pixel_byte_depth bytes_per_pixel() noexcept
+    template <pixel_format P>
+    static constexpr pixel_byte_depth
+    bytes_per_pixel() noexcept
     {
-        return static_cast<pixel_byte_depth>(
-            SDL_BYTESPERPIXEL(static_cast<SDL_PixelFormat>(P))
-        );
+        return static_cast<pixel_byte_depth>(SDL_BYTESPERPIXEL(static_cast<SDL_PixelFormat>(P)));
     }
 
-    template<pixel_format P>
-    static constexpr bool is_indexed() noexcept
+    template <pixel_format P>
+    static constexpr bool
+    is_indexed() noexcept
     {
-        return SDL_ISPIXELFORMAT_INDEXED(
-            static_cast<SDL_PixelFormat>(P)
-        );
+        return SDL_ISPIXELFORMAT_INDEXED(static_cast<SDL_PixelFormat>(P));
     }
 
-    template<pixel_format P>
-    static constexpr bool is_packed() noexcept
+    template <pixel_format P>
+    static constexpr bool
+    is_packed() noexcept
     {
-        return SDL_ISPIXELFORMAT_PACKED(
-            static_cast<SDL_PixelFormat>(P)
-        );
+        return SDL_ISPIXELFORMAT_PACKED(static_cast<SDL_PixelFormat>(P));
     }
 
-    template<pixel_format P>
-    static constexpr bool is_array() noexcept
+    template <pixel_format P>
+    static constexpr bool
+    is_array() noexcept
     {
-        return SDL_ISPIXELFORMAT_ARRAY(
-            static_cast<SDL_PixelFormat>(P)
-        );
+        return SDL_ISPIXELFORMAT_ARRAY(static_cast<SDL_PixelFormat>(P));
     }
 
-    template<pixel_format P>
-    static constexpr bool is_10bit() noexcept
+    template <pixel_format P>
+    static constexpr bool
+    is_10bit() noexcept
     {
-        return SDL_ISPIXELFORMAT_10BIT(
-            static_cast<SDL_PixelFormat>(P)
-        );
+        return SDL_ISPIXELFORMAT_10BIT(static_cast<SDL_PixelFormat>(P));
     }
 
-    template<pixel_format P>
-    static constexpr bool is_float() noexcept
+    template <pixel_format P>
+    static constexpr bool
+    is_float() noexcept
     {
-        return SDL_ISPIXELFORMAT_FLOAT(
-            static_cast<SDL_PixelFormat>(P)
-        );
+        return SDL_ISPIXELFORMAT_FLOAT(static_cast<SDL_PixelFormat>(P));
     }
 
-    template<pixel_format P>
-    static constexpr bool has_alpha() noexcept
+    template <pixel_format P>
+    static constexpr bool
+    has_alpha() noexcept
     {
-        return SDL_ISPIXELFORMAT_ALPHA(
-            static_cast<SDL_PixelFormat>(P)
-        );
+        return SDL_ISPIXELFORMAT_ALPHA(static_cast<SDL_PixelFormat>(P));
     }
 
-    template<pixel_format P>
-    static constexpr bool is_four_cc() noexcept
+    template <pixel_format P>
+    static constexpr bool
+    is_four_cc() noexcept
     {
-        return SDL_ISPIXELFORMAT_FOURCC(
-            static_cast<SDL_PixelFormat>(P)
-        );
+        return SDL_ISPIXELFORMAT_FOURCC(static_cast<SDL_PixelFormat>(P));
     }
 
-    template<pixel_format P>
-    static constexpr
-    bitmap_order pixel_order() noexcept requires (is_indexed<P>())
+    template <pixel_format P>
+    static constexpr bitmap_order
+    pixel_order() noexcept
+        requires(is_indexed<P>())
     {
-        return static_cast<bitmap_order>(
-            SDL_PIXELORDER(static_cast<SDL_PixelFormat>(P))
-        );
+        return static_cast<bitmap_order>(SDL_PIXELORDER(static_cast<SDL_PixelFormat>(P)));
     }
 
-    template<pixel_format P>
-    static constexpr
-    packed_order pixel_order() noexcept requires (is_packed<P>())
+    template <pixel_format P>
+    static constexpr packed_order
+    pixel_order() noexcept
+        requires(is_packed<P>())
     {
-        return static_cast<packed_order>(
-            SDL_PIXELORDER(static_cast<SDL_PixelFormat>(P))
-        );
+        return static_cast<packed_order>(SDL_PIXELORDER(static_cast<SDL_PixelFormat>(P)));
     }
 
-    template<pixel_format P>
-    static constexpr
-    array_order pixel_order() noexcept requires (is_array<P>())
+    template <pixel_format P>
+    static constexpr array_order
+    pixel_order() noexcept
+        requires(is_array<P>())
     {
-        return static_cast<array_order>(
-            SDL_PIXELORDER(static_cast<SDL_PixelFormat>(P))
-        );
+        return static_cast<array_order>(SDL_PIXELORDER(static_cast<SDL_PixelFormat>(P)));
     }
 
-    template<pixel_format P>
-    static constexpr
-    packed_layout pixel_layout() noexcept requires (is_packed<P>())
+    template <pixel_format P>
+    static constexpr packed_layout
+    pixel_layout() noexcept
+        requires(is_packed<P>())
     {
-        return static_cast<packed_layout>(
-            SDL_PIXELLAYOUT(static_cast<SDL_PixelFormat>(P))
-        );
+        return static_cast<packed_layout>(SDL_PIXELLAYOUT(static_cast<SDL_PixelFormat>(P)));
     }
 
-    template<color_space C>
-    static constexpr color_type color_space_type() noexcept
+    template <color_space C>
+    static constexpr color_type
+    color_space_type() noexcept
     {
-        return static_cast<color_type>(
-            SDL_COLORSPACETYPE(static_cast<SDL_Colorspace>(C))
-        );
+        return static_cast<color_type>(SDL_COLORSPACETYPE(static_cast<SDL_Colorspace>(C)));
     }
 
-    template<color_space C>
-    static constexpr bool is_rgb_color_space() noexcept
+    template <color_space C>
+    static constexpr bool
+    is_rgb_color_space() noexcept
     {
         return color_type::rgb == color_space_type<C>();
     }
 
-    template<pixel_format P, color_space C>
-    static constexpr bool is_compatible_color_space() noexcept
+    template <pixel_format P, color_space C>
+    static constexpr bool
+    is_compatible_color_space() noexcept
     {
         return (is_array<P>() || is_indexed<P>() || is_packed<P>()) && is_rgb_color_space<C>();
     }
 
-    template<pixel_format P>
-    static constexpr color_space default_color_space() noexcept
+    template <pixel_format P>
+    static constexpr color_space
+    default_color_space() noexcept
     {
         if (is_four_cc<P>())
         {
@@ -548,7 +551,7 @@ namespace sdl3
             {
                 case pixel_format::mjpg: return color_space::srgb;
                 case pixel_format::p010: return color_space::hdr10;
-                default: return color_space::jpeg;
+                default:                 return color_space::jpeg;
             }
         }
         if (is_float<P>())
@@ -562,6 +565,7 @@ namespace sdl3
         return color_space::srgb;
     }
 
-    template<pixel_format P, color_space C>
-    struct pixel_color { };
-}
+    template <pixel_format P, color_space C>
+    struct pixel_color
+    { };
+}  // namespace sdl3

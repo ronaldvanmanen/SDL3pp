@@ -5,7 +5,7 @@
 // This software is provided 'as-is', without any express or implied
 // warranty.  In no event will the authors be held liable for any damages
 // arising from the use of this software.
-// 
+//
 // Permission is granted to anyone to use this software for any purpose,
 // including commercial applications, and to alter it and redistribute it
 // freely, subject to the following restrictions:
@@ -43,10 +43,11 @@ struct displacement
 {
     displacement()
     : displacement(0, 0)
-    {}
+    { }
 
     displacement(sdl3::length<std::int32_t> x, sdl3::length<std::int32_t> y)
-    : x(x), y(y)
+    : x(x)
+    , y(y)
     { }
 
     sdl3::length<std::int32_t> x;
@@ -68,12 +69,12 @@ public:
 
     sdl3::length<std::int32_t> height() const;
 
-    displacement& operator()(sdl3::offset<int32_t> x, sdl3::offset<int32_t> y);
+    displacement & operator()(sdl3::offset<int32_t> x, sdl3::offset<int32_t> y);
 
-    displacement const& operator()(sdl3::offset<int32_t> x, sdl3::offset<int32_t> y) const;
+    displacement const & operator()(sdl3::offset<int32_t> x, sdl3::offset<int32_t> y) const;
 
 private:
-    displacement* _pixels;
+    displacement * _pixels;
 
     sdl3::length<std::int32_t> _width;
 
@@ -85,7 +86,8 @@ displacement_table::displacement_table(sdl3::size_2d<std::int32_t> size)
 { }
 
 displacement_table::displacement_table(sdl3::length<std::int32_t> width, sdl3::length<std::int32_t> height)
-: _pixels(new displacement[boost::units::quantity_cast<std::size_t>(height) * boost::units::quantity_cast<std::size_t>(width)])
+: _pixels(new displacement
+              [boost::units::quantity_cast<std::size_t>(height) * boost::units::quantity_cast<std::size_t>(width)])
 , _width(width)
 , _height(height)
 { }
@@ -107,20 +109,16 @@ displacement_table::height() const
     return _height;
 }
 
-displacement&
+displacement &
 displacement_table::operator()(sdl3::offset<std::int32_t> x, sdl3::offset<std::int32_t> y)
 {
-    return _pixels[
-        boost::units::quantity_cast<std::size_t>(y * _height / px + x)
-    ];
+    return _pixels[boost::units::quantity_cast<std::size_t>(y * _height / px + x)];
 }
 
-displacement const&
+displacement const &
 displacement_table::operator()(sdl3::offset<std::int32_t> x, sdl3::offset<std::int32_t> y) const
 {
-    return _pixels[
-        boost::units::quantity_cast<std::size_t>(y * _height / px + x)
-    ];
+    return _pixels[boost::units::quantity_cast<std::size_t>(y * _height / px + x)];
 }
 
 sdl3::length<double>
@@ -128,15 +126,11 @@ calc_distance(sdl3::length<double> width, sdl3::length<double> height, sdl3::off
 {
     // distance = int(ratio * texHeight / sqrt((x - w / 2.0) * (x - w / 2.0) + (y - h / 2.0) * (y - h / 2.0))) % texHeight;
     const double ratio = 32;
-    return sdl3::length<double>::from_value(
-        fmod(
-            ratio * height / boost::units::sqrt(
-                boost::units::pow<2>(x - width / 2.0) +
-                boost::units::pow<2>(y - height / 2.0)
-            ),
-            boost::units::quantity_cast<double>(height)
-        )
-    );
+    return sdl3::length<double>::from_value(fmod(
+        ratio * height /
+            boost::units::sqrt(boost::units::pow<2>(x - width / 2.0) + boost::units::pow<2>(y - height / 2.0)),
+        boost::units::quantity_cast<double>(height)
+    ));
 }
 
 sdl3::length<double>
@@ -157,9 +151,9 @@ generate_displacement_image(sdl3::length<std::int32_t> square_size)
 
     displacement_table displacement_image(actual_size, actual_size);
 
-    for (sdl3::offset<std::int32_t> y = 0*px; y < actual_size; y += 1*px)
+    for (sdl3::offset<std::int32_t> y = 0 * px; y < actual_size; y += 1 * px)
     {
-        for (sdl3::offset<std::int32_t> x = 0*px; x < actual_size; x += 1*px)
+        for (sdl3::offset<std::int32_t> x = 0 * px; x < actual_size; x += 1 * px)
         {
             auto displace_x = sdl3::length<std::int32_t>(calc_distance(actual_size, actual_size, x, y));
             auto displace_y = sdl3::length<std::int32_t>(calc_angle(actual_size, actual_size, x, y));
@@ -173,9 +167,7 @@ generate_displacement_image(sdl3::length<std::int32_t> square_size)
 displacement_table
 generate_displacement_image(sdl3::length<std::int32_t> width, sdl3::length<std::int32_t> height)
 {
-    return generate_displacement_image(
-        std::max(width, height)
-    );
+    return generate_displacement_image(std::max(width, height));
 }
 
 displacement_table
@@ -191,9 +183,9 @@ generate_xor_image(sdl3::length<std::int32_t> square_size)
 
     sdl3::surface<sdl3::pixel_format::xrgb8888, sdl3::color_space::srgb> xor_image(actual_size, actual_size);
 
-    for (sdl3::offset<int32_t> y = 0; y < actual_size; y += 1*px)
+    for (sdl3::offset<int32_t> y = 0; y < actual_size; y += 1 * px)
     {
-        for (sdl3::offset<int32_t> x = 0; x < actual_size; x += 1*px)
+        for (sdl3::offset<int32_t> x = 0; x < actual_size; x += 1 * px)
         {
             xor_image(x, y) = sdl3::s_xrgb8888(
                 sdl3::r8(0x00),
@@ -213,7 +205,7 @@ generate_xor_image(sdl3::length<std::int32_t> width, sdl3::length<std::int32_t> 
 }
 
 sdl3::surface<sdl3::pixel_format::xrgb8888, sdl3::color_space::srgb>
-generate_xor_image(sdl3::size_2d<std::int32_t> const& size)
+generate_xor_image(sdl3::size_2d<std::int32_t> const & size)
 {
     return generate_xor_image(size.width, size.height);
 }
@@ -226,18 +218,22 @@ power_of_two_mod(sdl3::length<std::int32_t> x, sdl3::length<std::int32_t> y)
     return sdl3::length<std::int32_t>::from_value(x_value & (y_value - 1));
 }
 
-int main()
+int
+main()
 {
-    auto window = sdl3::window("Tunnel Effect", 800*px, 600*px, sdl3::window_flags::resizable);
+    auto window = sdl3::window("Tunnel Effect", 800 * px, 600 * px, sdl3::window_flags::resizable);
     auto renderer = sdl3::renderer(window);
-    auto texture = sdl3::streaming_texture<sdl3::pixel_format::xrgb8888, sdl3::color_space::srgb>(renderer, renderer.output_size());
+    auto texture = sdl3::streaming_texture<sdl3::pixel_format::xrgb8888, sdl3::color_space::srgb>(
+        renderer,
+        renderer.output_size()
+    );
 
     auto event_queue = sdl3::event_queue();
 
     auto source_image = generate_xor_image(renderer.output_size());
     auto displacement_table = generate_displacement_table(renderer.output_size());
     auto target_image = sdl3::surface<sdl3::pixel_format::xrgb8888, sdl3::color_space::srgb>(renderer.output_size());
-    
+
     auto stopwatch = sdl3::stopwatch::start_now();
     auto running = true;
     while (running)
@@ -245,15 +241,15 @@ int main()
         sdl3::event event;
         if (event_queue.poll(event))
         {
-            event.handle(sdl3::event_handler
-            {
-                [&running](sdl3::quit_event &&)
-                {
-                    running = false;
-                },
+            event.handle(
+                sdl3::event_handler{
+                    [&running](sdl3::quit_event &&) {
+                        running = false;
+                    },
 
-                [](auto &&) { }
-            });
+                    [](auto &&) {}
+                }
+            );
         }
         else
         {
@@ -270,9 +266,9 @@ int main()
             const auto offset_x = (source_width - target_width) / 2;
             const auto offset_y = (source_height - target_height) / 2;
 
-            for (auto target_y = 0*px; target_y < target_height; target_y += 1*px)
+            for (auto target_y = 0 * px; target_y < target_height; target_y += 1 * px)
             {
-                for (auto target_x = 0*px; target_x < target_width; target_x += 1*px)
+                for (auto target_x = 0 * px; target_x < target_width; target_x += 1 * px)
                 {
                     const auto displacement = displacement_table(target_x + offset_x, target_y + offset_y);
                     const auto source_x = power_of_two_mod(displacement.x + shift_x, source_width);

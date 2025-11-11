@@ -5,7 +5,7 @@
 // This software is provided 'as-is', without any express or implied
 // warranty.  In no event will the authors be held liable for any damages
 // arising from the use of this software.
-// 
+//
 // Permission is granted to anyone to use this software for any purpose,
 // including commercial applications, and to alter it and redistribute it
 // freely, subject to the following restrictions:
@@ -25,24 +25,21 @@
 
 namespace sdl3
 {
-    inline
-    bool is_power_of_two(std::int32_t value)
+    inline bool
+    is_power_of_two(std::int32_t value)
     {
         return (value > 0) && ((value & (value - 1)) == 0);
     }
 
-    template<typename Unit>
-    inline
-    bool
+    template <typename Unit>
+    inline bool
     is_power_of_two(boost::units::quantity<Unit, std::int32_t> value)
     {
-        return is_power_of_two(
-            boost::units::quantity_cast<std::int32_t>(value)
-        );
+        return is_power_of_two(boost::units::quantity_cast<std::int32_t>(value));
     }
 
-    inline
-    std::int32_t next_power_of_two(std::int32_t value)
+    inline std::int32_t
+    next_power_of_two(std::int32_t value)
     {
         --value;
         value |= value >> 1;
@@ -54,21 +51,18 @@ namespace sdl3
         return value;
     }
 
-    template<typename Unit>
-    inline
-    boost::units::quantity<Unit, std::int32_t>
+    template <typename Unit>
+    inline boost::units::quantity<Unit, std::int32_t>
     next_power_of_two(boost::units::quantity<Unit, std::int32_t> value)
     {
         return boost::units::quantity<Unit, std::int32_t>::from_value(
-            next_power_of_two(
-                boost::units::quantity_cast<std::int32_t>(value)
-            )
+            next_power_of_two(boost::units::quantity_cast<std::int32_t>(value))
         );
     }
 
-    inline
-    float degrees_to_radians(float degrees)
+    inline float
+    degrees_to_radians(float degrees)
     {
         return degrees * std::numbers::pi_v<float> / 180.0f;
     }
-}
+}  // namespace sdl3

@@ -5,7 +5,7 @@
 // This software is provided 'as-is', without any express or implied
 // warranty.  In no event will the authors be held liable for any damages
 // arising from the use of this software.
-// 
+//
 // Permission is granted to anyone to use this software for any purpose,
 // including commercial applications, and to alter it and redistribute it
 // freely, subject to the following restrictions:
@@ -56,7 +56,7 @@ namespace sdl3
         x = SDL_SCANCODE_X,
         y = SDL_SCANCODE_Y,
         z = SDL_SCANCODE_Z,
-    
+
         d1 = SDL_SCANCODE_1,
         d2 = SDL_SCANCODE_2,
         d3 = SDL_SCANCODE_3,
@@ -67,13 +67,13 @@ namespace sdl3
         d8 = SDL_SCANCODE_8,
         d9 = SDL_SCANCODE_9,
         d0 = SDL_SCANCODE_0,
-    
+
         return1 = SDL_SCANCODE_RETURN,
         escape = SDL_SCANCODE_ESCAPE,
         backspace = SDL_SCANCODE_BACKSPACE,
         tab = SDL_SCANCODE_TAB,
         space = SDL_SCANCODE_SPACE,
-    
+
         minus = SDL_SCANCODE_MINUS,
         equals = SDL_SCANCODE_EQUALS,
         left_bracket = SDL_SCANCODE_LEFTBRACKET,
@@ -86,9 +86,9 @@ namespace sdl3
         comma = SDL_SCANCODE_COMMA,
         period = SDL_SCANCODE_PERIOD,
         slash = SDL_SCANCODE_SLASH,
-    
+
         caps_lock = SDL_SCANCODE_CAPSLOCK,
-    
+
         f1 = SDL_SCANCODE_F1,
         f2 = SDL_SCANCODE_F2,
         f3 = SDL_SCANCODE_F3,
@@ -101,11 +101,11 @@ namespace sdl3
         f10 = SDL_SCANCODE_F10,
         f11 = SDL_SCANCODE_F11,
         f12 = SDL_SCANCODE_F12,
-    
+
         print_screen = SDL_SCANCODE_PRINTSCREEN,
         scroll_lock = SDL_SCANCODE_SCROLLLOCK,
         pause = SDL_SCANCODE_PAUSE,
-        insert = SDL_SCANCODE_INSERT, 
+        insert = SDL_SCANCODE_INSERT,
         home = SDL_SCANCODE_HOME,
         page_up = SDL_SCANCODE_PAGEUP,
         del = SDL_SCANCODE_DELETE,
@@ -115,7 +115,7 @@ namespace sdl3
         left = SDL_SCANCODE_LEFT,
         down = SDL_SCANCODE_DOWN,
         up = SDL_SCANCODE_UP,
-    
+
         numlock_clear = SDL_SCANCODE_NUMLOCKCLEAR,
         keypad_divide = SDL_SCANCODE_KP_DIVIDE,
         keypad_multiply = SDL_SCANCODE_KP_MULTIPLY,
@@ -133,7 +133,7 @@ namespace sdl3
         keypad_9 = SDL_SCANCODE_KP_9,
         keypad_0 = SDL_SCANCODE_KP_0,
         keypad_period = SDL_SCANCODE_KP_PERIOD,
-    
+
         non_us_backslash = SDL_SCANCODE_NONUSBACKSLASH,
         application = SDL_SCANCODE_APPLICATION,
         power = SDL_SCANCODE_POWER,
@@ -166,7 +166,7 @@ namespace sdl3
         volume_down = SDL_SCANCODE_VOLUMEDOWN,
         keypad_comma = SDL_SCANCODE_KP_COMMA,
         keypad_equals_as400 = SDL_SCANCODE_KP_EQUALSAS400,
-    
+
         international1 = SDL_SCANCODE_INTERNATIONAL1,
         international2 = SDL_SCANCODE_INTERNATIONAL2,
         international3 = SDL_SCANCODE_INTERNATIONAL3,
@@ -186,7 +186,7 @@ namespace sdl3
         lang7 = SDL_SCANCODE_LANG7,
         lang8 = SDL_SCANCODE_LANG8,
         lang9 = SDL_SCANCODE_LANG9,
-    
+
         alt_erase = SDL_SCANCODE_ALTERASE,
         sys_req = SDL_SCANCODE_SYSREQ,
         cancel = SDL_SCANCODE_CANCEL,
@@ -199,7 +199,7 @@ namespace sdl3
         clear_again = SDL_SCANCODE_CLEARAGAIN,
         crsel = SDL_SCANCODE_CRSEL,
         exsel = SDL_SCANCODE_EXSEL,
-    
+
         keypad_00 = SDL_SCANCODE_KP_00,
         keypad_000 = SDL_SCANCODE_KP_000,
         thousands_separator = SDL_SCANCODE_THOUSANDSSEPARATOR,
@@ -246,7 +246,7 @@ namespace sdl3
         keypad_octal = SDL_SCANCODE_KP_OCTAL,
         keypad_decimal = SDL_SCANCODE_KP_DECIMAL,
         keypad_hexadecimal = SDL_SCANCODE_KP_HEXADECIMAL,
-    
+
         left_ctrl = SDL_SCANCODE_LCTRL,
         left_shift = SDL_SCANCODE_LSHIFT,
         left_alt = SDL_SCANCODE_LALT,
@@ -255,9 +255,9 @@ namespace sdl3
         right_shift = SDL_SCANCODE_RSHIFT,
         right_alt = SDL_SCANCODE_RALT,
         right_gui = SDL_SCANCODE_RGUI,
-    
+
         mode = SDL_SCANCODE_MODE,
-    
+
         audio_next = SDL_SCANCODE_MEDIA_NEXT_TRACK,
         audio_prev = SDL_SCANCODE_MEDIA_PREVIOUS_TRACK,
         audio_stop = SDL_SCANCODE_MEDIA_STOP,
@@ -271,16 +271,16 @@ namespace sdl3
         ac_stop = SDL_SCANCODE_AC_STOP,
         ac_refresh = SDL_SCANCODE_AC_REFRESH,
         ac_bookmarks = SDL_SCANCODE_AC_BOOKMARKS,
-    
+
         eject = SDL_SCANCODE_MEDIA_EJECT,
         sleep = SDL_SCANCODE_SLEEP,
-    
+
         audio_rewind = SDL_SCANCODE_MEDIA_REWIND,
         audio_fastforward = SDL_SCANCODE_MEDIA_FAST_FORWARD,
-    
+
         soft_left = SDL_SCANCODE_SOFTLEFT,
         soft_right = SDL_SCANCODE_SOFTRIGHT,
         call = SDL_SCANCODE_CALL,
         end_call = SDL_SCANCODE_ENDCALL
     };
-}
+}  // namespace sdl3

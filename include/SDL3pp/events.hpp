@@ -5,7 +5,7 @@
 // This software is provided 'as-is', without any express or implied
 // warranty.  In no event will the authors be held liable for any damages
 // arising from the use of this software.
-// 
+//
 // Permission is granted to anyone to use this software for any purpose,
 // including commercial applications, and to alter it and redistribute it
 // freely, subject to the following restrictions:
@@ -29,18 +29,19 @@
 
 namespace sdl3
 {
-    class quit_event {};
+    class quit_event
+    { };
 
     class keyboard_event
     {
     protected:
         keyboard_event() = delete;
 
-        keyboard_event(keyboard_event const&) = delete;
+        keyboard_event(keyboard_event const &) = delete;
 
         keyboard_event(SDL_Event && native_handle);
 
-        keyboard_event& operator=(keyboard_event const&) = delete;
+        keyboard_event & operator=(keyboard_event const &) = delete;
 
     public:
         std::uint64_t timestamp() const;
@@ -58,7 +59,7 @@ namespace sdl3
         key_code key_code() const;
 
         key_modifier_set key_modifiers() const;
-    
+
     private:
         SDL_Event _native_handle;
     };
@@ -68,11 +69,11 @@ namespace sdl3
     public:
         key_up_event() = delete;
 
-        key_up_event(key_up_event const&) = delete;
+        key_up_event(key_up_event const &) = delete;
 
         key_up_event(SDL_Event && native_handle);
 
-        key_up_event& operator=(key_up_event const&) = delete;
+        key_up_event & operator=(key_up_event const &) = delete;
     };
 
     class key_down_event : public keyboard_event
@@ -80,11 +81,11 @@ namespace sdl3
     public:
         key_down_event() = delete;
 
-        key_down_event(key_down_event const&) = delete;
+        key_down_event(key_down_event const &) = delete;
 
         key_down_event(SDL_Event && native_handle);
 
-        key_down_event& operator=(key_down_event const&) = delete;
+        key_down_event & operator=(key_down_event const &) = delete;
     };
 
     class mouse_wheel_event
@@ -92,11 +93,11 @@ namespace sdl3
     public:
         mouse_wheel_event() = delete;
 
-        mouse_wheel_event(mouse_wheel_event const&) = delete;
+        mouse_wheel_event(mouse_wheel_event const &) = delete;
 
         mouse_wheel_event(SDL_Event && native_handle);
-        
-        mouse_wheel_event & operator=(mouse_wheel_event const&) = delete;
+
+        mouse_wheel_event & operator=(mouse_wheel_event const &) = delete;
 
         std::uint64_t timestamp() const;
 
@@ -118,13 +119,13 @@ namespace sdl3
         SDL_Event _native_handle;
     };
 
-    template<class... Ts>
+    template <class... Ts>
     struct event_handler : Ts...
     {
         using Ts::operator()...;
     };
 
-    template<class... Ts>
+    template <class... Ts>
     event_handler(Ts...) -> event_handler<Ts...>;
 
     class event
@@ -132,9 +133,8 @@ namespace sdl3
     public:
         event();
 
-        template<class Self, class EventHandler>
-        void
-        handle(this Self && self, EventHandler && handler);
+        template <class Self, class EventHandler>
+        void handle(this Self && self, EventHandler && handler);
 
         SDL_Event * native_handle();
 
@@ -154,199 +154,162 @@ namespace sdl3
         bool pending() const;
     };
 
-    inline
-    keyboard_event::keyboard_event(SDL_Event && native_handle)
+    inline keyboard_event::keyboard_event(SDL_Event && native_handle)
     : _native_handle(native_handle)
     { }
 
-    inline
-    std::uint64_t
+    inline std::uint64_t
     keyboard_event::timestamp() const
     {
         return _native_handle.key.timestamp;
     }
 
-    inline
-    std::uint32_t
+    inline std::uint32_t
     keyboard_event::window_id() const
     {
         return _native_handle.key.windowID;
     }
 
-    inline
-    bool
+    inline bool
     keyboard_event::released() const
     {
         return !pressed();
     }
 
-    inline
-    bool
+    inline bool
     keyboard_event::pressed() const
     {
         return _native_handle.key.down;
     }
 
-    inline
-    bool
+    inline bool
     keyboard_event::repeated() const
     {
         return _native_handle.key.repeat;
     }
 
-    inline
-    scan_code
+    inline scan_code
     keyboard_event::scan_code() const
     {
         return static_cast<::sdl3::scan_code>(_native_handle.key.scancode);
-    }        
+    }
 
-    inline
-    key_code
+    inline key_code
     keyboard_event::key_code() const
     {
         return static_cast<::sdl3::key_code>(_native_handle.key.key);
     }
 
-    inline
-    key_modifier_set
+    inline key_modifier_set
     keyboard_event::key_modifiers() const
     {
         return key_modifier_set(static_cast<key_modifier>(_native_handle.key.mod));
     }
-    
-    inline
-    key_up_event::key_up_event(SDL_Event && native_handle)
+
+    inline key_up_event::key_up_event(SDL_Event && native_handle)
     : keyboard_event(std::move(native_handle))
     { }
 
-    inline
-    key_down_event::key_down_event(SDL_Event && native_handle)
+    inline key_down_event::key_down_event(SDL_Event && native_handle)
     : keyboard_event(std::move(native_handle))
     { }
 
-    inline
-    mouse_wheel_event::mouse_wheel_event(SDL_Event && native_handle)
+    inline mouse_wheel_event::mouse_wheel_event(SDL_Event && native_handle)
     : _native_handle(native_handle)
     { }
-    
-    inline
-    std::uint64_t
+
+    inline std::uint64_t
     mouse_wheel_event::timestamp() const
     {
         return _native_handle.wheel.timestamp;
     }
 
-    inline
-    std::uint32_t
+    inline std::uint32_t
     mouse_wheel_event::window_id() const
     {
         return _native_handle.wheel.windowID;
     }
 
-    inline
-    std::uint32_t
+    inline std::uint32_t
     mouse_wheel_event::which() const
     {
         return _native_handle.wheel.which;
     }
 
-    inline
-    float
+    inline float
     mouse_wheel_event::x() const
     {
         return _native_handle.wheel.x;
     }
 
-    inline
-    float
+    inline float
     mouse_wheel_event::y() const
     {
         return _native_handle.wheel.y;
     }
 
-    inline
-    std::uint32_t
+    inline std::uint32_t
     mouse_wheel_event::direction() const
     {
         return _native_handle.wheel.direction;
     }
 
-    inline
-    float
+    inline float
     mouse_wheel_event::mouse_x() const
     {
         return _native_handle.wheel.mouse_x;
     }
 
-    inline
-    float
+    inline float
     mouse_wheel_event::mouse_y() const
     {
         return _native_handle.wheel.mouse_y;
     }
 
-    inline
-    event::event()
+    inline event::event()
     : _native_handle(SDL_Event())
     {
         SDL_zero(_native_handle);
     }
 
-    template<class Self, class EventHandler>
+    template <class Self, class EventHandler>
     void
     event::handle(this Self && self, EventHandler && handler)
     {
         switch (self._native_handle.type)
         {
-            case SDL_EVENT_QUIT:
-                handler(quit_event());
-                break;
-
-            case SDL_EVENT_KEY_DOWN:
-                handler(key_down_event(std::move(self._native_handle)));
-                break;
-
-            case SDL_EVENT_KEY_UP:
-                handler(key_up_event(std::move(self._native_handle)));
-                break;
-
-            case SDL_EVENT_MOUSE_WHEEL:
-                handler(mouse_wheel_event(std::move(self._native_handle)));
-                break;
+            case SDL_EVENT_QUIT:        handler(quit_event()); break;
+            case SDL_EVENT_KEY_DOWN:    handler(key_down_event(std::move(self._native_handle))); break;
+            case SDL_EVENT_KEY_UP:      handler(key_up_event(std::move(self._native_handle))); break;
+            case SDL_EVENT_MOUSE_WHEEL: handler(mouse_wheel_event(std::move(self._native_handle))); break;
         }
     }
 
-    inline
-    SDL_Event *
+    inline SDL_Event *
     event::native_handle()
     {
         return &_native_handle;
     }
 
-    inline
-    event_queue::event_queue()
+    inline event_queue::event_queue()
     {
         SDL_InitSubSystem(SDL_INIT_EVENTS);
     }
 
-    inline
-    event_queue::~event_queue()
+    inline event_queue::~event_queue()
     {
         SDL_QuitSubSystem(SDL_INIT_EVENTS);
     }
 
-    inline
-    bool
+    inline bool
     event_queue::poll(event & event)
     {
         return 1 == SDL_PollEvent(event.native_handle());
     }
 
-    inline
-    bool
+    inline bool
     event_queue::pending() const
     {
         return 1 == SDL_PollEvent(nullptr);
     }
-}
+}  // namespace sdl3

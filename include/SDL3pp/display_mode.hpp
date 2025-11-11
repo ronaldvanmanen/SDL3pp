@@ -5,7 +5,7 @@
 // This software is provided 'as-is', without any express or implied
 // warranty.  In no event will the authors be held liable for any damages
 // arising from the use of this software.
-// 
+//
 // Permission is granted to anyone to use this software for any purpose,
 // including commercial applications, and to alter it and redistribute it
 // freely, subject to the following restrictions:
@@ -32,57 +32,50 @@
 
 namespace sdl3
 {
-    typedef boost::units::quantity<
-        boost::units::si::frequency, float
-    > display_rate;
+    typedef boost::units::quantity<boost::units::si::frequency, float> display_rate;
 
     class display_mode
     {
     public:
-        display_mode(SDL_DisplayMode const* native_handle);
+        display_mode(SDL_DisplayMode const * native_handle);
 
         pixel_format format() const;
-                
+
         length<std::int32_t> width() const;
 
         length<std::int32_t> height() const;
 
         display_rate refresh_rate() const;
-    
+
     private:
-        SDL_DisplayMode const* _native_handle;
+        SDL_DisplayMode const * _native_handle;
     };
 
-    inline
-    display_mode::display_mode(SDL_DisplayMode const* native_handle)
+    inline display_mode::display_mode(SDL_DisplayMode const * native_handle)
     : _native_handle(native_handle)
-    {}
+    { }
 
-    inline
-    pixel_format
+    inline pixel_format
     display_mode::format() const
     {
         return static_cast<pixel_format>(_native_handle->format);
     }
-            
-    inline
-    length<std::int32_t>
+
+    inline length<std::int32_t>
     display_mode::width() const
     {
         return _native_handle->w * px;
     }
 
-    inline
-    length<std::int32_t>
+    inline length<std::int32_t>
     display_mode::height() const
     {
         return _native_handle->h * px;
     }
 
-    inline
-    display_rate
+    inline display_rate
     display_mode::refresh_rate() const
     {
         return _native_handle->refresh_rate * boost::units::si::hertz;
     }
-}
+}  // namespace sdl3

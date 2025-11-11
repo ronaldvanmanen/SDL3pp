@@ -3,7 +3,7 @@ macro("add_sample" TARGET)
   cmake_parse_arguments(arg "" "" "${multiValueArgs}" ${ARGN})
 
   add_executable(${TARGET} ${arg_SOURCES})
-  
+
   target_link_libraries(${TARGET} PRIVATE SDL3pp)
 
   if ("${PACKAGES}")
@@ -13,7 +13,6 @@ macro("add_sample" TARGET)
   endif()
 endmacro()
 
-add_subdirectory("hw_ray_tracer")
 add_subdirectory("plasma_fractal")
 add_subdirectory("sw_ray_tracer")
 add_subdirectory("tunnel_effect")

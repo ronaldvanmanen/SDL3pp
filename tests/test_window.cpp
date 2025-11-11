@@ -5,7 +5,7 @@
 // This software is provided 'as-is', without any express or implied
 // warranty.  In no event will the authors be held liable for any damages
 // arising from the use of this software.
-// 
+//
 // Permission is granted to anyone to use this software for any purpose,
 // including commercial applications, and to alter it and redistribute it
 // freely, subject to the following restrictions:
@@ -24,17 +24,15 @@
 
 using sdl3::px;
 
-BOOST_AUTO_TEST_SUITE(window);
+BOOST_AUTO_TEST_SUITE(window)
 
-BOOST_AUTO_TEST_CASE(test_constructors)
-{
-    BOOST_REQUIRE_NO_THROW(
-        sdl3::window test_window("test_window_constructor", 640*px, 480*px)
-    );
+    BOOST_AUTO_TEST_CASE(test_constructors)
+    {
+        BOOST_REQUIRE_NO_THROW(sdl3::window test_window("test_window_constructor", 640 * px, 480 * px));
 
-    BOOST_REQUIRE_NO_THROW(
-        sdl3::window test_window("test_window_constructor", 640*px, 480*px, sdl3::window_flags::hidden)
-    );
-}
+        BOOST_REQUIRE_NO_THROW(
+            sdl3::window test_window("test_window_constructor", 640 * px, 480 * px, sdl3::window_flags::hidden)
+        );
+    }
 
-BOOST_AUTO_TEST_SUITE_END();
+BOOST_AUTO_TEST_SUITE_END()

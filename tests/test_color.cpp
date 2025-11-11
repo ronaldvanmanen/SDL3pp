@@ -5,7 +5,7 @@
 // This software is provided 'as-is', without any express or implied
 // warranty.  In no event will the authors be held liable for any damages
 // arising from the use of this software.
-// 
+//
 // Permission is granted to anyone to use this software for any purpose,
 // including commercial applications, and to alter it and redistribute it
 // freely, subject to the following restrictions:
@@ -23,10 +23,9 @@
 #include <random>
 #include <sstream>
 
-#include <boost/test/data/test_case.hpp>
-#include <boost/test/data/monomorphic.hpp>
 #include <boost/test/data/monomorphic.hpp>
 #include <boost/test/data/monomorphic/generators/xrange.hpp>
+#include <boost/test/data/test_case.hpp>
 #include <boost/test/unit_test.hpp>
 
 #include "SDL3pp/color.hpp"
@@ -39,109 +38,129 @@ using sdl3::operator""_g8;
 using sdl3::operator""_b8;
 using sdl3::operator""_a8;
 
-BOOST_AUTO_TEST_SUITE(color);
+BOOST_AUTO_TEST_SUITE(color)
 
-BOOST_AUTO_TEST_CASE(test_default_constructor)
-{
-    sdl3::color test_color;
+    BOOST_AUTO_TEST_CASE(test_default_constructor)
+    {
+        sdl3::color test_color;
 
-    BOOST_TEST(test_color.r == 0_r8);
-    BOOST_TEST(test_color.g == 0_g8);
-    BOOST_TEST(test_color.b == 0_b8);
-    BOOST_TEST(test_color.a == 0_a8);
-}
+        BOOST_TEST(test_color.r == 0_r8);
+        BOOST_TEST(test_color.g == 0_g8);
+        BOOST_TEST(test_color.b == 0_b8);
+        BOOST_TEST(test_color.a == 0_a8);
+    }
 
-BOOST_DATA_TEST_CASE(test_component_constructor,
-    sdl3::unit_test::tools::random_color<sdl3::r8>() ^
-    sdl3::unit_test::tools::random_color<sdl3::g8>() ^
-    sdl3::unit_test::tools::random_color<sdl3::b8>() ^
-    sdl3::unit_test::tools::random_color<sdl3::a8>() ^
-    boost::unit_test::data::xrange(8),
-    r, g, b, a, index)
-{
-    auto test_color = sdl3::color(r, g, b, a);
+    BOOST_DATA_TEST_CASE(
+        test_component_constructor,
+        sdl3::unit_test::tools::random_color<sdl3::r8>() ^ sdl3::unit_test::tools::random_color<sdl3::g8>() ^
+            sdl3::unit_test::tools::random_color<sdl3::b8>() ^ sdl3::unit_test::tools::random_color<sdl3::a8>() ^
+            boost::unit_test::data::xrange(8),
+        r,
+        g,
+        b,
+        a,
+        index
+    )
+    {
+        auto test_color = sdl3::color(r, g, b, a);
 
-    BOOST_TEST(test_color.r == r);
-    BOOST_TEST(test_color.g == g);
-    BOOST_TEST(test_color.b == b);
-    BOOST_TEST(test_color.a == a);
-}
+        BOOST_TEST(test_color.r == r);
+        BOOST_TEST(test_color.g == g);
+        BOOST_TEST(test_color.b == b);
+        BOOST_TEST(test_color.a == a);
+    }
 
-BOOST_DATA_TEST_CASE(test_copy_constructor,
-    sdl3::unit_test::tools::random_color<sdl3::r8>() ^
-    sdl3::unit_test::tools::random_color<sdl3::g8>() ^
-    sdl3::unit_test::tools::random_color<sdl3::b8>() ^
-    sdl3::unit_test::tools::random_color<sdl3::a8>() ^
-    boost::unit_test::data::xrange(8),
-    r, g, b, a, index)
-{
-    auto source_color = sdl3::color(r, g, b, a);
+    BOOST_DATA_TEST_CASE(
+        test_copy_constructor,
+        sdl3::unit_test::tools::random_color<sdl3::r8>() ^ sdl3::unit_test::tools::random_color<sdl3::g8>() ^
+            sdl3::unit_test::tools::random_color<sdl3::b8>() ^ sdl3::unit_test::tools::random_color<sdl3::a8>() ^
+            boost::unit_test::data::xrange(8),
+        r,
+        g,
+        b,
+        a,
+        index
+    )
+    {
+        auto source_color = sdl3::color(r, g, b, a);
 
-    auto target_color(source_color);
+        auto target_color(source_color);
 
-    BOOST_TEST(target_color.r == r);
-    BOOST_TEST(target_color.g == g);
-    BOOST_TEST(target_color.b == b);
-    BOOST_TEST(target_color.a == a);
-    
-    BOOST_TEST(target_color == source_color);
-}
+        BOOST_TEST(target_color.r == r);
+        BOOST_TEST(target_color.g == g);
+        BOOST_TEST(target_color.b == b);
+        BOOST_TEST(target_color.a == a);
 
-BOOST_DATA_TEST_CASE(test_assignment_operator,
-    sdl3::unit_test::tools::random_color<sdl3::color>() ^
-    boost::unit_test::data::xrange(8),
-    source_color, index)
-{
-    auto target_color = sdl3::color();
+        BOOST_TEST(target_color == source_color);
+    }
 
-    BOOST_TEST(source_color != target_color);
-    target_color = source_color;
-    BOOST_TEST(source_color == target_color);
-}
+    BOOST_DATA_TEST_CASE(
+        test_assignment_operator,
+        sdl3::unit_test::tools::random_color<sdl3::color>() ^ boost::unit_test::data::xrange(8),
+        source_color,
+        index
+    )
+    {
+        auto target_color = sdl3::color();
 
-BOOST_DATA_TEST_CASE(test_addition_is_commutative,
-    sdl3::unit_test::tools::random_color<sdl3::color>() ^
-    sdl3::unit_test::tools::random_color<sdl3::color>() ^
-    boost::unit_test::data::xrange(8),
-    x, y, index)
-{
-    BOOST_TEST(x + y == y + x);
-}
+        BOOST_TEST(source_color != target_color);
+        target_color = source_color;
+        BOOST_TEST(source_color == target_color);
+    }
 
-BOOST_DATA_TEST_CASE(test_multiplication_is_commutative,
-    sdl3::unit_test::tools::random_color<sdl3::color>() ^
-    sdl3::unit_test::tools::random_color<sdl3::color>() ^
-    boost::unit_test::data::xrange(8),
-    x, y, index)
-{
-    BOOST_TEST(x * y == y * x);
-}
+    BOOST_DATA_TEST_CASE(
+        test_addition_is_commutative,
+        sdl3::unit_test::tools::random_color<sdl3::color>() ^ sdl3::unit_test::tools::random_color<sdl3::color>() ^
+            boost::unit_test::data::xrange(8),
+        x,
+        y,
+        index
+    )
+    {
+        BOOST_TEST(x + y == y + x);
+    }
 
-BOOST_DATA_TEST_CASE(test_compatibility,
-    sdl3::unit_test::tools::random_color<sdl3::r8>() ^
-    sdl3::unit_test::tools::random_color<sdl3::g8>() ^
-    sdl3::unit_test::tools::random_color<sdl3::b8>() ^
-    sdl3::unit_test::tools::random_color<sdl3::a8>() ^
-    boost::unit_test::data::xrange(8),
-    r, g, b, a, index)
-{
-    sdl3::color test_color(r, g, b, a);
+    BOOST_DATA_TEST_CASE(
+        test_multiplication_is_commutative,
+        sdl3::unit_test::tools::random_color<sdl3::color>() ^ sdl3::unit_test::tools::random_color<sdl3::color>() ^
+            boost::unit_test::data::xrange(8),
+        x,
+        y,
+        index
+    )
+    {
+        BOOST_TEST(x * y == y * x);
+    }
 
-    SDL_Color* ri_test_color = reinterpret_cast<SDL_Color*>(&test_color);
+    BOOST_DATA_TEST_CASE(
+        test_compatibility,
+        sdl3::unit_test::tools::random_color<sdl3::r8>() ^ sdl3::unit_test::tools::random_color<sdl3::g8>() ^
+            sdl3::unit_test::tools::random_color<sdl3::b8>() ^ sdl3::unit_test::tools::random_color<sdl3::a8>() ^
+            boost::unit_test::data::xrange(8),
+        r,
+        g,
+        b,
+        a,
+        index
+    )
+    {
+        sdl3::color test_color(r, g, b, a);
 
-    BOOST_TEST(ri_test_color->r == static_cast<Uint8>(r));
-    BOOST_TEST(ri_test_color->g == static_cast<Uint8>(g));
-    BOOST_TEST(ri_test_color->b == static_cast<Uint8>(b));
-    BOOST_TEST(ri_test_color->a == static_cast<Uint8>(a));
-}
+        SDL_Color * ri_test_color = reinterpret_cast<SDL_Color *>(&test_color);
 
-BOOST_AUTO_TEST_CASE(test_stream_insertion_operator)
-{
-    sdl3::color test_color(0xDE_r8, 0xAD_g8, 0xBE_b8, 0xEF_a8);
+        BOOST_TEST(ri_test_color->r == static_cast<Uint8>(r));
+        BOOST_TEST(ri_test_color->g == static_cast<Uint8>(g));
+        BOOST_TEST(ri_test_color->b == static_cast<Uint8>(b));
+        BOOST_TEST(ri_test_color->a == static_cast<Uint8>(a));
+    }
 
-    std::stringstream s;
-    s << std::hex << std::showbase << std::uppercase << test_color;
-    BOOST_TEST("0XDE,0XAD,0XBE,0XEF" == s.str());
-}
+    BOOST_AUTO_TEST_CASE(test_stream_insertion_operator)
+    {
+        sdl3::color test_color(0xDE_r8, 0xAD_g8, 0xBE_b8, 0xEF_a8);
 
-BOOST_AUTO_TEST_SUITE_END();
+        std::stringstream s;
+        s << std::hex << std::showbase << std::uppercase << test_color;
+        BOOST_TEST("0XDE,0XAD,0XBE,0XEF" == s.str());
+    }
+
+BOOST_AUTO_TEST_SUITE_END()

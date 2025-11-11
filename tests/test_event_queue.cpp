@@ -5,7 +5,7 @@
 // This software is provided 'as-is', without any express or implied
 // warranty.  In no event will the authors be held liable for any damages
 // arising from the use of this software.
-// 
+//
 // Permission is granted to anyone to use this software for any purpose,
 // including commercial applications, and to alter it and redistribute it
 // freely, subject to the following restrictions:
@@ -22,13 +22,11 @@
 
 #include "SDL3pp/events.hpp"
 
-BOOST_AUTO_TEST_SUITE(event_queue);
+BOOST_AUTO_TEST_SUITE(event_queue)
 
-BOOST_AUTO_TEST_CASE(test_event_queue_constructor)
-{
-    BOOST_REQUIRE_NO_THROW(
-        sdl3::event_queue event_queue;
-    );
-}
+    BOOST_AUTO_TEST_CASE(test_event_queue_constructor)
+    {
+        BOOST_REQUIRE_NO_THROW(sdl3::event_queue event_queue;);
+    }
 
-BOOST_AUTO_TEST_SUITE_END();
+BOOST_AUTO_TEST_SUITE_END()

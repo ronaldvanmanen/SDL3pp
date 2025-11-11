@@ -5,7 +5,7 @@
 // This software is provided 'as-is', without any express or implied
 // warranty.  In no event will the authors be held liable for any damages
 // arising from the use of this software.
-// 
+//
 // Permission is granted to anyone to use this software for any purpose,
 // including commercial applications, and to alter it and redistribute it
 // freely, subject to the following restrictions:
@@ -22,13 +22,11 @@
 
 #include "SDL3pp/pixels.hpp"
 
-BOOST_AUTO_TEST_SUITE(pixel_format_details);
+BOOST_AUTO_TEST_SUITE(pixel_format_details)
 
-BOOST_AUTO_TEST_CASE(test_pixel_format_details_constructor)
-{
-    BOOST_REQUIRE_NO_THROW(
-        auto instance = sdl3::pixel_format_details(sdl3::pixel_format::argb8888)
-    );
-}
+    BOOST_AUTO_TEST_CASE(test_pixel_format_details_constructor)
+    {
+        BOOST_REQUIRE_NO_THROW(auto instance = sdl3::pixel_format_details(sdl3::pixel_format::argb8888));
+    }
 
-BOOST_AUTO_TEST_SUITE_END();
+BOOST_AUTO_TEST_SUITE_END()

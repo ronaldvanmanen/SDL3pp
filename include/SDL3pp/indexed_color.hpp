@@ -5,7 +5,7 @@
 // This software is provided 'as-is', without any express or implied
 // warranty.  In no event will the authors be held liable for any damages
 // arising from the use of this software.
-// 
+//
 // Permission is granted to anyone to use this software for any purpose,
 // including commercial applications, and to alter it and redistribute it
 // freely, subject to the following restrictions:
@@ -29,11 +29,13 @@
 namespace sdl3
 {
     class alignas(alignof(std::uint8_t)) index8
+    // clang-format off
     : boost::totally_ordered<index8
     , boost::additive<index8
     , boost::multiplicative<index8
     , boost::unit_steppable<index8
     > > > >
+    // clang-format on
     {
     public:
         static constexpr pixel_format format = pixel_format::index8;
@@ -43,21 +45,21 @@ namespace sdl3
 
         index8(std::uint8_t value);
 
-        index8(index8 const& other);
+        index8(index8 const & other);
 
-        index8 & operator=(index8 const& other);
+        index8 & operator=(index8 const & other);
 
-        index8 & operator+=(index8 const& other);
+        index8 & operator+=(index8 const & other);
 
-        index8 & operator-=(index8 const& other);
+        index8 & operator-=(index8 const & other);
 
         index8 & operator++();
 
         index8 & operator--();
 
-        bool operator==(index8 const& other) const;
+        bool operator==(index8 const & other) const;
 
-        bool operator<(index8 const& other) const;
+        bool operator<(index8 const & other) const;
 
         operator std::uint8_t() const;
 
@@ -65,86 +67,76 @@ namespace sdl3
         std::uint8_t _value;
     };
 
-    inline
-    index8::index8() { }
+    inline index8::index8() { }
 
-    inline
-    index8::index8(std::uint8_t value)
+    inline index8::index8(std::uint8_t value)
     : _value(value)
     { }
 
-    inline
-    index8::index8(index8 const& other)
+    inline index8::index8(index8 const & other)
     : _value(other._value)
     { }
 
-    inline
-    index8 &
-    index8::operator=(index8 const& other)
+    inline index8 &
+    index8::operator=(index8 const & other)
     {
         if (this != &other)
         {
             _value = other._value;
         }
-        return *this;    
+        return *this;
     }
 
-    inline
-    index8 &
-    index8::operator+=(index8 const& other)
+    inline index8 &
+    index8::operator+=(index8 const & other)
     {
         _value += other._value;
-        return *this;    
+        return *this;
     }
 
-    inline
-    index8 &
-    index8::operator-=(index8 const& other)
+    inline index8 &
+    index8::operator-=(index8 const & other)
     {
         _value += other._value;
-        return *this;    
+        return *this;
     }
 
-    inline
-    index8 &
+    inline index8 &
     index8::operator++()
     {
         ++_value;
         return *this;
     }
 
-    inline
-    index8 &
+    inline index8 &
     index8::operator--()
     {
         --_value;
         return *this;
     }
 
-    inline
-    bool
-    index8::operator==(index8 const& other) const
+    inline bool
+    index8::operator==(index8 const & other) const
     {
         return _value == other._value;
     }
 
-    inline
-    bool
-    index8::operator<(index8 const& other) const
+    inline bool
+    index8::operator<(index8 const & other) const
     {
         return _value < other._value;
     }
 
-    inline
-    index8::operator std::uint8_t() const
+    inline index8::
+    operator std::uint8_t() const
     {
         return _value;
     }
 
-    template<color_space C>
-    requires (is_rgb_color_space<C>())
+    template <color_space C>
+        requires(is_rgb_color_space<C>())
     struct pixel_color<pixel_format::index8, C>
     {
         using type = index8;
     };
-}
+}  // namespace sdl3

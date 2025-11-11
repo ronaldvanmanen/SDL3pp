@@ -5,7 +5,7 @@
 // This software is provided 'as-is', without any express or implied
 // warranty.  In no event will the authors be held liable for any damages
 // arising from the use of this software.
-// 
+//
 // Permission is granted to anyone to use this software for any purpose,
 // including commercial applications, and to alter it and redistribute it
 // freely, subject to the following restrictions:
@@ -24,11 +24,11 @@
 #include <boost/cstdlib.hpp>
 
 #define BOOST_TEST_NO_MAIN
-#include <boost/test/tree/visitor.hpp>
-#include <boost/test/tree/test_unit.hpp>
-#include <boost/test/tree/traverse.hpp>
 #include <boost/test/debug.hpp>
 #include <boost/test/results_reporter.hpp>
+#include <boost/test/tree/test_unit.hpp>
+#include <boost/test/tree/traverse.hpp>
+#include <boost/test/tree/visitor.hpp>
 #include <boost/test/unit_test.hpp>
 #include <boost/test/unit_test_parameters.hpp>
 
@@ -41,27 +41,30 @@ public:
     { }
 
 private:
-    void report_test_unit(boost::unit_test::test_unit const& test_unit)
+    void
+    report_test_unit(boost::unit_test::test_unit const & test_unit)
     {
-        for(auto test_suite : m_test_suites)
+        for (auto test_suite : m_test_suites)
         {
             m_os << test_suite << "/";
         }
         m_os << test_unit.p_name;
         m_os << (test_unit.p_default_status == boost::unit_test::test_unit::RS_ENABLED ? "*" : "");
-        if(!test_unit.p_file_name.empty())
+        if (!test_unit.p_file_name.empty())
         {
             m_os << " (" << test_unit.p_file_name << ":" << test_unit.p_line_num << ")";
         }
         m_os << std::endl;
     }
 
-    void visit(boost::unit_test::test_case const & test_case) override
+    void
+    visit(boost::unit_test::test_case const & test_case) override
     {
         report_test_unit(test_case);
     }
 
-    bool test_suite_start(boost::unit_test::test_suite const & test_suite) override
+    bool
+    test_suite_start(boost::unit_test::test_suite const & test_suite) override
     {
         if (&test_suite != &boost::unit_test::framework::master_test_suite())
         {
@@ -70,7 +73,8 @@ private:
         return true;
     }
 
-    void test_suite_finish(boost::unit_test::test_suite const & test_suite) override
+    void
+    test_suite_finish(boost::unit_test::test_suite const & test_suite) override
     {
         if (&test_suite != &boost::unit_test::framework::master_test_suite())
         {
@@ -79,13 +83,18 @@ private:
     }
 
 private:
-    std::ostream& m_os;
+    std::ostream & m_os;
     std::vector<std::string> m_test_suites;
 };
 
-bool initialize_unit_tests() { return true; }
+bool
+initialize_unit_tests()
+{
+    return true;
+}
 
-int main(int argc, char* argv[])
+int
+main(int argc, char * argv[])
 {
     if (argc == 2 && argv[1] == std::string("--list_test_cases"))
     {
@@ -101,7 +110,7 @@ int main(int argc, char* argv[])
             test_case_reporter reporter(boost::unit_test::results_reporter::get_stream());
             boost::unit_test::traverse_test_tree(master_test_suite, reporter, true);
         }
-        catch(...)
+        catch (...)
         {
             exit_code = boost::exit_failure;
         }

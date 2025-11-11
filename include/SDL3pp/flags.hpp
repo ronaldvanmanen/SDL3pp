@@ -5,7 +5,7 @@
 // This software is provided 'as-is', without any express or implied
 // warranty.  In no event will the authors be held liable for any damages
 // arising from the use of this software.
-// 
+//
 // Permission is granted to anyone to use this software for any purpose,
 // including commercial applications, and to alter it and redistribute it
 // freely, subject to the following restrictions:
@@ -34,78 +34,77 @@
 
 namespace sdl3
 {
-    template<class T>
-    requires (std::is_enum_v<T>)
+    template <class T>
+        requires(std::is_enum_v<T>)
     struct is_flags_enum
     {
         static const bool value = false;
     };
 
-    template<class T>
-    requires (std::is_enum_v<T>)
+    template <class T>
+        requires(std::is_enum_v<T>)
     constexpr bool is_flags_enum_v = is_flags_enum<T>::value;
 
-    template<typename T>
-    requires (is_flags_enum_v<T>)
-    constexpr T operator~(T value)
+    template <typename T>
+        requires(is_flags_enum_v<T>)
+    constexpr T
+    operator~(T value)
     {
         using underlying_type = std::underlying_type_t<T>;
-        return static_cast<T>(
-            static_cast<underlying_type>(value)
-        );
+        return static_cast<T>(static_cast<underlying_type>(value));
     }
 
-    template<typename T>
-    requires (is_flags_enum_v<T>)
-    constexpr T operator&(T left, T right)
+    template <typename T>
+        requires(is_flags_enum_v<T>)
+    constexpr T
+    operator&(T left, T right)
     {
         using underlying_type = std::underlying_type_t<T>;
-        return static_cast<T>(
-            static_cast<underlying_type>(left) & static_cast<underlying_type>(right)
-        );
+        return static_cast<T>(static_cast<underlying_type>(left) & static_cast<underlying_type>(right));
     }
 
-    template<typename T>
-    requires (is_flags_enum_v<T>)
-    constexpr T operator|(T left, T right)
+    template <typename T>
+        requires(is_flags_enum_v<T>)
+    constexpr T
+    operator|(T left, T right)
     {
         using underlying_type = std::underlying_type_t<T>;
-        return static_cast<T>(
-            static_cast<underlying_type>(left) | static_cast<underlying_type>(right)
-        );
+        return static_cast<T>(static_cast<underlying_type>(left) | static_cast<underlying_type>(right));
     }
 
-    template<typename T>
-    requires (is_flags_enum_v<T>)
-    constexpr T operator^(T left, T right)
+    template <typename T>
+        requires(is_flags_enum_v<T>)
+    constexpr T
+    operator^(T left, T right)
     {
         using underlying_type = std::underlying_type_t<T>;
-        return static_cast<T>(
-            static_cast<underlying_type>(left) & static_cast<underlying_type>(right)
-        );
+        return static_cast<T>(static_cast<underlying_type>(left) & static_cast<underlying_type>(right));
     }
 
-    template<typename T>
-    requires (is_flags_enum_v<T>)
-    constexpr T & operator&=(T & self, T other)
+    template <typename T>
+        requires(is_flags_enum_v<T>)
+    constexpr T &
+    operator&=(T & self, T other)
     {
         self = self & other;
         return self;
     }
 
-    template<typename T>
-    requires (is_flags_enum_v<T>)
-    constexpr T & operator|=(T & self, T other)
+    template <typename T>
+        requires(is_flags_enum_v<T>)
+    constexpr T &
+    operator|=(T & self, T other)
     {
         self = self | other;
         return self;
     }
 
-    template<typename T>
-    requires (is_flags_enum_v<T>)
-    constexpr T & operator^=(T & self, T other)
+    template <typename T>
+        requires(is_flags_enum_v<T>)
+    constexpr T &
+    operator^=(T & self, T other)
     {
         self = self ^ other;
         return self;
     }
-}
+}  // namespace sdl3

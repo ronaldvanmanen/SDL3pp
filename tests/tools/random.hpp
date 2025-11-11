@@ -5,7 +5,7 @@
 // This software is provided 'as-is', without any express or implied
 // warranty.  In no event will the authors be held liable for any damages
 // arising from the use of this software.
-// 
+//
 // Permission is granted to anyone to use this software for any purpose,
 // including commercial applications, and to alter it and redistribute it
 // freely, subject to the following restrictions:
@@ -21,10 +21,9 @@
 #include <random>
 #include <type_traits>
 
+#include <boost/mpl/if.hpp>
 #include <boost/test/data/config.hpp>
 #include <boost/test/data/monomorphic/generators/random.hpp>
-
-#include <boost/mpl/if.hpp>
 
 #include "SDL3pp/array_color.hpp"
 #include "SDL3pp/base_color.hpp"
@@ -34,29 +33,27 @@
 
 namespace sdl3::unit_test::tools
 {
-    template<class T>
+    template <class T>
     struct promote
     {
         using type = T;
     };
 
-    template<>
+    template <>
     struct promote<std::uint8_t>
     {
         using type = unsigned short;
     };
 
-    template<class ResultT>
-    requires (is_clamped_numeric_v<ResultT>)
+    template <class ResultT>
+        requires(is_clamped_numeric_v<ResultT>)
     class uniform_clamped_numeric_distribution
     {
     public:
         using result_type = ResultT;
 
     private:
-        using internal_type = promote<
-            typename base_type<result_type>::type
-        >::type;
+        using internal_type = promote<typename base_type<result_type>::type>::type;
 
         using distribution_type = boost::mpl::if_<
             std::is_integral<internal_type>,
@@ -67,13 +64,14 @@ namespace sdl3::unit_test::tools
     public:
         uniform_clamped_numeric_distribution()
         : _distribution(
-            static_cast<internal_type>(std::numeric_limits<result_type>::min()),
-            static_cast<internal_type>(std::numeric_limits<result_type>::max())
-        )
+              static_cast<internal_type>(std::numeric_limits<result_type>::min()),
+              static_cast<internal_type>(std::numeric_limits<result_type>::max())
+          )
         { }
 
         template <class Engine>
-        result_type operator()(Engine & engine) /*const*/
+        result_type
+        operator()(Engine & engine) /*const*/
         {
             return result_type(_distribution(engine));
         }
@@ -82,20 +80,21 @@ namespace sdl3::unit_test::tools
         distribution_type _distribution;
     };
 
-    template<typename Color>
+    template <typename Color>
     class uniform_color_distribution
     { };
 
-    template<typename T, typename Tag>
-    requires (is_clamped_numeric_v<T>)
-    class uniform_color_distribution<base_color<T, Tag> >
+    template <typename T, typename Tag>
+        requires(is_clamped_numeric_v<T>)
+    class uniform_color_distribution<base_color<T, Tag>>
     {
     public:
         using result_type = base_color<T, Tag>;
 
     public:
         template <class Engine>
-        result_type operator()(Engine & engine) /*const*/
+        result_type
+        operator()(Engine & engine) /*const*/
         {
             return result_type(_distribution(engine));
         }
@@ -104,12 +103,13 @@ namespace sdl3::unit_test::tools
         uniform_clamped_numeric_distribution<T> _distribution;
     };
 
-    template<>
+    template <>
     class uniform_color_distribution<color>
     {
     public:
         template <class Engine>
-        color operator()(Engine & engine) /*const*/
+        color
+        operator()(Engine & engine) /*const*/
         {
             return color(
                 _r_distribution(engine),
@@ -126,7 +126,7 @@ namespace sdl3::unit_test::tools
         uniform_color_distribution<a8> _a_distribution;
     };
 
-    template<pixel_format P, color_space C>
+    template <pixel_format P, color_space C>
     class uniform_color_distribution<rgb_packed_color<P, C>>
     {
     public:
@@ -139,13 +139,10 @@ namespace sdl3::unit_test::tools
 
     public:
         template <class Engine>
-        result_type operator()(Engine & engine) /*const*/
+        result_type
+        operator()(Engine & engine) /*const*/
         {
-            return result_type(
-                _r_distribution(engine),
-                _g_distribution(engine),
-                _b_distribution(engine)
-            );
+            return result_type(_r_distribution(engine), _g_distribution(engine), _b_distribution(engine));
         }
 
     private:
@@ -154,7 +151,7 @@ namespace sdl3::unit_test::tools
         uniform_color_distribution<b_type> _b_distribution;
     };
 
-    template<pixel_format P, color_space C>
+    template <pixel_format P, color_space C>
     class uniform_color_distribution<rgba_packed_color<P, C>>
     {
     public:
@@ -168,7 +165,8 @@ namespace sdl3::unit_test::tools
 
     public:
         template <class Engine>
-        result_type operator()(Engine & engine) /*const*/
+        result_type
+        operator()(Engine & engine) /*const*/
         {
             return result_type(
                 _r_distribution(engine),
@@ -185,8 +183,8 @@ namespace sdl3::unit_test::tools
         uniform_color_distribution<a_type> _a_distribution;
     };
 
-    template<pixel_format P, color_space C>
-    class uniform_color_distribution<rgb_array_color<P, C> >
+    template <pixel_format P, color_space C>
+    class uniform_color_distribution<rgb_array_color<P, C>>
     {
     public:
         using result_type = rgb_array_color<P, C>;
@@ -198,13 +196,10 @@ namespace sdl3::unit_test::tools
 
     public:
         template <class Engine>
-        result_type operator()(Engine & engine) /*const*/
+        result_type
+        operator()(Engine & engine) /*const*/
         {
-            return result_type(
-                _r_distribution(engine),
-                _g_distribution(engine),
-                _b_distribution(engine)
-            );
+            return result_type(_r_distribution(engine), _g_distribution(engine), _b_distribution(engine));
         }
 
     private:
@@ -213,8 +208,8 @@ namespace sdl3::unit_test::tools
         uniform_color_distribution<b_type> _b_distribution;
     };
 
-    template<pixel_format P, color_space C>
-    class uniform_color_distribution<rgba_array_color<P, C> >
+    template <pixel_format P, color_space C>
+    class uniform_color_distribution<rgba_array_color<P, C>>
     {
     public:
         using result_type = rgba_array_color<P, C>;
@@ -227,7 +222,8 @@ namespace sdl3::unit_test::tools
 
     public:
         template <class Engine>
-        result_type operator()(Engine & engine) /*const*/
+        result_type
+        operator()(Engine & engine) /*const*/
         {
             return result_type(
                 _r_distribution(engine),
@@ -244,19 +240,17 @@ namespace sdl3::unit_test::tools
         uniform_color_distribution<a_type> _a_distribution;
     };
 
-    template<
+    template <
         typename Color = sdl3::color,
         typename ColorDistribution = uniform_color_distribution<Color>,
         typename EngineType = std::default_random_engine
     >
     using random_color_t = boost::unit_test::data::monomorphic::random_t<Color, ColorDistribution, EngineType>;
 
-    template<typename Color>
-    boost::unit_test::data::monomorphic::generated_by<random_color_t<Color> >
+    template <typename Color>
+    boost::unit_test::data::monomorphic::generated_by<random_color_t<Color>>
     random_color()
     {
-        return boost::unit_test::data::monomorphic::generated_by<
-            random_color_t<Color>
-        >(random_color_t<Color>());
-    } 
-}
+        return boost::unit_test::data::monomorphic::generated_by<random_color_t<Color>>(random_color_t<Color>());
+    }
+}  // namespace sdl3::unit_test::tools

@@ -5,7 +5,7 @@
 // This software is provided 'as-is', without any express or implied
 // warranty.  In no event will the authors be held liable for any damages
 // arising from the use of this software.
-// 
+//
 // Permission is granted to anyone to use this software for any purpose,
 // including commercial applications, and to alter it and redistribute it
 // freely, subject to the following restrictions:
@@ -47,15 +47,15 @@ namespace sdl3
     public:
         renderer(window & owner);
 
-        renderer(window & owner, std::string const& name);
+        renderer(window & owner, std::string const & name);
 
-        renderer(renderer const& other) = delete;
+        renderer(renderer const & other) = delete;
 
-        renderer(renderer&& other);
+        renderer(renderer && other);
 
         ~renderer();
 
-        renderer & operator=(renderer const& other) = delete;
+        renderer & operator=(renderer const & other) = delete;
 
         std::string name() const;
 
@@ -65,7 +65,7 @@ namespace sdl3
 
         color draw_color() const;
 
-        void draw_color(color const& draw_color);
+        void draw_color(color const & draw_color);
 
         blend_mode draw_blend_mode() const;
 
@@ -77,11 +77,11 @@ namespace sdl3
 
         void copy(texture_base & texture);
 
-        SDL_Renderer* native_handle();
+        SDL_Renderer * native_handle();
 
     private:
-        SDL_Renderer* _native_handle;
+        SDL_Renderer * _native_handle;
     };
-}
+}  // namespace sdl3
 
 #include "renderer.ipp"

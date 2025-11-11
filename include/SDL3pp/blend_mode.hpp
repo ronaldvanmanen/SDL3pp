@@ -5,7 +5,7 @@
 // This software is provided 'as-is', without any express or implied
 // warranty.  In no event will the authors be held liable for any damages
 // arising from the use of this software.
-// 
+//
 // Permission is granted to anyone to use this software for any purpose,
 // including commercial applications, and to alter it and redistribute it
 // freely, subject to the following restrictions:
@@ -20,8 +20,8 @@
 
 #pragma once
 
-#include <iostream>
 #include <cstdint>
+#include <iostream>
 
 #include <SDL3/SDL.h>
 
@@ -37,19 +37,19 @@ namespace sdl3
         invalid = SDL_BLENDMODE_INVALID
     };
 
-    template<class CharT, class Traits>
-    std::basic_ostream<CharT, Traits>&
-    operator<<(std::basic_ostream<CharT, Traits>& stream, blend_mode const& value)
+    template <class CharT, class Traits>
+    std::basic_ostream<CharT, Traits> &
+    operator<<(std::basic_ostream<CharT, Traits> & stream, blend_mode const & value)
     {
         switch (value)
         {
-            case blend_mode::none: stream << "none"; break;
-            case blend_mode::blend: stream << "blend"; break;
+            case blend_mode::none:     stream << "none"; break;
+            case blend_mode::blend:    stream << "blend"; break;
             case blend_mode::additive: stream << "additive"; break;
             case blend_mode::modulate: stream << "modulate"; break;
             case blend_mode::multiply: stream << "multiply"; break;
-            case blend_mode::invalid: stream << "invalid"; break;
+            case blend_mode::invalid:  stream << "invalid"; break;
         }
         return stream;
     }
-}
+}  // namespace sdl3

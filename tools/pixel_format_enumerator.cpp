@@ -5,7 +5,7 @@
 // This software is provided 'as-is', without any express or implied
 // warranty.  In no event will the authors be held liable for any damages
 // arising from the use of this software.
-// 
+//
 // Permission is granted to anyone to use this software for any purpose,
 // including commercial applications, and to alter it and redistribute it
 // freely, subject to the following restrictions:
@@ -25,7 +25,8 @@
 
 using namespace std;
 
-int main()
+int
+main()
 {
     vector<SDL_PixelFormat> formats = {
         SDL_PIXELFORMAT_UNKNOWN,
@@ -97,24 +98,25 @@ int main()
 
     for (auto format : formats)
     {
-        SDL_PixelFormatDetails const* format_details = SDL_GetPixelFormatDetails(format);
-
-        cout << "format: " << SDL_GetPixelFormatName(format) << endl;
-        cout << "    bits_per_pixel: "  << dec << static_cast<Uint32>(format_details->bits_per_pixel) << endl;
-        cout << "    bytes_per_pixel: " << dec << static_cast<Uint32>(format_details->bytes_per_pixel) << endl;
-        cout << "    Rmask: "           << hex << "0x" << static_cast<Uint32>(format_details->Rmask) << endl;
-        cout << "    Gmask: "           << hex << "0x" << static_cast<Uint32>(format_details->Gmask) << endl;
-        cout << "    Bmask: "           << hex << "0x" << static_cast<Uint32>(format_details->Bmask) << endl;
-        cout << "    Amask: "           << hex << "0x" << static_cast<Uint32>(format_details->Amask) << endl;
-        cout << "    Rbits: "           << dec << static_cast<Uint32>(format_details->Rbits) << endl;
-        cout << "    Gbits: "           << dec << static_cast<Uint32>(format_details->Gbits) << endl;
-        cout << "    Bbits: "           << dec << static_cast<Uint32>(format_details->Bbits) << endl;
-        cout << "    Abits: "           << dec << static_cast<Uint32>(format_details->Abits) << endl;
-        cout << "    Rshift: "          << dec << static_cast<Uint32>(format_details->Rshift) << endl;
-        cout << "    Gshift: "          << dec << static_cast<Uint32>(format_details->Gshift) << endl;
-        cout << "    Bshift: "          << dec << static_cast<Uint32>(format_details->Bshift) << endl;
-        cout << "    Ashift: "          << dec << static_cast<Uint32>(format_details->Ashift) << endl;
+        SDL_PixelFormatDetails const * format_details = SDL_GetPixelFormatDetails(format);
+        // clang-format off
+        cout << "format: "              << SDL_GetPixelFormatName(format) << endl
+             << "    bits_per_pixel: "  << dec << static_cast<Uint32>(format_details->bits_per_pixel) << endl
+             << "    bytes_per_pixel: " << dec << static_cast<Uint32>(format_details->bytes_per_pixel) << endl
+             << "    Rmask: "           << hex << "0x" << static_cast<Uint32>(format_details->Rmask) << endl
+             << "    Gmask: "           << hex << "0x" << static_cast<Uint32>(format_details->Gmask) << endl
+             << "    Bmask: "           << hex << "0x" << static_cast<Uint32>(format_details->Bmask) << endl
+             << "    Amask: "           << hex << "0x" << static_cast<Uint32>(format_details->Amask) << endl
+             << "    Rbits: "           << dec << static_cast<Uint32>(format_details->Rbits) << endl
+             << "    Gbits: "           << dec << static_cast<Uint32>(format_details->Gbits) << endl
+             << "    Bbits: "           << dec << static_cast<Uint32>(format_details->Bbits) << endl
+             << "    Abits: "           << dec << static_cast<Uint32>(format_details->Abits) << endl
+             << "    Rshift: "          << dec << static_cast<Uint32>(format_details->Rshift) << endl
+             << "    Gshift: "          << dec << static_cast<Uint32>(format_details->Gshift) << endl
+             << "    Bshift: "          << dec << static_cast<Uint32>(format_details->Bshift) << endl
+             << "    Ashift: "          << dec << static_cast<Uint32>(format_details->Ashift) << endl;
+        // clang-format on
     }
-   
+
     return 0;
 }

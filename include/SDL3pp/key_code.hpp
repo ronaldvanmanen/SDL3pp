@@ -5,7 +5,7 @@
 // This software is provided 'as-is', without any express or implied
 // warranty.  In no event will the authors be held liable for any damages
 // arising from the use of this software.
-// 
+//
 // Permission is granted to anyone to use this software for any purpose,
 // including commercial applications, and to alter it and redistribute it
 // freely, subject to the following restrictions:
@@ -32,7 +32,7 @@ namespace sdl3
     enum class key_code : std::uint32_t
     {
         unknown = SDLK_UNKNOWN,
-    
+
         return1 = SDLK_RETURN,
         escape = SDLK_ESCAPE,
         backspace = SDLK_BACKSPACE,
@@ -70,7 +70,7 @@ namespace sdl3
         greater = SDLK_GREATER,
         question = SDLK_QUESTION,
         at = SDLK_AT,
-    
+
         left_bracket = SDLK_LEFTBRACKET,
         backslash = SDLK_BACKSLASH,
         right_bracket = SDLK_RIGHTBRACKET,
@@ -103,9 +103,9 @@ namespace sdl3
         x = SDLK_X,
         y = SDLK_Y,
         z = SDLK_Z,
-    
+
         caps_lock = SDLK_CAPSLOCK,
-    
+
         f1 = SDLK_F1,
         f2 = SDLK_F2,
         f3 = SDLK_F3,
@@ -118,7 +118,7 @@ namespace sdl3
         f10 = SDLK_F10,
         f11 = SDLK_F11,
         f12 = SDLK_F12,
-    
+
         print_screen = SDLK_PRINTSCREEN,
         scroll_lock = SDLK_SCROLLLOCK,
         pause = SDLK_PAUSE,
@@ -132,7 +132,7 @@ namespace sdl3
         left = SDLK_LEFT,
         down = SDLK_DOWN,
         up = SDLK_UP,
-    
+
         numlock_clear = SDLK_NUMLOCKCLEAR,
         keypad_divide = SDLK_KP_DIVIDE,
         keypad_multiply = SDLK_KP_MULTIPLY,
@@ -150,7 +150,7 @@ namespace sdl3
         keypad_9 = SDLK_KP_9,
         keypad_0 = SDLK_KP_0,
         keypad_period = SDLK_KP_PERIOD,
-    
+
         application = SDLK_APPLICATION,
         power = SDLK_POWER,
         keypad_equals = SDLK_KP_EQUALS,
@@ -182,7 +182,7 @@ namespace sdl3
         volume_down = SDLK_VOLUMEDOWN,
         keypad_comma = SDLK_KP_COMMA,
         keypad_equals_as400 = SDLK_KP_EQUALSAS400,
-    
+
         alt_erase = SDLK_ALTERASE,
         sys_req = SDLK_SYSREQ,
         cancel = SDLK_CANCEL,
@@ -195,7 +195,7 @@ namespace sdl3
         clear_again = SDLK_CLEARAGAIN,
         crsel = SDLK_CRSEL,
         exsel = SDLK_EXSEL,
-    
+
         keypad_00 = SDLK_KP_00,
         keypad_000 = SDLK_KP_000,
         thousands_separator = SDLK_THOUSANDSSEPARATOR,
@@ -242,7 +242,7 @@ namespace sdl3
         keypad_octal = SDLK_KP_OCTAL,
         keypad_decimal = SDLK_KP_DECIMAL,
         keypad_hexadecimal = SDLK_KP_HEXADECIMAL,
-    
+
         left_ctrl = SDLK_LCTRL,
         left_shift = SDLK_LSHIFT,
         left_alt = SDLK_LALT,
@@ -251,9 +251,9 @@ namespace sdl3
         right_shift = SDLK_RSHIFT,
         right_alt = SDLK_RALT,
         right_gui = SDLK_RGUI,
-    
+
         mode = SDLK_MODE,
-    
+
         audio_next = SDLK_MEDIA_NEXT_TRACK,
         audio_prev = SDLK_MEDIA_PREVIOUS_TRACK,
         audio_stop = SDLK_MEDIA_STOP,
@@ -281,10 +281,10 @@ namespace sdl3
         sleep = SDLK_SLEEP,
         // app1 = SDLK_APP1,
         // app2 = SDLK_APP2,
-    
+
         audio_rewind = SDLK_MEDIA_REWIND,
         audio_fastforward = SDLK_MEDIA_FAST_FORWARD,
-    
+
         soft_left = SDLK_SOFTLEFT,
         soft_right = SDLK_SOFTRIGHT,
         call = SDLK_CALL,
@@ -315,12 +315,14 @@ namespace sdl3
     };
 
     class key_modifier_set
+    // clang-format off
     : boost::equality_comparable<key_modifier_set
     , boost::equality_comparable<key_modifier_set, key_modifier
     , boost::bitwise<key_modifier_set
     , boost::bitwise<key_modifier_set, key_modifier
     , boost::bitwise<key_modifier, key_modifier
     > > > > >
+    // clang-format on
     {
     private:
         key_modifier_set(uint16_t values);
@@ -330,23 +332,23 @@ namespace sdl3
 
         key_modifier_set(key_modifier value);
 
-        key_modifier_set& operator|=(key_modifier_set const& other);
+        key_modifier_set & operator|=(key_modifier_set const & other);
 
-        key_modifier_set& operator&=(key_modifier_set const& other);
+        key_modifier_set & operator&=(key_modifier_set const & other);
 
-        key_modifier_set& operator^=(key_modifier_set const& other);
+        key_modifier_set & operator^=(key_modifier_set const & other);
 
-        key_modifier_set& operator|=(key_modifier const& value);
+        key_modifier_set & operator|=(key_modifier const & value);
 
-        key_modifier_set& operator&=(key_modifier const& value);
+        key_modifier_set & operator&=(key_modifier const & value);
 
-        key_modifier_set& operator^=(key_modifier const& value);
+        key_modifier_set & operator^=(key_modifier const & value);
 
         key_modifier_set operator~() const;
 
-        bool operator==(key_modifier_set const& other) const;
+        bool operator==(key_modifier_set const & other) const;
 
-        bool operator==(key_modifier const& value) const;
+        bool operator==(key_modifier const & value) const;
 
         bool test(key_modifier value) const;
 
@@ -363,128 +365,105 @@ namespace sdl3
         friend key_modifier_set operator~(key_modifier value);
     };
 
-    inline
-    key_modifier_set::key_modifier_set(std::uint16_t values)
+    inline key_modifier_set::key_modifier_set(std::uint16_t values)
     : _values(values)
     { }
 
-    inline
-    key_modifier_set::key_modifier_set()
+    inline key_modifier_set::key_modifier_set()
     : key_modifier_set(static_cast<std::uint16_t>(key_modifier::none))
     { }
 
-    inline
-    key_modifier_set::key_modifier_set(key_modifier value)
+    inline key_modifier_set::key_modifier_set(key_modifier value)
     : _values(static_cast<std::uint16_t>(value))
     { }
 
-    inline
-    key_modifier_set&
-    key_modifier_set::operator|=(key_modifier_set const& other)
+    inline key_modifier_set &
+    key_modifier_set::operator|=(key_modifier_set const & other)
     {
         _values |= other._values;
         return *this;
     }
 
-    inline
-    key_modifier_set&
-    key_modifier_set::operator&=(key_modifier_set const& other)
+    inline key_modifier_set &
+    key_modifier_set::operator&=(key_modifier_set const & other)
     {
         _values &= other._values;
         return *this;
     }
 
-    inline
-    key_modifier_set&
-    key_modifier_set::operator^=(key_modifier_set const& other)
+    inline key_modifier_set &
+    key_modifier_set::operator^=(key_modifier_set const & other)
     {
         _values ^= other._values;
         return *this;
     }
 
-    inline
-    key_modifier_set&
-    key_modifier_set::operator|=(key_modifier const& value)
+    inline key_modifier_set &
+    key_modifier_set::operator|=(key_modifier const & value)
     {
         _values |= static_cast<std::uint16_t>(value);
         return *this;
     }
 
-    inline
-    key_modifier_set&
-    key_modifier_set::operator&=(key_modifier const& value)
+    inline key_modifier_set &
+    key_modifier_set::operator&=(key_modifier const & value)
     {
         _values &= static_cast<std::uint16_t>(value);
         return *this;
     }
 
-    inline
-    key_modifier_set&
-    key_modifier_set::operator^=(key_modifier const& value)
+    inline key_modifier_set &
+    key_modifier_set::operator^=(key_modifier const & value)
     {
         _values ^= static_cast<std::uint16_t>(value);
         return *this;
     }
 
-    inline
-    key_modifier_set
+    inline key_modifier_set
     key_modifier_set::operator~() const
     {
         return key_modifier_set(~_values);
     }
 
-    inline
-    bool
-    key_modifier_set::operator==(key_modifier_set const& other) const
+    inline bool
+    key_modifier_set::operator==(key_modifier_set const & other) const
     {
         return _values == other._values;
     }
 
-    inline
-    bool
-    key_modifier_set::operator==(key_modifier const& value) const
+    inline bool
+    key_modifier_set::operator==(key_modifier const & value) const
     {
         return _values == static_cast<std::uint16_t>(value);
     }
 
-    inline
-    bool
+    inline bool
     key_modifier_set::test(key_modifier value) const
     {
         return _values & static_cast<std::uint16_t>(value);
     }
 
-    inline
-    key_modifier_set
+    inline key_modifier_set
     operator|(key_modifier left, key_modifier right)
     {
-        return key_modifier_set(
-            static_cast<std::uint16_t>(left) | static_cast<std::uint16_t>(right)
-        );
+        return key_modifier_set(static_cast<std::uint16_t>(left) | static_cast<std::uint16_t>(right));
     }
 
-    inline
-    key_modifier_set
+    inline key_modifier_set
     operator&(key_modifier left, key_modifier right)
     {
-        return key_modifier_set(
-            static_cast<std::uint16_t>(left) & static_cast<std::uint16_t>(right)
-        );
+        return key_modifier_set(static_cast<std::uint16_t>(left) & static_cast<std::uint16_t>(right));
     }
 
-    inline
-    key_modifier_set
+    inline key_modifier_set
     operator^(key_modifier left, key_modifier right)
     {
-        return key_modifier_set(
-            static_cast<std::uint16_t>(left) ^ static_cast<std::uint16_t>(right)
-        );
+        return key_modifier_set(static_cast<std::uint16_t>(left) ^ static_cast<std::uint16_t>(right));
     }
 
-    inline
-    key_modifier_set
+    inline key_modifier_set
     operator~(key_modifier value)
     {
         return sdl3::key_modifier_set(~static_cast<uint16_t>(value));
     }
-}
+}  // namespace sdl3

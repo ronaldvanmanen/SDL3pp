@@ -5,7 +5,7 @@
 // This software is provided 'as-is', without any express or implied
 // warranty.  In no event will the authors be held liable for any damages
 // arising from the use of this software.
-// 
+//
 // Permission is granted to anyone to use this software for any purpose,
 // including commercial applications, and to alter it and redistribute it
 // freely, subject to the following restrictions:
@@ -22,35 +22,35 @@
 
 #include "SDL3pp/palette.hpp"
 
-BOOST_AUTO_TEST_SUITE(palette);
+BOOST_AUTO_TEST_SUITE(palette)
 
-BOOST_AUTO_TEST_CASE(test_size_constructor)
-{
-    sdl3::palette test_palette(256);
+    BOOST_AUTO_TEST_CASE(test_size_constructor)
+    {
+        sdl3::palette test_palette(256);
 
-    BOOST_TEST(256 == test_palette.size());
-}
+        BOOST_TEST(256 == test_palette.size());
+    }
 
-BOOST_AUTO_TEST_CASE(test_initializer_list_constructor)
-{
-    sdl3::palette test_palette { sdl3::color::white, sdl3::color::black };
+    BOOST_AUTO_TEST_CASE(test_initializer_list_constructor)
+    {
+        sdl3::palette test_palette{sdl3::color::white, sdl3::color::black};
 
-    BOOST_TEST(2 == test_palette.size());
-    BOOST_TEST(test_palette[0] == sdl3::color::white);
-    BOOST_TEST(test_palette[1] == sdl3::color::black);
-}
+        BOOST_TEST(2 == test_palette.size());
+        BOOST_TEST(test_palette[0] == sdl3::color::white);
+        BOOST_TEST(test_palette[1] == sdl3::color::black);
+    }
 
-BOOST_AUTO_TEST_CASE(test_subscript_operator)
-{
-    sdl3::palette test_palette(2);
+    BOOST_AUTO_TEST_CASE(test_subscript_operator)
+    {
+        sdl3::palette test_palette(2);
 
-    test_palette[0] = sdl3::color::white;
-    test_palette[1] = sdl3::color::black;
+        test_palette[0] = sdl3::color::white;
+        test_palette[1] = sdl3::color::black;
 
-    BOOST_REQUIRE_THROW(test_palette[2], std::out_of_range);
-    
-    BOOST_TEST(test_palette[0] == sdl3::color::white);
-    BOOST_TEST(test_palette[1] == sdl3::color::black);
-}
+        BOOST_REQUIRE_THROW(test_palette[2], std::out_of_range);
 
-BOOST_AUTO_TEST_SUITE_END();
+        BOOST_TEST(test_palette[0] == sdl3::color::white);
+        BOOST_TEST(test_palette[1] == sdl3::color::black);
+    }
+
+BOOST_AUTO_TEST_SUITE_END()

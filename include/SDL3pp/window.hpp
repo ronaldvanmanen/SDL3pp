@@ -5,7 +5,7 @@
 // This software is provided 'as-is', without any express or implied
 // warranty.  In no event will the authors be held liable for any damages
 // arising from the use of this software.
-// 
+//
 // Permission is granted to anyone to use this software for any purpose,
 // including commercial applications, and to alter it and redistribute it
 // freely, subject to the following restrictions:
@@ -56,10 +56,10 @@ namespace sdl3
         tooltip = SDL_WINDOW_TOOLTIP,
         popup_menu = SDL_WINDOW_POPUP_MENU,
         vulkan = SDL_WINDOW_VULKAN,
-        metal = SDL_WINDOW_METAL,
+        metal = SDL_WINDOW_METAL
     };
 
-    template<>
+    template <>
     struct is_flags_enum<window_flags>
     {
         static const bool value = true;
@@ -68,17 +68,17 @@ namespace sdl3
     class window
     {
     public:
-        window(std::string const& title, length<std::int32_t> width, length<std::int32_t> height);
+        window(std::string const & title, length<std::int32_t> width, length<std::int32_t> height);
 
-        window(std::string const& title, length<std::int32_t> width, length<std::int32_t> height, window_flags flags);
+        window(std::string const & title, length<std::int32_t> width, length<std::int32_t> height, window_flags flags);
 
-        window(window const& other) = delete;
+        window(window const & other) = delete;
 
         window(window && other);
 
         ~window();
 
-        window & operator=(window const& other) = delete;
+        window & operator=(window const & other) = delete;
 
         bool relative_mouse_mode() const;
 
@@ -96,46 +96,51 @@ namespace sdl3
 
         void update_surface();
 
-        SDL_Window* native_handle();
+        SDL_Window * native_handle();
 
     private:
-        SDL_Window* _native_handle;
+        SDL_Window * _native_handle;
     };
 
     namespace details
     {
-        inline
-        SDL_Window* create_window(std::string const& title, length<std::int32_t> width, length<std::int32_t> height, window_flags flags)
+        inline SDL_Window *
+        create_window(
+            std::string const & title,
+            length<std::int32_t> width,
+            length<std::int32_t> height,
+            window_flags flags
+        )
         {
-            SDL_Window* native_handle =
-                SDL_CreateWindow(
-                    title.c_str(),
-                    quantity_cast<std::int32_t>(width),
-                    quantity_cast<std::int32_t>(height),
-                    static_cast<std::uint32_t>(flags)
-                );
-            throw_last_error(native_handle != nullptr);        
+            SDL_Window * native_handle = SDL_CreateWindow(
+                title.c_str(),
+                quantity_cast<std::int32_t>(width),
+                quantity_cast<std::int32_t>(height),
+                static_cast<std::uint32_t>(flags)
+            );
+            throw_last_error(native_handle != nullptr);
             return native_handle;
         }
-    }
+    }  // namespace details
 
-    inline
-    window::window(std::string const& title, length<std::int32_t> width, length<std::int32_t> height)
+    inline window::window(std::string const & title, length<std::int32_t> width, length<std::int32_t> height)
     : _native_handle(details::create_window(title, width, height, window_flags::none))
     { }
 
-    inline
-    window::window(std::string const& title, length<std::int32_t> width, length<std::int32_t> height, window_flags flags)
+    inline window::window(
+        std::string const & title,
+        length<std::int32_t> width,
+        length<std::int32_t> height,
+        window_flags flags
+    )
     : _native_handle(details::create_window(title, width, height, flags))
     { }
 
-    inline
-    window::window(window&& other)
+    inline window::window(window && other)
     : _native_handle(std::exchange(other._native_handle, nullptr))
     { }
 
-    inline
-    window::~window()
+    inline window::~window()
     {
         if (_native_handle != nullptr)
         {
@@ -143,26 +148,21 @@ namespace sdl3
         }
     }
 
-    inline
-    void
+    inline void
     window::relative_mouse_mode(bool enabled)
     {
-        throw_last_error(
-            SDL_SetWindowRelativeMouseMode(_native_handle, enabled)
-        );
+        throw_last_error(SDL_SetWindowRelativeMouseMode(_native_handle, enabled));
     }
 
-    inline
-    bool
+    inline bool
     window::relative_mouse_mode() const
     {
         return SDL_GetWindowRelativeMouseMode(_native_handle);
     }
 
-    inline
-    std::optional<display_mode>
+    inline std::optional<display_mode>
     window::fullscreen_mode() const
-    { 
+    {
         auto native_handle = SDL_GetWindowFullscreenMode(_native_handle);
         if (native_handle == nullptr)
         {
@@ -171,35 +171,27 @@ namespace sdl3
         return display_mode(native_handle);
     }
 
-    inline
-    size_2d<std::int32_t>
+    inline size_2d<std::int32_t>
     window::size() const
     {
         int width, height;
-        throw_last_error(
-            SDL_GetWindowSize(_native_handle, &width, &height)
-        );
+        throw_last_error(SDL_GetWindowSize(_native_handle, &width, &height));
         return size_2d<std::int32_t>(width * px, height * px);
     }
 
-    inline
-    void
+    inline void
     window::raise()
     {
-        throw_last_error(
-            SDL_RaiseWindow(_native_handle)
-        );
+        throw_last_error(SDL_RaiseWindow(_native_handle));
     }
 
-    inline
-    bool
+    inline bool
     window::has_surface() const
     {
         return SDL_WindowHasSurface(_native_handle);
     }
 
-    inline
-    surface_base
+    inline surface_base
     window::surface()
     {
         auto native_handle = SDL_GetWindowSurface(_native_handle);
@@ -207,20 +199,15 @@ namespace sdl3
         return surface_base(native_handle, false);
     }
 
-    inline
-    void
+    inline void
     window::update_surface()
     {
-        throw_last_error(
-            SDL_UpdateWindowSurface(_native_handle)
-        );
+        throw_last_error(SDL_UpdateWindowSurface(_native_handle));
     }
 
-    inline
-    SDL_Window*
+    inline SDL_Window *
     window::native_handle()
     {
         return _native_handle;
     }
-
-}
+}  // namespace sdl3

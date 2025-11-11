@@ -5,7 +5,7 @@
 // This software is provided 'as-is', without any express or implied
 // warranty.  In no event will the authors be held liable for any damages
 // arising from the use of this software.
-// 
+//
 // Permission is granted to anyone to use this software for any purpose,
 // including commercial applications, and to alter it and redistribute it
 // freely, subject to the following restrictions:
@@ -45,21 +45,21 @@ namespace sdl3
 
         palette(std::initializer_list<color> colors);
 
-        palette(std::vector<color> const& colors);
+        palette(std::vector<color> const & colors);
 
-        palette(palette const& other);
+        palette(palette const & other);
 
         palette(palette && other);
 
-        palette(SDL_Palette *native_handle, bool free_handle);
+        palette(SDL_Palette * native_handle, bool free_handle);
 
         ~palette();
 
         palette & operator=(std::initializer_list<color> colors);
 
-        palette & operator=(std::vector<color> const& colors);
+        palette & operator=(std::vector<color> const & colors);
 
-        palette & operator=(palette const& other) = delete;
+        palette & operator=(palette const & other) = delete;
 
         indexed_color operator[](std::size_t index);
 
@@ -67,26 +67,28 @@ namespace sdl3
 
         std::size_t size() const;
 
-        SDL_Palette* native_handle();
+        SDL_Palette * native_handle();
 
     private:
-        SDL_Palette* _native_handle;
+        SDL_Palette * _native_handle;
 
         bool _free_handle;
     };
 
-    template<pixel_format P, color_space C = default_color_space<P>()>
-    palette create_palette(surface<P, C> & owner)
-    requires (is_indexed<P>())
+    template <pixel_format P, color_space C = default_color_space<P>()>
+    palette
+    create_palette(surface<P, C> & owner)
+        requires(is_indexed<P>())
     {
         auto result = SDL_CreateSurfacePalette(owner.native_handle());
         sdl3::throw_last_error(result != nullptr);
         return sdl3::palette(result, false);
     }
 
-    template<pixel_format P, color_space C = default_color_space<P>()>
-    std::optional<palette> get_palette(surface<P, C> & owner)
-    requires (is_indexed<P>())
+    template <pixel_format P, color_space C = default_color_space<P>()>
+    std::optional<palette>
+    get_palette(surface<P, C> & owner)
+        requires(is_indexed<P>())
     {
         auto native_handle = SDL_GetSurfacePalette(owner.native_handle());
         if (native_handle == nullptr)
@@ -101,15 +103,15 @@ namespace sdl3
     public:
         indexed_color(palette * owner, std::size_t index);
 
-        indexed_color(indexed_color const& other);
+        indexed_color(indexed_color const & other);
 
         indexed_color(indexed_color && other);
 
-        indexed_color& operator=(color const & value);
+        indexed_color & operator=(color const & value);
 
-        color const& get() const;
+        color const & get() const;
 
-        operator color const&() const;
+        operator color const &() const;
 
     private:
         palette * _owner;
@@ -120,13 +122,13 @@ namespace sdl3
     class palette::const_indexed_color
     {
     public:
-        const_indexed_color(palette const* owner, std::size_t index);
+        const_indexed_color(palette const * owner, std::size_t index);
 
-        const_indexed_color(const_indexed_color const& other);
+        const_indexed_color(const_indexed_color const & other);
 
-        color const& get() const;
+        color const & get() const;
 
-        operator color const&() const;
+        operator color const &() const;
 
     private:
         palette const * _owner;
@@ -134,19 +136,19 @@ namespace sdl3
         std::size_t _index;
     };
 
-    bool operator==(palette::indexed_color const& left, palette::indexed_color const& right);
+    bool operator==(palette::indexed_color const & left, palette::indexed_color const & right);
 
-    bool operator!=(palette::indexed_color const& left, palette::indexed_color const& right);
+    bool operator!=(palette::indexed_color const & left, palette::indexed_color const & right);
 
-    bool operator==(palette::indexed_color const& left, color const& right);
+    bool operator==(palette::indexed_color const & left, color const & right);
 
-    bool operator!=(palette::indexed_color const& left, color const& right);
+    bool operator!=(palette::indexed_color const & left, color const & right);
 
-    bool operator==(color const& left, palette::indexed_color const& right);
+    bool operator==(color const & left, palette::indexed_color const & right);
 
-    bool operator!=(color const& left, palette::indexed_color const& right);
+    bool operator!=(color const & left, palette::indexed_color const & right);
 
-    std::ostream & operator<<(std::ostream & stream, palette::indexed_color const& value);
-}
+    std::ostream & operator<<(std::ostream & stream, palette::indexed_color const & value);
+}  // namespace sdl3
 
 #include "palette.ipp"

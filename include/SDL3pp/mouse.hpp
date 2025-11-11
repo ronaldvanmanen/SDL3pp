@@ -5,7 +5,7 @@
 // This software is provided 'as-is', without any express or implied
 // warranty.  In no event will the authors be held liable for any damages
 // arising from the use of this software.
-// 
+//
 // Permission is granted to anyone to use this software for any purpose,
 // including commercial applications, and to alter it and redistribute it
 // freely, subject to the following restrictions:
@@ -45,12 +45,11 @@ namespace sdl3
         return ((this->buttons & which) == which);
     }
 
-    inline
-    mouse_state
+    inline mouse_state
     mouse::relative_state()
     {
         float x, y;
         std::uint32_t buttons = SDL_GetRelativeMouseState(&x, &y);
-        return mouse_state { x, y, buttons };
+        return mouse_state{x, y, buttons};
     }
-}
+}  // namespace sdl3

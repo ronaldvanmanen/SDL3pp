@@ -5,7 +5,7 @@
 // This software is provided 'as-is', without any express or implied
 // warranty.  In no event will the authors be held liable for any damages
 // arising from the use of this software.
-// 
+//
 // Permission is granted to anyone to use this software for any purpose,
 // including commercial applications, and to alter it and redistribute it
 // freely, subject to the following restrictions:
@@ -20,8 +20,8 @@
 
 #pragma once
 
-#include <iostream>
 #include <cstdint>
+#include <iostream>
 
 #include <boost/operators.hpp>
 
@@ -32,11 +32,13 @@
 namespace sdl3
 {
     class alignas(alignof(SDL_Color)) color
+    // clang-format off
     : boost::equality_comparable<color
     , boost::additive<color
     , boost::multiplicative<color
     , boost::multiplicative<color, clamped_uint8_t
     > > > >
+    // clang-format on
     {
     public:
         static const color black;
@@ -51,26 +53,26 @@ namespace sdl3
 
     public:
         color();
-        
+
         color(r8 r, g8 g, b8 b, a8 a);
 
-        color(color const& other);
+        color(color const & other);
 
-        color & operator=(color const& other);
+        color & operator=(color const & other);
 
-        color & operator*=(color const& other);
+        color & operator*=(color const & other);
 
-        color & operator/=(color const& other);
+        color & operator/=(color const & other);
 
-        color & operator+=(color const& other);
+        color & operator+=(color const & other);
 
-        color & operator-=(color const& other);
+        color & operator-=(color const & other);
 
         color & operator*=(clamped_uint8_t scalar);
 
         color & operator/=(clamped_uint8_t scalar);
 
-        bool operator==(color const& other) const;
+        bool operator==(color const & other) const;
 
     public:
         r8 r;
@@ -89,24 +91,29 @@ namespace sdl3
 
     inline const color color::blue(0_r8, 0_g8, 255_b8, 255_a8);
 
-    inline
-    color::color()
-    : r(0_r8), g(0_g8), b(0_b8), a(0_a8)
+    inline color::color()
+    : r(0_r8)
+    , g(0_g8)
+    , b(0_b8)
+    , a(0_a8)
     { }
 
-    inline
-    color::color(r8 r, g8 g, b8 b, a8 a)
-    : r(r), g(g), b(b), a(a)
+    inline color::color(r8 r, g8 g, b8 b, a8 a)
+    : r(r)
+    , g(g)
+    , b(b)
+    , a(a)
     { }
 
-    inline
-    color::color(color const& other)
-    : r(other.r), g(other.g), b(other.b), a(other.a)
+    inline color::color(color const & other)
+    : r(other.r)
+    , g(other.g)
+    , b(other.b)
+    , a(other.a)
     { }
 
-    inline
-    color &
-    color::operator=(color const& other)
+    inline color &
+    color::operator=(color const & other)
     {
         if (*this != other)
         {
@@ -118,9 +125,8 @@ namespace sdl3
         return *this;
     }
 
-    inline
-    color &
-    color::operator*=(color const& other)
+    inline color &
+    color::operator*=(color const & other)
     {
         r *= other.r;
         g *= other.g;
@@ -129,9 +135,8 @@ namespace sdl3
         return *this;
     }
 
-    inline
-    color &
-    color::operator/=(color const& other)
+    inline color &
+    color::operator/=(color const & other)
     {
         r /= other.r;
         g /= other.g;
@@ -140,9 +145,8 @@ namespace sdl3
         return *this;
     }
 
-    inline
-    color &
-    color::operator+=(color const& other)
+    inline color &
+    color::operator+=(color const & other)
     {
         r += other.r;
         g += other.g;
@@ -151,9 +155,8 @@ namespace sdl3
         return *this;
     }
 
-    inline
-    color &
-    color::operator-=(color const& other)
+    inline color &
+    color::operator-=(color const & other)
     {
         r -= other.r;
         g -= other.g;
@@ -162,8 +165,7 @@ namespace sdl3
         return *this;
     }
 
-    inline
-    color &
+    inline color &
     color::operator*=(clamped_uint8_t scalar)
     {
         r *= scalar;
@@ -173,8 +175,7 @@ namespace sdl3
         return *this;
     }
 
-    inline
-    color &
+    inline color &
     color::operator/=(clamped_uint8_t scalar)
     {
         r /= scalar;
@@ -184,17 +185,16 @@ namespace sdl3
         return *this;
     }
 
-    inline
-    bool
-    color::operator==(color const& other) const
+    inline bool
+    color::operator==(color const & other) const
     {
         return r == other.r && g == other.g && b == other.b && a == other.a;
     }
 
-    template<class CharT, class Traits>
-    std::basic_ostream<CharT, Traits>&
-    operator<<(std::basic_ostream<CharT, Traits>& stream, color const& value)
+    template <class CharT, class Traits>
+    std::basic_ostream<CharT, Traits> &
+    operator<<(std::basic_ostream<CharT, Traits> & stream, color const & value)
     {
         return stream << value.r << ',' << value.g << ',' << value.b << ',' << value.a;
     }
-}
+}  // namespace sdl3

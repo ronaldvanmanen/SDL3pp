@@ -5,7 +5,7 @@
 // This software is provided 'as-is', without any express or implied
 // warranty.  In no event will the authors be held liable for any damages
 // arising from the use of this software.
-// 
+//
 // Permission is granted to anyone to use this software for any purpose,
 // including commercial applications, and to alter it and redistribute it
 // freely, subject to the following restrictions:
@@ -55,8 +55,7 @@ namespace sdl3
 
     using fractional_seconds = std::chrono::duration<double>;
 
-    inline
-    stopwatch
+    inline stopwatch
     stopwatch::start_now()
     {
         stopwatch instance;
@@ -64,44 +63,41 @@ namespace sdl3
         return instance;
     }
 
-    inline
-    stopwatch::stopwatch()
+    inline stopwatch::stopwatch()
     : _start_time(time_point::min())
     , _elapsed_time(duration::zero())
     , _running(false)
     { }
 
-    inline
-    void
+    inline void
     stopwatch::start()
     {
-        if (_running) return;
+        if (_running)
+            return;
         _start_time = clock::now();
         _running = true;
     }
 
-    inline
-    void
+    inline void
     stopwatch::stop()
     {
-        if (!_running) return;
-        
+        if (!_running)
+            return;
+
         auto end_time = clock::now();
         auto lap_time = end_time - _start_time;
         _elapsed_time += lap_time;
         _running = false;
     }
 
-    inline
-    void
+    inline void
     stopwatch::reset()
     {
         _start_time = clock::now();
         _elapsed_time = duration::zero();
     }
 
-    inline
-    stopwatch::duration
+    inline stopwatch::duration
     stopwatch::elapsed()
     {
         auto elapsed_time = _elapsed_time;
@@ -114,19 +110,15 @@ namespace sdl3
         return elapsed_time;
     }
 
-    inline
-    fractional_seconds
+    inline fractional_seconds
     elapsed_seconds(stopwatch & instance)
     {
-        return std::chrono::duration_cast<
-            fractional_seconds
-        >(instance.elapsed());
+        return std::chrono::duration_cast<fractional_seconds>(instance.elapsed());
     }
 
-    inline
-    time<double>
+    inline time<double>
     elapsed_time(stopwatch & instance)
     {
         return sdl3::time<double>(sdl3::elapsed_seconds(instance).count() * sdl3::seconds);
     }
-}
+}  // namespace sdl3

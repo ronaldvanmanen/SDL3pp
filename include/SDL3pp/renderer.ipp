@@ -5,7 +5,7 @@
 // This software is provided 'as-is', without any express or implied
 // warranty.  In no event will the authors be held liable for any damages
 // arising from the use of this software.
-// 
+//
 // Permission is granted to anyone to use this software for any purpose,
 // including commercial applications, and to alter it and redistribute it
 // freely, subject to the following restrictions:
@@ -20,51 +20,43 @@
 
 #pragma once
 
-#include "texture.hpp"
 #include "renderer.hpp"
+#include "texture.hpp"
 
 namespace sdl3
 {
     namespace details
     {
-        inline
-        SDL_Renderer* create_renderer(window & owner)
+        inline SDL_Renderer *
+        create_renderer(window & owner)
         {
-            SDL_Renderer* native_handle = SDL_CreateRenderer(
-                owner.native_handle(), nullptr
-            );
+            SDL_Renderer * native_handle = SDL_CreateRenderer(owner.native_handle(), nullptr);
             throw_last_error(native_handle != nullptr);
             return native_handle;
         }
 
-        inline
-        SDL_Renderer* create_renderer(window & owner, std::string const& name)
+        inline SDL_Renderer *
+        create_renderer(window & owner, std::string const & name)
         {
-            SDL_Renderer* native_handle = SDL_CreateRenderer(
-                owner.native_handle(), name.c_str()
-            );
+            SDL_Renderer * native_handle = SDL_CreateRenderer(owner.native_handle(), name.c_str());
             throw_last_error(native_handle != nullptr);
             return native_handle;
         }
-    }
+    }  // namespace details
 
-    inline
-    renderer::renderer(window & owner)
+    inline renderer::renderer(window & owner)
     : _native_handle(details::create_renderer(owner))
     { }
 
-    inline
-    renderer::renderer(window & owner, std::string const& name)
+    inline renderer::renderer(window & owner, std::string const & name)
     : _native_handle(details::create_renderer(owner, name))
     { }
 
-    inline
-    renderer::renderer(renderer&& other)
+    inline renderer::renderer(renderer && other)
     : _native_handle(std::exchange(other._native_handle, nullptr))
-    {}
+    { }
 
-    inline
-    renderer::~renderer()
+    inline renderer::~renderer()
     {
         if (_native_handle != nullptr)
         {
@@ -72,107 +64,79 @@ namespace sdl3
         }
     }
 
-    inline
-    std::string
+    inline std::string
     renderer::name() const
     {
-        char const *retval = SDL_GetRendererName(_native_handle);
+        char const * retval = SDL_GetRendererName(_native_handle);
         throw_last_error(retval != nullptr);
         return std::string(retval);
     }
 
-    inline
-    property_group
+    inline property_group
     renderer::properties() const
     {
         return property_group(SDL_GetRendererProperties(_native_handle));
     }
 
-    inline
-    size_2d<std::int32_t>
+    inline size_2d<std::int32_t>
     renderer::output_size() const
     {
         int width, height;
-        throw_last_error(
-            SDL_GetCurrentRenderOutputSize(_native_handle, &width, &height)
-        );
+        throw_last_error(SDL_GetCurrentRenderOutputSize(_native_handle, &width, &height));
         return size_2d<std::int32_t>(width * px, height * px);
     }
 
-    inline
-    color
+    inline color
     renderer::draw_color() const
     {
         std::uint8_t r, g, b, a;
-        throw_last_error(
-            SDL_GetRenderDrawColor(_native_handle, &r, &g, &b, &a)
-        );
+        throw_last_error(SDL_GetRenderDrawColor(_native_handle, &r, &g, &b, &a));
         return color(r8(r), g8(g), b8(b), a8(a));
     }
 
-    inline
-    void
-    renderer::draw_color(color const& draw_color)
+    inline void
+    renderer::draw_color(color const & draw_color)
     {
         throw_last_error(
-            SDL_SetRenderDrawColor(
-                _native_handle, draw_color.r, draw_color.g, draw_color.b, draw_color.a
-            )
+            SDL_SetRenderDrawColor(_native_handle, draw_color.r, draw_color.g, draw_color.b, draw_color.a)
         );
     }
 
-    inline
-    blend_mode
+    inline blend_mode
     renderer::draw_blend_mode() const
     {
         SDL_BlendMode mode;
-        throw_last_error(
-            SDL_GetRenderDrawBlendMode(_native_handle, &mode)
-        );
+        throw_last_error(SDL_GetRenderDrawBlendMode(_native_handle, &mode));
         return static_cast<blend_mode>(mode);
     }
 
-    inline
-    void
+    inline void
     renderer::draw_blend_mode(blend_mode mode)
     {
-        throw_last_error(
-            SDL_SetRenderDrawBlendMode(_native_handle, static_cast<SDL_BlendMode>(mode))
-        );
+        throw_last_error(SDL_SetRenderDrawBlendMode(_native_handle, static_cast<SDL_BlendMode>(mode)));
     }
 
-    inline
-    void
+    inline void
     renderer::clear()
     {
-        throw_last_error(
-            SDL_RenderClear(_native_handle)
-        );
+        throw_last_error(SDL_RenderClear(_native_handle));
     }
 
-    inline
-    void
+    inline void
     renderer::present()
     {
         SDL_RenderPresent(_native_handle);
     }
 
-    inline
-    void
+    inline void
     renderer::copy(texture_base & texture)
     {
-        throw_last_error(
-            SDL_RenderTexture(
-                _native_handle,
-                texture.native_handle(),
-                nullptr,
-                nullptr)
-        );
+        throw_last_error(SDL_RenderTexture(_native_handle, texture.native_handle(), nullptr, nullptr));
     }
 
-    inline
-    SDL_Renderer* renderer::native_handle()
+    inline SDL_Renderer *
+    renderer::native_handle()
     {
         return _native_handle;
     }
-}
+}  // namespace sdl3

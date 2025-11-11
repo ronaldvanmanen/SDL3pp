@@ -5,7 +5,7 @@
 // This software is provided 'as-is', without any express or implied
 // warranty.  In no event will the authors be held liable for any damages
 // arising from the use of this software.
-// 
+//
 // Permission is granted to anyone to use this software for any purpose,
 // including commercial applications, and to alter it and redistribute it
 // freely, subject to the following restrictions:
@@ -23,37 +23,41 @@
 #include <cstdint>
 
 #include <boost/units/base_unit.hpp>
-#include <boost/units/quantity.hpp>
 #include <boost/units/make_system.hpp>
-#include <boost/units/static_constant.hpp>
 #include <boost/units/physical_dimensions/length.hpp>
 #include <boost/units/physical_dimensions/time.hpp>
+#include <boost/units/quantity.hpp>
+#include <boost/units/static_constant.hpp>
 
 namespace sdl3
 {
     struct pixel_base_unit : public boost::units::base_unit<pixel_base_unit, boost::units::length_dimension, 1>
     {
-        static std::string name()
+        static std::string
+        name()
         {
-            return("pixel");
+            return ("pixel");
         }
 
-        static std::string symbol()
+        static std::string
+        symbol()
         {
-            return("px");
+            return ("px");
         }
     };
 
     struct second_base_unit : public boost::units::base_unit<second_base_unit, boost::units::time_dimension, 2>
     {
-        static std::string name()
+        static std::string
+        name()
         {
-            return("second");
+            return ("second");
         }
 
-        static std::string symbol()
+        static std::string
+        symbol()
         {
-            return("s");
+            return ("s");
         }
     };
 
@@ -63,13 +67,13 @@ namespace sdl3
 
     typedef boost::units::unit<boost::units::time_dimension, system_of_units> unit_of_time;
 
-    template<typename Y>
+    template <typename Y>
     using length = boost::units::quantity<unit_of_length, Y>;
 
-    template<typename Y>
+    template <typename Y>
     using offset = boost::units::quantity<unit_of_length, Y>;
 
-    template<typename Y>
+    template <typename Y>
     using time = boost::units::quantity<unit_of_time, Y>;
 
     BOOST_UNITS_STATIC_CONSTANT(px, unit_of_length);
@@ -77,4 +81,4 @@ namespace sdl3
     BOOST_UNITS_STATIC_CONSTANT(pixels, unit_of_length);
     BOOST_UNITS_STATIC_CONSTANT(second, unit_of_time);
     BOOST_UNITS_STATIC_CONSTANT(seconds, unit_of_time);
-}
+}  // namespace sdl3
