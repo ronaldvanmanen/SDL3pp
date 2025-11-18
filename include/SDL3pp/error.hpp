@@ -29,46 +29,35 @@ namespace sdl3
     class error : public std::runtime_error
     {
     public:
-        error(std::string const & what_arg);
+        error(std::string const & what_arg)
+        : std::runtime_error(what_arg)
+        { }
 
-        error(const char * what_arg);
+        error(const char * what_arg)
+        : std::runtime_error(what_arg)
+        { }
 
-        error(error const & other);
+        error(error const & other)
+        : std::runtime_error(other)
+        { }
 
-        error & operator=(error const & other);
+        inline error & operator=(error const & other)
+        {
+            if (this != &other)
+            {
+                std::runtime_error::operator=(other);
+            }
+            return *this;
+        }
     };
 
-    inline error::error(std::string const & what_arg)
-    : std::runtime_error(what_arg)
-    { }
-
-    inline error::error(const char * what_arg)
-    : std::runtime_error(what_arg)
-    { }
-
-    inline error::error(error const & other)
-    : std::runtime_error(other)
-    { }
-
-    inline error &
-    error::operator=(error const & other)
-    {
-        if (this != &other)
-        {
-            std::runtime_error::operator=(other);
-        }
-        return *this;
-    }
-
-    inline void
-    throw_last_error()
+    inline void throw_last_error()
     {
         throw error(SDL_GetError());
     }
 
     template <class T>
-    void
-    check_result(T result)
+    void check_result(T result)
     {
         if (!result)
         {
@@ -78,8 +67,7 @@ namespace sdl3
 
     template <class T>
     [[nodiscard]]
-    T *
-    check_pointer(T * pointer)
+    T * check_pointer(T * pointer)
     {
         if (pointer == nullptr)
         {

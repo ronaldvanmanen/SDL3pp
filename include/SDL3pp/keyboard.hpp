@@ -28,11 +28,20 @@ namespace sdl3
     class keyboard_state
     {
     public:
-        keyboard_state(bool const * key_states, std::int32_t key_count);
+        keyboard_state(bool const * key_states, std::int32_t key_count)
+        : _key_states(key_states)
+        , _key_count(key_count)
+        { }
 
-        bool pressed(scan_code key) const;
+        bool pressed(scan_code key) const
+        {
+            return _key_states[static_cast<int>(key)];
+        }
 
-        bool released(scan_code key) const;
+        bool released(scan_code key) const
+        {
+            return _key_states[static_cast<int>(key)];
+        }
 
     private:
         bool const * _key_states;
@@ -43,40 +52,17 @@ namespace sdl3
     class keyboard
     {
     public:
-        static keyboard_state state();
+        static keyboard_state state()
+        {
+            int key_count;
+            auto key_states = SDL_GetKeyboardState(&key_count);
+            return sdl3::keyboard_state(key_states, key_count);
+        }
 
-        static key_modifier_set modifier_state();
+        static key_modifier_set modifier_state()
+        {
+            return key_modifier_set(static_cast<sdl3::key_modifier>(SDL_GetModState()));
+        }
     };
-
-    inline keyboard_state::keyboard_state(bool const * key_states, std::int32_t key_count)
-    : _key_states(key_states)
-    , _key_count(key_count)
-    { }
-
-    inline bool
-    keyboard_state::pressed(scan_code key) const
-    {
-        return _key_states[static_cast<int>(key)];
-    }
-
-    inline bool
-    keyboard_state::released(scan_code key) const
-    {
-        return _key_states[static_cast<int>(key)];
-    }
-
-    inline keyboard_state
-    keyboard::state()
-    {
-        int key_count;
-        auto key_states = SDL_GetKeyboardState(&key_count);
-        return sdl3::keyboard_state(key_states, key_count);
-    }
-
-    inline key_modifier_set
-    keyboard::modifier_state()
-    {
-        return key_modifier_set(static_cast<sdl3::key_modifier>(SDL_GetModState()));
-    }
 
 }  // namespace sdl3

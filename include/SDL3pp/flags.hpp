@@ -47,8 +47,7 @@ namespace sdl3
 
     template <typename T>
         requires(is_flags_enum_v<T>)
-    constexpr T
-    operator~(T value)
+    constexpr T operator~(T value)
     {
         using underlying_type = std::underlying_type_t<T>;
         return static_cast<T>(static_cast<underlying_type>(value));
@@ -56,8 +55,7 @@ namespace sdl3
 
     template <typename T>
         requires(is_flags_enum_v<T>)
-    constexpr T
-    operator&(T left, T right)
+    constexpr T operator&(T left, T right)
     {
         using underlying_type = std::underlying_type_t<T>;
         return static_cast<T>(static_cast<underlying_type>(left) & static_cast<underlying_type>(right));
@@ -65,8 +63,7 @@ namespace sdl3
 
     template <typename T>
         requires(is_flags_enum_v<T>)
-    constexpr T
-    operator|(T left, T right)
+    constexpr T operator|(T left, T right)
     {
         using underlying_type = std::underlying_type_t<T>;
         return static_cast<T>(static_cast<underlying_type>(left) | static_cast<underlying_type>(right));
@@ -74,8 +71,7 @@ namespace sdl3
 
     template <typename T>
         requires(is_flags_enum_v<T>)
-    constexpr T
-    operator^(T left, T right)
+    constexpr T operator^(T left, T right)
     {
         using underlying_type = std::underlying_type_t<T>;
         return static_cast<T>(static_cast<underlying_type>(left) & static_cast<underlying_type>(right));
@@ -83,8 +79,7 @@ namespace sdl3
 
     template <typename T>
         requires(is_flags_enum_v<T>)
-    constexpr T &
-    operator&=(T & self, T other)
+    constexpr T & operator&=(T & self, T other)
     {
         self = self & other;
         return self;
@@ -92,8 +87,7 @@ namespace sdl3
 
     template <typename T>
         requires(is_flags_enum_v<T>)
-    constexpr T &
-    operator|=(T & self, T other)
+    constexpr T & operator|=(T & self, T other)
     {
         self = self | other;
         return self;
@@ -101,8 +95,7 @@ namespace sdl3
 
     template <typename T>
         requires(is_flags_enum_v<T>)
-    constexpr T &
-    operator^=(T & self, T other)
+    constexpr T & operator^=(T & self, T other)
     {
         self = self ^ other;
         return self;

@@ -47,8 +47,7 @@ using sdl3::operator""_g8;
 using sdl3::operator""_b8;
 using sdl3::operator""_a8;
 
-void
-diamond_step(
+void diamond_step(
     sdl3::surface<sdl3::pixel_format::index8, sdl3::color_space::srgb> & map,
     std::default_random_engine & random_number_engine,
     sdl3::offset<std::int32_t> center_x,
@@ -103,8 +102,7 @@ diamond_step(
     map(center_x, center_y) = static_cast<sdl3::index8>(value);
 }
 
-void
-square_step(
+void square_step(
     sdl3::surface<sdl3::pixel_format::index8, sdl3::color_space::srgb> & map,
     std::default_random_engine & random_number_engine,
     sdl3::offset<std::int32_t> center_x,
@@ -151,8 +149,10 @@ square_step(
     map(center_x, center_y) = static_cast<sdl3::index8>(value);
 }
 
-sdl3::surface<sdl3::pixel_format::index8, sdl3::color_space::srgb>
-generate_diamond_square_image(std::default_random_engine & random_number_engine, sdl3::length<std::int32_t> square_size)
+sdl3::surface<sdl3::pixel_format::index8, sdl3::color_space::srgb> generate_diamond_square_image(
+    std::default_random_engine & random_number_engine,
+    sdl3::length<std::int32_t> square_size
+)
 {
     auto actual_size = sdl3::size_2d<std::int32_t>(1 * px + sdl3::next_power_of_two(square_size));
     auto actual_surface = sdl3::surface<sdl3::pixel_format::index8, sdl3::color_space::srgb>(actual_size);
@@ -202,8 +202,7 @@ generate_diamond_square_image(std::default_random_engine & random_number_engine,
     return actual_surface;
 }
 
-sdl3::surface<sdl3::pixel_format::index8, sdl3::color_space::srgb>
-generate_diamond_square_image(
+sdl3::surface<sdl3::pixel_format::index8, sdl3::color_space::srgb> generate_diamond_square_image(
     std::default_random_engine & random_number_engine,
     sdl3::length<std::int32_t> width,
     sdl3::length<std::int32_t> height
@@ -212,26 +211,25 @@ generate_diamond_square_image(
     return generate_diamond_square_image(random_number_engine, std::max(width, height));
 }
 
-sdl3::surface<sdl3::pixel_format::index8, sdl3::color_space::srgb>
-generate_diamond_square_image(std::default_random_engine & random_number_engine, sdl3::size_2d<std::int32_t> size)
+sdl3::surface<sdl3::pixel_format::index8, sdl3::color_space::srgb> generate_diamond_square_image(
+    std::default_random_engine & random_number_engine,
+    sdl3::size_2d<std::int32_t> size
+)
 {
     return generate_diamond_square_image(random_number_engine, size.width, size.height);
 }
 
-void
-rotate_left(std::vector<sdl3::color> & palette)
+void rotate_left(std::vector<sdl3::color> & palette)
 {
     rotate(palette.begin(), palette.begin() + 1, palette.end());
 }
 
-void
-rotate_right(std::vector<sdl3::color> & palette)
+void rotate_right(std::vector<sdl3::color> & palette)
 {
     rotate(palette.begin(), palette.end() - 1, palette.end());
 }
 
-int
-main()
+int main()
 {
     auto window = sdl3::window("Plasma Fractal", 640 * px, 480 * px);
     auto event_queue = sdl3::event_queue();
@@ -285,7 +283,7 @@ main()
         }
         else
         {
-            auto window_surface = window.surface();
+            auto window_surface = window.get_surface<sdl3::pixel_format::xrgb8888>();
             window_surface.blit(plasma_surface);
             window.update_surface();
 

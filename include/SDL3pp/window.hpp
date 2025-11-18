@@ -68,133 +68,91 @@ namespace sdl3
     class window
     {
     public:
-        window(std::string const & title, length<std::int32_t> width, length<std::int32_t> height);
+        window(std::string const & title, length<std::int32_t> width, length<std::int32_t> height)
+        : _native_handle(check_pointer(SDL_CreateWindow(
+              title.c_str(),
+              quantity_cast<std::int32_t>(width),
+              quantity_cast<std::int32_t>(height),
+              static_cast<std::uint32_t>(window_flags::none)
+          )))
+        { }
 
-        window(std::string const & title, length<std::int32_t> width, length<std::int32_t> height, window_flags flags);
+        window(std::string const & title, length<std::int32_t> width, length<std::int32_t> height, window_flags flags)
+        : _native_handle(check_pointer(SDL_CreateWindow(
+              title.c_str(),
+              quantity_cast<std::int32_t>(width),
+              quantity_cast<std::int32_t>(height),
+              static_cast<std::uint32_t>(flags)
+          )))
+        { }
 
-        window(window const & other) = delete;
+        window(window && other)
+        : _native_handle(std::exchange(other._native_handle, nullptr))
+        { }
 
-        window(window && other);
+        ~window()
+        {
+            if (_native_handle != nullptr)
+            {
+                SDL_DestroyWindow(_native_handle);
+            }
+        }
 
-        ~window();
+        void relative_mouse_mode(bool enabled)
+        {
+            check_result(SDL_SetWindowRelativeMouseMode(_native_handle, enabled));
+        }
 
-        window & operator=(window const & other) = delete;
+        bool relative_mouse_mode() const
+        {
+            return SDL_GetWindowRelativeMouseMode(_native_handle);
+        }
 
-        bool relative_mouse_mode() const;
+        std::optional<display_mode> fullscreen_mode() const
+        {
+            auto native_handle = SDL_GetWindowFullscreenMode(_native_handle);
+            if (native_handle == nullptr)
+            {
+                return std::nullopt;
+            }
+            return display_mode(native_handle);
+        }
 
-        void relative_mouse_mode(bool enable);
+        size_2d<std::int32_t> size() const
+        {
+            int width, height;
+            check_result(SDL_GetWindowSize(_native_handle, &width, &height));
+            return size_2d<std::int32_t>(width * px, height * px);
+        }
 
-        std::optional<display_mode> fullscreen_mode() const;
+        void raise()
+        {
+            check_result(SDL_RaiseWindow(_native_handle));
+        }
 
-        size_2d<std::int32_t> size() const;
+        bool has_surface() const
+        {
+            return SDL_WindowHasSurface(_native_handle);
+        }
 
-        void raise();
+        template <pixel_format P, color_space C = default_color_space<P>()>
+        surface<P, C> get_surface()
+        {
+            return surface<P, C>(check_pointer(SDL_GetWindowSurface(_native_handle)), false);
+        }
 
-        bool has_surface() const;
+        void update_surface()
+        {
+            check_result(SDL_UpdateWindowSurface(_native_handle));
+        }
 
-        surface_base surface();
-
-        void update_surface();
-
-        SDL_Window * native_handle();
+        SDL_Window * native_handle()
+        {
+            return _native_handle;
+        }
 
     private:
         SDL_Window * _native_handle;
     };
 
-    inline window::window(std::string const & title, length<std::int32_t> width, length<std::int32_t> height)
-    : _native_handle(check_pointer(SDL_CreateWindow(
-          title.c_str(),
-          quantity_cast<std::int32_t>(width),
-          quantity_cast<std::int32_t>(height),
-          static_cast<std::uint32_t>(window_flags::none)
-      )))
-    { }
-
-    inline window::window(
-        std::string const & title,
-        length<std::int32_t> width,
-        length<std::int32_t> height,
-        window_flags flags
-    )
-    : _native_handle(check_pointer(SDL_CreateWindow(
-          title.c_str(),
-          quantity_cast<std::int32_t>(width),
-          quantity_cast<std::int32_t>(height),
-          static_cast<std::uint32_t>(flags)
-      )))
-    { }
-
-    inline window::window(window && other)
-    : _native_handle(std::exchange(other._native_handle, nullptr))
-    { }
-
-    inline window::~window()
-    {
-        if (_native_handle != nullptr)
-        {
-            SDL_DestroyWindow(_native_handle);
-        }
-    }
-
-    inline void
-    window::relative_mouse_mode(bool enabled)
-    {
-        check_result(SDL_SetWindowRelativeMouseMode(_native_handle, enabled));
-    }
-
-    inline bool
-    window::relative_mouse_mode() const
-    {
-        return SDL_GetWindowRelativeMouseMode(_native_handle);
-    }
-
-    inline std::optional<display_mode>
-    window::fullscreen_mode() const
-    {
-        auto native_handle = SDL_GetWindowFullscreenMode(_native_handle);
-        if (native_handle == nullptr)
-        {
-            return std::nullopt;
-        }
-        return display_mode(native_handle);
-    }
-
-    inline size_2d<std::int32_t>
-    window::size() const
-    {
-        int width, height;
-        check_result(SDL_GetWindowSize(_native_handle, &width, &height));
-        return size_2d<std::int32_t>(width * px, height * px);
-    }
-
-    inline void
-    window::raise()
-    {
-        check_result(SDL_RaiseWindow(_native_handle));
-    }
-
-    inline bool
-    window::has_surface() const
-    {
-        return SDL_WindowHasSurface(_native_handle);
-    }
-
-    inline surface_base
-    window::surface()
-    {
-        return surface_base(check_pointer(SDL_GetWindowSurface(_native_handle)), false);
-    }
-
-    inline void
-    window::update_surface()
-    {
-        check_result(SDL_UpdateWindowSurface(_native_handle));
-    }
-
-    inline SDL_Window *
-    window::native_handle()
-    {
-        return _native_handle;
-    }
 }  // namespace sdl3

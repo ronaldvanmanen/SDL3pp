@@ -49,7 +49,7 @@ BraceWrapping:
     SplitEmptyNamespace: true
 BreakAfterAttributes: Always
 BreakAfterJavaFieldAnnotations: false
-BreakAfterReturnType: AllDefinitions
+BreakAfterReturnType: ExceptShortType
 BreakBeforeBinaryOperators: None
 BreakBeforeBraces: Custom
 BreakBeforeConceptDeclarations: true

@@ -30,33 +30,24 @@ namespace sdl3
     struct size_2d : boost::equality_comparable<size_2d<Y>>
     {
     public:
-        explicit size_2d(length<Y> width_and_height);
+        explicit size_2d(length<Y> width_and_height)
+        : width(width_and_height)
+        , height(width_and_height)
+        { }
 
-        size_2d(length<Y> width, length<Y> height);
+        size_2d(length<Y> width, length<Y> height)
+        : width(width)
+        , height(height)
+        { }
 
-        bool operator==(size_2d<Y> const & other) const;
+        bool operator==(size_2d<Y> const & other) const
+        {
+            return width == other.width && height == other.height;
+        }
 
         length<Y> width;
 
         length<Y> height;
     };
 
-    template <typename Y>
-    size_2d<Y>::size_2d(length<Y> width_and_height)
-    : width(width_and_height)
-    , height(width_and_height)
-    { }
-
-    template <typename Y>
-    size_2d<Y>::size_2d(length<Y> width, length<Y> height)
-    : width(width)
-    , height(height)
-    { }
-
-    template <typename Y>
-    bool
-    size_2d<Y>::operator==(size_2d<Y> const & other) const
-    {
-        return width == other.width && height == other.height;
-    }
 }  // namespace sdl3

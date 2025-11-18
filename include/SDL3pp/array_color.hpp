@@ -94,33 +94,120 @@ namespace sdl3
         static const rgb_array_color<P, C> white;
 
     public:
-        rgb_array_color();
+        rgb_array_color()
+        {
+            _components[r_index] = static_cast<scalar_type>(0);
+            _components[g_index] = static_cast<scalar_type>(0);
+            _components[b_index] = static_cast<scalar_type>(0);
+        }
 
-        rgb_array_color(r_type r, g_type g, b_type b);
+        rgb_array_color(r_type r, g_type g, b_type b)
+        {
+            _components[r_index] = static_cast<scalar_type>(r);
+            _components[g_index] = static_cast<scalar_type>(g);
+            _components[b_index] = static_cast<scalar_type>(b);
+        }
 
-        rgb_array_color(rgb_array_color<P, C> const & other);
+        rgb_array_color(rgb_array_color<P, C> const & other)
+        {
+            for (size_t i = 0; i < size; ++i)
+            {
+                _components[i] = other._components[i];
+            }
+        }
 
-        rgb_array_color<P, C> & operator=(rgb_array_color<P, C> const & other);
+        rgb_array_color<P, C> & operator=(rgb_array_color<P, C> const & other)
+        {
+            if (this != &other)
+            {
+                for (size_t i = 0; i < size; ++i)
+                {
+                    _components[i] = other._components[i];
+                }
+            }
+            return *this;
+        }
 
-        rgb_array_color<P, C> & operator*=(rgb_array_color<P, C> const & other);
+        rgb_array_color<P, C> & operator*=(rgb_array_color<P, C> const & other)
+        {
+            for (size_t i = 0; i < size; ++i)
+            {
+                _components[i] *= other._components[i];
+            }
+            return *this;
+        }
 
-        rgb_array_color<P, C> & operator/=(rgb_array_color<P, C> const & other);
+        rgb_array_color<P, C> & operator/=(rgb_array_color<P, C> const & other)
+        {
+            for (size_t i = 0; i < size; ++i)
+            {
+                _components[i] /= other._components[i];
+            }
+            return *this;
+        }
 
-        rgb_array_color<P, C> & operator+=(rgb_array_color<P, C> const & other);
+        rgb_array_color<P, C> & operator+=(rgb_array_color<P, C> const & other)
+        {
+            for (size_t i = 0; i < size; ++i)
+            {
+                _components[i] += other._components[i];
+            }
+            return *this;
+        }
 
-        rgb_array_color<P, C> & operator-=(rgb_array_color<P, C> const & other);
+        rgb_array_color<P, C> & operator-=(rgb_array_color<P, C> const & other)
+        {
+            for (size_t i = 0; i < size; ++i)
+            {
+                _components[i] -= other._components[i];
+            }
+            return *this;
+        }
 
-        rgb_array_color<P, C> & operator*=(scalar_type scalar);
+        rgb_array_color<P, C> & operator*=(scalar_type scalar)
+        {
+            for (size_t i = 0; i < size; ++i)
+            {
+                _components[i] *= scalar;
+            }
+            return *this;
+        }
 
-        rgb_array_color<P, C> & operator/=(scalar_type scalar);
+        rgb_array_color<P, C> & operator/=(scalar_type scalar)
+        {
+            for (size_t i = 0; i < size; ++i)
+            {
+                _components[i] /= scalar;
+            }
+            return *this;
+        }
 
-        bool operator==(rgb_array_color<P, C> const & other) const;
+        bool operator==(rgb_array_color<P, C> const & other) const
+        {
+            for (size_t i = 0; i < size; ++i)
+            {
+                if (_components[i] != other._components[i])
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
 
-        r_type r() const;
+        r_type r() const
+        {
+            return static_cast<r_type>(_components[r_index]);
+        }
 
-        g_type g() const;
+        g_type g() const
+        {
+            return static_cast<g_type>(_components[g_index]);
+        }
 
-        b_type b() const;
+        b_type b() const
+        {
+            return static_cast<b_type>(_components[b_index]);
+        }
 
     private:
         scalar_type _components[size];
@@ -149,165 +236,12 @@ namespace sdl3
         base_color_limits<b_type>::max()
     );
 
-    template <pixel_format P, color_space C>
-        requires(is_array<P>() && !has_alpha<P>() && is_rgb_color_space<C>())
-    rgb_array_color<P, C>::rgb_array_color()
-    : rgb_array_color(
-          base_color_limits<r_type>::min(),
-          base_color_limits<g_type>::min(),
-          base_color_limits<b_type>::min()
-      )
-    { }
-
-    template <pixel_format P, color_space C>
-        requires(is_array<P>() && !has_alpha<P>() && is_rgb_color_space<C>())
-    rgb_array_color<P, C>::rgb_array_color(r_type r, g_type g, b_type b)
-    {
-        _components[r_index] = static_cast<scalar_type>(r);
-        _components[g_index] = static_cast<scalar_type>(g);
-        _components[b_index] = static_cast<scalar_type>(b);
-    }
-
-    template <pixel_format P, color_space C>
-        requires(is_array<P>() && !has_alpha<P>() && is_rgb_color_space<C>())
-    rgb_array_color<P, C>::rgb_array_color(rgb_array_color<P, C> const & other)
-    {
-        for (size_t i = 0; i < size; ++i)
-        {
-            _components[i] = other._components[i];
-        }
-    }
-
-    template <pixel_format P, color_space C>
-        requires(is_array<P>() && !has_alpha<P>() && is_rgb_color_space<C>())
-    rgb_array_color<P, C> &
-    rgb_array_color<P, C>::operator=(rgb_array_color<P, C> const & other)
-    {
-        if (this != &other)
-        {
-            for (size_t i = 0; i < size; ++i)
-            {
-                _components[i] = other._components[i];
-            }
-        }
-        return *this;
-    }
-
-    template <pixel_format P, color_space C>
-        requires(is_array<P>() && !has_alpha<P>() && is_rgb_color_space<C>())
-    rgb_array_color<P, C> &
-    rgb_array_color<P, C>::operator*=(rgb_array_color<P, C> const & other)
-    {
-        for (size_t i = 0; i < size; ++i)
-        {
-            _components[i] *= other._components[i];
-        }
-        return *this;
-    }
-
-    template <pixel_format P, color_space C>
-        requires(is_array<P>() && !has_alpha<P>() && is_rgb_color_space<C>())
-    rgb_array_color<P, C> &
-    rgb_array_color<P, C>::operator/=(rgb_array_color<P, C> const & other)
-    {
-        for (size_t i = 0; i < size; ++i)
-        {
-            _components[i] /= other._components[i];
-        }
-        return *this;
-    }
-
-    template <pixel_format P, color_space C>
-        requires(is_array<P>() && !has_alpha<P>() && is_rgb_color_space<C>())
-    rgb_array_color<P, C> &
-    rgb_array_color<P, C>::operator+=(rgb_array_color<P, C> const & other)
-    {
-        for (size_t i = 0; i < size; ++i)
-        {
-            _components[i] += other._components[i];
-        }
-        return *this;
-    }
-
-    template <pixel_format P, color_space C>
-        requires(is_array<P>() && !has_alpha<P>() && is_rgb_color_space<C>())
-    rgb_array_color<P, C> &
-    rgb_array_color<P, C>::operator-=(rgb_array_color<P, C> const & other)
-    {
-        for (size_t i = 0; i < size; ++i)
-        {
-            _components[i] -= other._components[i];
-        }
-        return *this;
-    }
-
-    template <pixel_format P, color_space C>
-        requires(is_array<P>() && !has_alpha<P>() && is_rgb_color_space<C>())
-    rgb_array_color<P, C> &
-    rgb_array_color<P, C>::operator*=(scalar_type scalar)
-    {
-        for (size_t i = 0; i < size; ++i)
-        {
-            _components[i] *= scalar;
-        }
-        return *this;
-    }
-
-    template <pixel_format P, color_space C>
-        requires(is_array<P>() && !has_alpha<P>() && is_rgb_color_space<C>())
-    rgb_array_color<P, C> &
-    rgb_array_color<P, C>::operator/=(scalar_type scalar)
-    {
-        for (size_t i = 0; i < size; ++i)
-        {
-            _components[i] /= scalar;
-        }
-        return *this;
-    }
-
-    template <pixel_format P, color_space C>
-        requires(is_array<P>() && !has_alpha<P>() && is_rgb_color_space<C>())
-    bool
-    rgb_array_color<P, C>::operator==(rgb_array_color<P, C> const & other) const
-    {
-        for (size_t i = 0; i < size; ++i)
-        {
-            if (_components[i] != other._components[i])
-            {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    template <pixel_format P, color_space C>
-        requires(is_array<P>() && !has_alpha<P>() && is_rgb_color_space<C>())
-    typename rgb_array_color<P, C>::r_type
-    rgb_array_color<P, C>::r() const
-    {
-        return static_cast<r_type>(_components[r_index]);
-    }
-
-    template <pixel_format P, color_space C>
-        requires(is_array<P>() && !has_alpha<P>() && is_rgb_color_space<C>())
-    typename rgb_array_color<P, C>::g_type
-    rgb_array_color<P, C>::g() const
-    {
-        return static_cast<g_type>(_components[g_index]);
-    }
-
-    template <pixel_format P, color_space C>
-        requires(is_array<P>() && !has_alpha<P>() && is_rgb_color_space<C>())
-    typename rgb_array_color<P, C>::b_type
-    rgb_array_color<P, C>::b() const
-    {
-        return static_cast<b_type>(_components[b_index]);
-    }
-
     template <class CharT, class Traits, pixel_format P, color_space C>
         requires(is_array<P>() && !has_alpha<P>() && is_rgb_color_space<C>())
-    std::basic_ostream<CharT, Traits> &
-    operator<<(std::basic_ostream<CharT, Traits> & stream, rgb_array_color<P, C> const & value)
+    std::basic_ostream<CharT, Traits> & operator<<(
+        std::basic_ostream<CharT, Traits> & stream,
+        rgb_array_color<P, C> const & value
+    )
     {
         return stream << value.r() << ',' << value.g() << ',' << value.b();
     }
@@ -387,35 +321,127 @@ namespace sdl3
         static const rgba_array_color<P, C> white;
 
     public:
-        rgba_array_color();
+        rgba_array_color()
+        {
+            _components[r_index] = static_cast<scalar_type>(0);
+            _components[g_index] = static_cast<scalar_type>(0);
+            _components[b_index] = static_cast<scalar_type>(0);
+            _components[a_index] = static_cast<scalar_type>(0);
+        }
 
-        rgba_array_color(r_type r, g_type g, b_type b, a_type a);
+        rgba_array_color(r_type r, g_type g, b_type b, a_type a)
+        {
+            _components[r_index] = static_cast<scalar_type>(r);
+            _components[g_index] = static_cast<scalar_type>(g);
+            _components[b_index] = static_cast<scalar_type>(b);
+            _components[a_index] = static_cast<scalar_type>(a);
+        }
 
-        rgba_array_color(rgba_array_color<P, C> const & other);
+        rgba_array_color(rgba_array_color<P, C> const & other)
+        {
+            for (size_t i = 0; i < size; ++i)
+            {
+                _components[i] = other._components[i];
+            }
+        }
 
-        rgba_array_color<P, C> & operator=(rgba_array_color<P, C> const & other);
+        rgba_array_color<P, C> & operator=(rgba_array_color<P, C> const & other)
+        {
+            if (this != &other)
+            {
+                for (size_t i = 0; i < size; ++i)
+                {
+                    _components[i] = other._components[i];
+                }
+            }
+            return *this;
+        }
 
-        rgba_array_color<P, C> & operator*=(rgba_array_color<P, C> const & other);
+        rgba_array_color<P, C> & operator*=(rgba_array_color<P, C> const & other)
+        {
+            for (size_t i = 0; i < size; ++i)
+            {
+                _components[i] *= other._components[i];
+            }
+            return *this;
+        }
 
-        rgba_array_color<P, C> & operator/=(rgba_array_color<P, C> const & other);
+        rgba_array_color<P, C> & operator/=(rgba_array_color<P, C> const & other)
+        {
+            for (size_t i = 0; i < size; ++i)
+            {
+                _components[i] /= other._components[i];
+            }
+            return *this;
+        }
 
-        rgba_array_color<P, C> & operator+=(rgba_array_color<P, C> const & other);
+        rgba_array_color<P, C> & operator+=(rgba_array_color<P, C> const & other)
+        {
+            for (size_t i = 0; i < size; ++i)
+            {
+                _components[i] += other._components[i];
+            }
+            return *this;
+        }
 
-        rgba_array_color<P, C> & operator-=(rgba_array_color<P, C> const & other);
+        rgba_array_color<P, C> & operator-=(rgba_array_color<P, C> const & other)
+        {
+            for (size_t i = 0; i < size; ++i)
+            {
+                _components[i] -= other._components[i];
+            }
+            return *this;
+        }
 
-        rgba_array_color<P, C> & operator*=(scalar_type scalar);
+        rgba_array_color<P, C> & operator*=(scalar_type scalar)
+        {
+            for (size_t i = 0; i < size; ++i)
+            {
+                _components[i] *= scalar;
+            }
+            return *this;
+        }
 
-        rgba_array_color<P, C> & operator/=(scalar_type scalar);
+        rgba_array_color<P, C> & operator/=(scalar_type scalar)
+        {
+            for (size_t i = 0; i < size; ++i)
+            {
+                _components[i] /= scalar;
+            }
+            return *this;
+        }
 
-        bool operator==(rgba_array_color<P, C> const & other) const;
+        bool operator==(rgba_array_color<P, C> const & other) const
+        {
+            for (size_t i = 0; i < size; ++i)
+            {
+                if (_components[i] != other._components[i])
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
 
-        r_type r() const;
+        r_type r() const
+        {
+            return static_cast<r_type>(_components[r_index]);
+        }
 
-        g_type g() const;
+        g_type g() const
+        {
+            return static_cast<g_type>(_components[g_index]);
+        }
 
-        b_type b() const;
+        b_type b() const
+        {
+            return static_cast<b_type>(_components[b_index]);
+        }
 
-        a_type a() const;
+        a_type a() const
+        {
+            return static_cast<a_type>(_components[a_index]);
+        }
 
     private:
         scalar_type _components[size];
@@ -446,174 +472,12 @@ namespace sdl3
         base_color_limits<b_type>::max()
     );
 
-    template <pixel_format P, color_space C>
-        requires(is_array<P>() && has_alpha<P>() && is_rgb_color_space<C>())
-    rgba_array_color<P, C>::rgba_array_color()
-    {
-        _components[r_index] = base_color_limits<r_type>::min();
-        _components[g_index] = base_color_limits<g_type>::min();
-        _components[b_index] = base_color_limits<b_type>::min();
-        _components[a_index] = base_color_limits<a_type>::min();
-    }
-
-    template <pixel_format P, color_space C>
-        requires(is_array<P>() && has_alpha<P>() && is_rgb_color_space<C>())
-    rgba_array_color<P, C>::rgba_array_color(r_type r, g_type g, b_type b, a_type a)
-    {
-        _components[r_index] = r;
-        _components[g_index] = g;
-        _components[b_index] = b;
-        _components[a_index] = a;
-    }
-
-    template <pixel_format P, color_space C>
-        requires(is_array<P>() && has_alpha<P>() && is_rgb_color_space<C>())
-    rgba_array_color<P, C>::rgba_array_color(rgba_array_color<P, C> const & other)
-    {
-        for (size_t i = 0; i < size; ++i)
-        {
-            _components[i] = other._components[i];
-        }
-    }
-
-    template <pixel_format P, color_space C>
-        requires(is_array<P>() && has_alpha<P>() && is_rgb_color_space<C>())
-    rgba_array_color<P, C> &
-    rgba_array_color<P, C>::operator=(rgba_array_color<P, C> const & other)
-    {
-        if (this != &other)
-        {
-            for (size_t i = 0; i < size; ++i)
-            {
-                _components[i] = other._components[i];
-            }
-        }
-        return *this;
-    }
-
-    template <pixel_format P, color_space C>
-        requires(is_array<P>() && has_alpha<P>() && is_rgb_color_space<C>())
-    rgba_array_color<P, C> &
-    rgba_array_color<P, C>::operator*=(rgba_array_color<P, C> const & other)
-    {
-        for (size_t i = 0; i < size; ++i)
-        {
-            _components[i] *= other._components[i];
-        }
-        return *this;
-    }
-
-    template <pixel_format P, color_space C>
-        requires(is_array<P>() && has_alpha<P>() && is_rgb_color_space<C>())
-    rgba_array_color<P, C> &
-    rgba_array_color<P, C>::operator/=(rgba_array_color<P, C> const & other)
-    {
-        for (size_t i = 0; i < size; ++i)
-        {
-            _components[i] /= other._components[i];
-        }
-        return *this;
-    }
-
-    template <pixel_format P, color_space C>
-        requires(is_array<P>() && has_alpha<P>() && is_rgb_color_space<C>())
-    rgba_array_color<P, C> &
-    rgba_array_color<P, C>::operator+=(rgba_array_color<P, C> const & other)
-    {
-        for (size_t i = 0; i < size; ++i)
-        {
-            _components[i] += other._components[i];
-        }
-        return *this;
-    }
-
-    template <pixel_format P, color_space C>
-        requires(is_array<P>() && has_alpha<P>() && is_rgb_color_space<C>())
-    rgba_array_color<P, C> &
-    rgba_array_color<P, C>::operator-=(rgba_array_color<P, C> const & other)
-    {
-        for (size_t i = 0; i < size; ++i)
-        {
-            _components[i] -= other._components[i];
-        }
-        return *this;
-    }
-
-    template <pixel_format P, color_space C>
-        requires(is_array<P>() && has_alpha<P>() && is_rgb_color_space<C>())
-    rgba_array_color<P, C> &
-    rgba_array_color<P, C>::operator*=(scalar_type scalar)
-    {
-        for (size_t i = 0; i < size; ++i)
-        {
-            _components[i] *= scalar;
-        }
-        return *this;
-    }
-
-    template <pixel_format P, color_space C>
-        requires(is_array<P>() && has_alpha<P>() && is_rgb_color_space<C>())
-    rgba_array_color<P, C> &
-    rgba_array_color<P, C>::operator/=(scalar_type scalar)
-    {
-        for (size_t i = 0; i < size; ++i)
-        {
-            _components[i] /= scalar;
-        }
-        return *this;
-    }
-
-    template <pixel_format P, color_space C>
-        requires(is_array<P>() && has_alpha<P>() && is_rgb_color_space<C>())
-    bool
-    rgba_array_color<P, C>::operator==(rgba_array_color<P, C> const & other) const
-    {
-        for (size_t i = 0; i < size; ++i)
-        {
-            if (_components[i] != other._components[i])
-            {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    template <pixel_format P, color_space C>
-        requires(is_array<P>() && has_alpha<P>() && is_rgb_color_space<C>())
-    typename rgba_array_color<P, C>::r_type
-    rgba_array_color<P, C>::r() const
-    {
-        return static_cast<r_type>(_components[r_index]);
-    }
-
-    template <pixel_format P, color_space C>
-        requires(is_array<P>() && has_alpha<P>() && is_rgb_color_space<C>())
-    typename rgba_array_color<P, C>::g_type
-    rgba_array_color<P, C>::g() const
-    {
-        return static_cast<g_type>(_components[g_index]);
-    }
-
-    template <pixel_format P, color_space C>
-        requires(is_array<P>() && has_alpha<P>() && is_rgb_color_space<C>())
-    typename rgba_array_color<P, C>::b_type
-    rgba_array_color<P, C>::b() const
-    {
-        return static_cast<b_type>(_components[b_index]);
-    }
-
-    template <pixel_format P, color_space C>
-        requires(is_array<P>() && has_alpha<P>() && is_rgb_color_space<C>())
-    typename rgba_array_color<P, C>::a_type
-    rgba_array_color<P, C>::a() const
-    {
-        return static_cast<a_type>(_components[a_index]);
-    }
-
     template <class CharT, class Traits, pixel_format P, color_space C>
         requires(is_array<P>() && has_alpha<P>() && is_rgb_color_space<C>())
-    std::basic_ostream<CharT, Traits> &
-    operator<<(std::basic_ostream<CharT, Traits> & stream, rgba_array_color<P, C> const & value)
+    std::basic_ostream<CharT, Traits> & operator<<(
+        std::basic_ostream<CharT, Traits> & stream,
+        rgba_array_color<P, C> const & value
+    )
     {
         return stream << value.r() << ',' << value.g() << ',' << value.b() << ',' << value.a();
     }

@@ -116,34 +116,29 @@ auto const backward_vector = vector3{0.0f, 0.0f, -1.0f};
 auto const forward_vector = vector3{0.0f, 0.0f, 1.0f};
 
 template <typename T>
-T
-sign(T val)
+T sign(T val)
 {
     auto const zero = static_cast<T>(0);
     auto const result = static_cast<T>((zero < val) - (val < zero));
     return result;
 }
 
-inline float
-distance(vector3 const & a, vector3 const & b)
+inline float distance(vector3 const & a, vector3 const & b)
 {
     return mag(a - b);
 }
 
-vector3
-faceforward(vector3 const & n, vector3 const & i, vector3 const & n_ref)
+vector3 faceforward(vector3 const & n, vector3 const & i, vector3 const & n_ref)
 {
     return sign(-dot(i, n_ref)) * n;
 }
 
-vector3
-reflect(vector3 const & i, vector3 const & n)
+vector3 reflect(vector3 const & i, vector3 const & n)
 {
     return i - 2.0f * dot(i, n) * n;
 }
 
-vector3
-refract(vector3 const & i, vector3 const & n, float eta)
+vector3 refract(vector3 const & i, vector3 const & n, float eta)
 {
     float const i_dot_n = dot(i, n);
     float const k = 1 - eta * eta * (1 - i_dot_n * i_dot_n);
@@ -152,8 +147,7 @@ refract(vector3 const & i, vector3 const & n, float eta)
 
 using matrix4x4 = boost::qvm::mat<float, 4, 4>;
 
-inline matrix4x4
-look_at_lh(vector3 const & eye, vector3 const & at, vector3 const & up)
+inline matrix4x4 look_at_lh(vector3 const & eye, vector3 const & at, vector3 const & up)
 {
     auto const zaxis = normalized(at - eye);
     auto const xaxis = normalized(cross(up, zaxis));
@@ -180,8 +174,7 @@ look_at_lh(vector3 const & eye, vector3 const & at, vector3 const & up)
     return result;
 }
 
-inline matrix4x4
-look_at_rh(vector3 const & eye, vector3 const & at, vector3 const & up)
+inline matrix4x4 look_at_rh(vector3 const & eye, vector3 const & at, vector3 const & up)
 {
     auto const zaxis = normalized(eye - at);
     auto const xaxis = normalized(cross(up, zaxis));
@@ -208,8 +201,7 @@ look_at_rh(vector3 const & eye, vector3 const & at, vector3 const & up)
 
 using quaternion = boost::qvm::quat<float>;
 
-quaternion
-rotation(matrix4x4 const & a)
+quaternion rotation(matrix4x4 const & a)
 {
     return normalized(convert_to<quaternion>(del_row_col<3, 3>(a)));
 }
@@ -235,8 +227,7 @@ ray::ray(vector3 const & origin, vector3 const & direction)
 , direction(normalized(direction))
 { }
 
-ray
-transform_ray(ray const & ray, matrix4x4 const & matrix)
+ray transform_ray(ray const & ray, matrix4x4 const & matrix)
 {
     auto const transformed_origin = transform_point(matrix, ray.origin);
     auto const transformed_direction = transform_vector(matrix, ray.direction);
@@ -252,14 +243,12 @@ struct frustum
     float height() const;
 };
 
-float
-frustum::width() const
+float frustum::width() const
 {
     return right - left;
 }
 
-float
-frustum::height() const
+float frustum::height() const
 {
     return top - bottom;
 }
@@ -319,120 +308,101 @@ public:
     matrix4x4 view_matrix() const;
 };
 
-void
-perspective_camera::look_at_lh(vector3 const & eye, vector3 const & at, vector3 const & up)
+void perspective_camera::look_at_lh(vector3 const & eye, vector3 const & at, vector3 const & up)
 {
     auto const look_at_matrix = ::look_at_lh(eye, at, up);
     orientation = rotation(look_at_matrix);
     position = translation(look_at_matrix);
 }
 
-void
-perspective_camera::look_at_rh(vector3 const & eye, vector3 const & at, vector3 const & up)
+void perspective_camera::look_at_rh(vector3 const & eye, vector3 const & at, vector3 const & up)
 {
     auto const look_at_matrix = ::look_at_rh(eye, at, up);
     orientation = rotation(look_at_matrix);
     position = translation(look_at_matrix);
 }
 
-void
-perspective_camera::pitch(float degrees)
+void perspective_camera::pitch(float degrees)
 {
     rotate(right_vector, degrees);
 }
 
-void
-perspective_camera::yaw(float degrees)
+void perspective_camera::yaw(float degrees)
 {
     rotate(up_vector, degrees);
 }
 
-void
-perspective_camera::roll(float degrees)
+void perspective_camera::roll(float degrees)
 {
     rotate(forward_vector, degrees);
 }
 
-void
-perspective_camera::rotate(vector3 const & axis, float degrees)
+void perspective_camera::rotate(vector3 const & axis, float degrees)
 {
     orientation = rot_quat(axis, -sdl3::degrees_to_radians(degrees)) * orientation;
 }
 
-void
-perspective_camera::move_to(vector3 const & position)
+void perspective_camera::move_to(vector3 const & position)
 {
     this->position = position;
 }
 
-void
-perspective_camera::move(vector3 const & distance)
+void perspective_camera::move(vector3 const & distance)
 {
     position += inverse(orientation) * -distance;
 }
 
-void
-perspective_camera::move_left(float distance)
+void perspective_camera::move_left(float distance)
 {
     move(left_vector * distance);
 }
 
-void
-perspective_camera::move_right(float distance)
+void perspective_camera::move_right(float distance)
 {
     move(right_vector * distance);
 }
 
-void
-perspective_camera::move_up(float distance)
+void perspective_camera::move_up(float distance)
 {
     move(up_vector * distance);
 }
 
-void
-perspective_camera::move_down(float distance)
+void perspective_camera::move_down(float distance)
 {
     move(down_vector * distance);
 }
 
-void
-perspective_camera::move_forward(float distance)
+void perspective_camera::move_forward(float distance)
 {
     move(forward_vector * distance);
 }
 
-void
-perspective_camera::move_backward(float distance)
+void perspective_camera::move_backward(float distance)
 {
     move(backward_vector * distance);
 }
 
-void
-perspective_camera::zoom_in(float amount)
+void perspective_camera::zoom_in(float amount)
 {
     zoom(amount);
 }
 
-void
-perspective_camera::zoom_out(float amount)
+void perspective_camera::zoom_out(float amount)
 {
     zoom(-amount);
 }
 
-void
-perspective_camera::zoom(float amount)
+void perspective_camera::zoom(float amount)
 {
     field_of_view -= amount;
 }
 
-matrix4x4
-perspective_camera::view_matrix() const
+matrix4x4 perspective_camera::view_matrix() const
 {
     return inverse(convert_to<matrix4x4>(orientation) * translation_mat(position));
 }
 
-float
-get_focal_length(perspective_camera const & camera, sdl3::length<int32_t> width, sdl3::length<int32_t> height)
+float get_focal_length(perspective_camera const & camera, sdl3::length<int32_t> width, sdl3::length<int32_t> height)
 {
     return quantity_cast<float>(width) / quantity_cast<float>(height) /
            tan(sdl3::degrees_to_radians(camera.field_of_view / 2.0f));
@@ -531,14 +501,12 @@ sphere::sphere(vector3 const & position, float radius, surface_info const & surf
 , radius(radius)
 { }
 
-vector3
-sphere::normal_at(vector3 const & point) const
+vector3 sphere::normal_at(vector3 const & point) const
 {
     return normalized((point - position) / radius);
 }
 
-std::optional<float>
-sphere::hit_test(ray const & ray) const
+std::optional<float> sphere::hit_test(ray const & ray) const
 {
     auto const v = position - ray.origin;
     auto const b = dot(v, ray.direction);
@@ -586,14 +554,12 @@ plane::plane(vector3 const & position, vector3 const & normal, surface_info cons
 , normal(normalized(normal))
 { }
 
-vector3
-plane::normal_at(vector3 const & point) const
+vector3 plane::normal_at(vector3 const & point) const
 {
     return normal;
 }
 
-std::optional<float>
-plane::hit_test(ray const & ray) const
+std::optional<float> plane::hit_test(ray const & ray) const
 {
     auto const denominator = dot(normal, ray.direction);
     if (denominator == 0.0)
@@ -637,8 +603,7 @@ struct hit
     ::solid const & object;
 };
 
-std::optional<hit>
-find_nearest_hit(ray const & ray, world const & world)
+std::optional<hit> find_nearest_hit(ray const & ray, world const & world)
 {
     auto nearest_object_distance = std::numeric_limits<float>::infinity();
     auto nearest_object = world.objects.end();
@@ -660,16 +625,14 @@ find_nearest_hit(ray const & ray, world const & world)
     return hit{ray, nearest_object_distance, *nearest_object};
 }
 
-sdl3::s_rgb96f
-mix(sdl3::s_rgb96f const & color0, sdl3::s_rgb96f const & color1, float value)
+sdl3::s_rgb96f mix(sdl3::s_rgb96f const & color0, sdl3::s_rgb96f const & color1, float value)
 {
     return (1.0f - value) * color0 + value * color1;
 }
 
 sdl3::s_rgb96f shade(hit const & hit, world const & world, int level, float weight);
 
-sdl3::s_rgb96f
-trace(ray const & ray, world const & world, int level, float weight)
+sdl3::s_rgb96f trace(ray const & ray, world const & world, int level, float weight)
 {
     auto const nearest_hit = find_nearest_hit(ray, world);
     if (nearest_hit)
@@ -679,16 +642,14 @@ trace(ray const & ray, world const & world, int level, float weight)
     return world.environment;
 }
 
-sdl3::s_rgb96f
-trace(ray const & ray, world const & world)
+sdl3::s_rgb96f trace(ray const & ray, world const & world)
 {
     return trace(ray, world, 0, 1.0f);
 }
 
 float shadow(ray const & ray, world const & world, float max_distance);
 
-sdl3::s_rgb96f
-shade(hit const & hit, world const & world, int level, float weight)
+sdl3::s_rgb96f shade(hit const & hit, world const & world, int level, float weight)
 {
     auto const surface_position = hit.ray.origin + hit.ray.direction * hit.distance;
     auto const geometry_normal = hit.object.normal_at(surface_position);
@@ -745,14 +706,12 @@ shade(hit const & hit, world const & world, int level, float weight)
     return color;
 }
 
-sdl3::s_rgb96f
-shade(hit const & hit, world const & world)
+sdl3::s_rgb96f shade(hit const & hit, world const & world)
 {
     return shade(hit, world, 0, 1.0f);
 }
 
-float
-shadow(ray const & ray, world const & world, float max_distance)
+float shadow(ray const & ray, world const & world, float max_distance)
 {
     auto const nearest_hit = find_nearest_hit(ray, world);
     if (!nearest_hit || nearest_hit->distance > (max_distance - ::ray::epsilon))
@@ -762,8 +721,7 @@ shadow(ray const & ray, world const & world, float max_distance)
     return 0.0f;
 }
 
-int
-main()
+int main()
 {
     auto window = sdl3::window("Software Ray Tracer", 640 * px, 480 * px, sdl3::window_flags::resizable);
     auto renderer = sdl3::renderer(window);

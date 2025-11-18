@@ -45,43 +45,93 @@ namespace sdl3
     class renderer
     {
     public:
-        renderer(window & owner);
+        renderer(window & owner)
+        : _native_handle(check_pointer(SDL_CreateRenderer(owner.native_handle(), nullptr)))
+        { }
 
-        renderer(window & owner, std::string const & name);
+        renderer(window & owner, std::string const & name)
+        : _native_handle(check_pointer(SDL_CreateRenderer(owner.native_handle(), name.c_str())))
+        { }
 
-        renderer(renderer const & other) = delete;
+        renderer(renderer && other)
+        : _native_handle(std::exchange(other._native_handle, nullptr))
+        { }
 
-        renderer(renderer && other);
+        ~renderer()
+        {
+            if (_native_handle != nullptr)
+            {
+                SDL_DestroyRenderer(_native_handle);
+            }
+        }
 
-        ~renderer();
+        std::string name() const
+        {
+            char const * retval = SDL_GetRendererName(_native_handle);
+            check_result(retval != nullptr);
+            return std::string(retval);
+        }
 
-        renderer & operator=(renderer const & other) = delete;
+        property_group properties() const
+        {
+            return property_group(SDL_GetRendererProperties(_native_handle));
+        }
 
-        std::string name() const;
+        size_2d<std::int32_t> output_size() const
+        {
+            int width, height;
+            check_result(SDL_GetCurrentRenderOutputSize(_native_handle, &width, &height));
+            return size_2d<std::int32_t>(width * px, height * px);
+        }
 
-        property_group properties() const;
+        color draw_color() const
+        {
+            std::uint8_t r, g, b, a;
+            check_result(SDL_GetRenderDrawColor(_native_handle, &r, &g, &b, &a));
+            return color(r8(r), g8(g), b8(b), a8(a));
+        }
 
-        size_2d<std::int32_t> output_size() const;
+        void draw_color(color const & draw_color)
+        {
+            check_result(
+                SDL_SetRenderDrawColor(_native_handle, draw_color.r, draw_color.g, draw_color.b, draw_color.a)
+            );
+        }
 
-        color draw_color() const;
+        blend_mode draw_blend_mode() const
+        {
+            SDL_BlendMode mode;
+            check_result(SDL_GetRenderDrawBlendMode(_native_handle, &mode));
+            return static_cast<blend_mode>(mode);
+        }
 
-        void draw_color(color const & draw_color);
+        void draw_blend_mode(blend_mode mode)
+        {
+            check_result(SDL_SetRenderDrawBlendMode(_native_handle, static_cast<SDL_BlendMode>(mode)));
+        }
 
-        blend_mode draw_blend_mode() const;
+        template <typename Texture>
+        void copy(Texture & texture)
+        {
+            check_result(SDL_RenderTexture(_native_handle, texture.native_handle(), nullptr, nullptr));
+        }
 
-        void draw_blend_mode(blend_mode mode);
+        void clear()
+        {
+            check_result(SDL_RenderClear(_native_handle));
+        }
 
-        void clear();
+        void present()
+        {
+            SDL_RenderPresent(_native_handle);
+        }
 
-        void present();
-
-        void copy(texture_base & texture);
-
-        SDL_Renderer * native_handle();
+        SDL_Renderer * native_handle()
+        {
+            return _native_handle;
+        }
 
     private:
         SDL_Renderer * _native_handle;
     };
 }  // namespace sdl3
-
-#include "renderer.ipp"

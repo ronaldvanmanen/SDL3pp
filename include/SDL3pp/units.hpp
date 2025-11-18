@@ -33,14 +33,12 @@ namespace sdl3
 {
     struct pixel_base_unit : public boost::units::base_unit<pixel_base_unit, boost::units::length_dimension, 1>
     {
-        static std::string
-        name()
+        static std::string name()
         {
             return ("pixel");
         }
 
-        static std::string
-        symbol()
+        static std::string symbol()
         {
             return ("px");
         }
@@ -48,14 +46,12 @@ namespace sdl3
 
     struct second_base_unit : public boost::units::base_unit<second_base_unit, boost::units::time_dimension, 2>
     {
-        static std::string
-        name()
+        static std::string name()
         {
             return ("second");
         }
 
-        static std::string
-        symbol()
+        static std::string symbol()
         {
             return ("s");
         }

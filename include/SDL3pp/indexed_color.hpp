@@ -41,97 +41,69 @@ namespace sdl3
         static constexpr pixel_format format = pixel_format::index8;
 
     public:
-        index8();
+        index8()
+        : _value(static_cast<std::uint8_t>(0))
+        { }
 
-        index8(std::uint8_t value);
+        index8(std::uint8_t value)
+        : _value(value)
+        { }
 
-        index8(index8 const & other);
+        index8(index8 const & other)
+        : _value(other._value)
+        { }
 
-        index8 & operator=(index8 const & other);
+        index8 & operator=(index8 const & other)
+        {
+            if (this != &other)
+            {
+                _value = other._value;
+            }
+            return *this;
+        }
 
-        index8 & operator+=(index8 const & other);
+        index8 & operator+=(index8 const & other)
+        {
+            _value += other._value;
+            return *this;
+        }
 
-        index8 & operator-=(index8 const & other);
+        index8 & operator-=(index8 const & other)
+        {
+            _value += other._value;
+            return *this;
+        }
 
-        index8 & operator++();
+        index8 & operator++()
+        {
+            ++_value;
+            return *this;
+        }
 
-        index8 & operator--();
+        index8 & operator--()
+        {
+            --_value;
+            return *this;
+        }
 
-        bool operator==(index8 const & other) const;
+        bool operator==(index8 const & other) const
+        {
+            return _value == other._value;
+        }
 
-        bool operator<(index8 const & other) const;
+        bool operator<(index8 const & other) const
+        {
+            return _value < other._value;
+        }
 
-        operator std::uint8_t() const;
+        operator std::uint8_t() const
+        {
+            return _value;
+        }
 
     private:
         std::uint8_t _value;
     };
-
-    inline index8::index8() { }
-
-    inline index8::index8(std::uint8_t value)
-    : _value(value)
-    { }
-
-    inline index8::index8(index8 const & other)
-    : _value(other._value)
-    { }
-
-    inline index8 &
-    index8::operator=(index8 const & other)
-    {
-        if (this != &other)
-        {
-            _value = other._value;
-        }
-        return *this;
-    }
-
-    inline index8 &
-    index8::operator+=(index8 const & other)
-    {
-        _value += other._value;
-        return *this;
-    }
-
-    inline index8 &
-    index8::operator-=(index8 const & other)
-    {
-        _value += other._value;
-        return *this;
-    }
-
-    inline index8 &
-    index8::operator++()
-    {
-        ++_value;
-        return *this;
-    }
-
-    inline index8 &
-    index8::operator--()
-    {
-        --_value;
-        return *this;
-    }
-
-    inline bool
-    index8::operator==(index8 const & other) const
-    {
-        return _value == other._value;
-    }
-
-    inline bool
-    index8::operator<(index8 const & other) const
-    {
-        return _value < other._value;
-    }
-
-    inline index8::
-    operator std::uint8_t() const
-    {
-        return _value;
-    }
 
     template <color_space C>
         requires(is_rgb_color_space<C>())

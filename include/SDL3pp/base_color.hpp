@@ -67,48 +67,109 @@ namespace sdl3
         using base_type = T;
 
     public:
-        base_color();
+        base_color()
+        : _value(static_cast<T>(0))
+        { }
 
-        explicit base_color(T value);
+        base_color(T value)
+        : _value(value)
+        { }
 
-        template <class From>
+        template <typename From>
             requires(!std::is_same_v<From, T> && std::is_convertible_v<From, T>)
-        explicit base_color(From value);
+        base_color(From value)
+        : _value(value)
+        { }
 
-        base_color(base_color<T, Tag> const & other);
+        base_color(base_color<T, Tag> const & other)
+        : _value(other._value)
+        { }
 
-        base_color<T, Tag> & operator=(base_color<T, Tag> const & other);
+        base_color<T, Tag> & operator=(base_color<T, Tag> const & other)
+        {
+            if (*this != other)
+            {
+                _value = other._value;
+            }
+            return *this;
+        }
 
-        base_color<T, Tag> & operator*=(base_color<T, Tag> const & other);
+        base_color<T, Tag> & operator*=(base_color<T, Tag> const & other)
+        {
+            _value *= other._value;
+            return *this;
+        }
 
-        base_color<T, Tag> & operator/=(base_color<T, Tag> const & other);
+        base_color<T, Tag> & operator/=(base_color<T, Tag> const & other)
+        {
+            _value /= other._value;
+            return *this;
+        }
 
-        base_color<T, Tag> & operator+=(base_color<T, Tag> const & other);
+        base_color<T, Tag> & operator+=(base_color<T, Tag> const & other)
+        {
+            _value += other._value;
+            return *this;
+        }
 
-        base_color<T, Tag> & operator-=(base_color<T, Tag> const & other);
+        base_color<T, Tag> & operator-=(base_color<T, Tag> const & other)
+        {
+            _value -= other._value;
+            return *this;
+        }
 
-        base_color<T, Tag> & operator*=(T scalar);
+        base_color<T, Tag> & operator*=(T scalar)
+        {
+            _value *= scalar;
+            return *this;
+        }
 
-        base_color<T, Tag> & operator/=(T scalar);
+        base_color<T, Tag> & operator/=(T scalar)
+        {
+            _value /= scalar;
+            return *this;
+        }
 
-        base_color<T, Tag> & operator++();
+        base_color<T, Tag> & operator++()
+        {
+            ++_value;
+            return *this;
+        }
 
-        base_color<T, Tag> & operator--();
+        base_color<T, Tag> & operator--()
+        {
+            --_value;
+            return *this;
+        }
 
-        bool operator==(base_color<T, Tag> const & other) const;
+        bool operator==(base_color<T, Tag> const & other) const
+        {
+            return _value == other._value;
+        }
 
-        bool operator<(base_color<T, Tag> const & other) const;
+        bool operator<(base_color<T, Tag> const & other) const
+        {
+            return _value < other._value;
+        }
 
-        operator T() const;
+        operator T() const
+        {
+            return _value;
+        }
 
         template <class To>
             requires(!std::is_same_v<T, To> && std::is_convertible_v<T, To>)
-        operator To() const;
+        operator To() const
+        {
+            return static_cast<To>(_value);
+        }
 
     public:
         template <typename CharT, typename Traits>
-        friend std::basic_ostream<CharT, Traits> &
-        operator<<(std::basic_ostream<CharT, Traits> & stream, base_color<T, Tag> const & value)
+        friend std::basic_ostream<CharT, Traits> & operator<<(
+            std::basic_ostream<CharT, Traits> & stream,
+            base_color<T, Tag> const & value
+        )
         {
             return stream << value._value;
         }
@@ -116,133 +177,6 @@ namespace sdl3
     private:
         T _value;
     };
-
-    template <typename T, typename Tag>
-    base_color<T, Tag>::base_color()
-    : _value()
-    { }
-
-    template <typename T, typename Tag>
-    base_color<T, Tag>::base_color(T value)
-    : _value(value)
-    { }
-
-    template <typename T, typename Tag>
-    template <typename From>
-        requires(!std::is_same_v<From, T> && std::is_convertible_v<From, T>)
-    base_color<T, Tag>::base_color(From value)
-    : _value(value)
-    { }
-
-    template <typename T, typename Tag>
-    base_color<T, Tag>::base_color(base_color<T, Tag> const & other)
-    : _value(other._value)
-    { }
-
-    template <typename T, typename Tag>
-    base_color<T, Tag> &
-    base_color<T, Tag>::operator=(base_color<T, Tag> const & other)
-    {
-        if (*this != other)
-        {
-            _value = other._value;
-        }
-        return *this;
-    }
-
-    template <typename T, typename Tag>
-    base_color<T, Tag> &
-    base_color<T, Tag>::operator*=(base_color<T, Tag> const & other)
-    {
-        _value *= other._value;
-        return *this;
-    }
-
-    template <typename T, typename Tag>
-    base_color<T, Tag> &
-    base_color<T, Tag>::operator/=(base_color<T, Tag> const & other)
-    {
-        _value /= other._value;
-        return *this;
-    }
-
-    template <typename T, typename Tag>
-    base_color<T, Tag> &
-    base_color<T, Tag>::operator+=(base_color<T, Tag> const & other)
-    {
-        _value += other._value;
-        return *this;
-    }
-
-    template <typename T, typename Tag>
-    base_color<T, Tag> &
-    base_color<T, Tag>::operator-=(base_color<T, Tag> const & other)
-    {
-        _value -= other._value;
-        return *this;
-    }
-
-    template <typename T, typename Tag>
-    base_color<T, Tag> &
-    base_color<T, Tag>::operator*=(T scalar)
-    {
-        _value *= scalar;
-        return *this;
-    }
-
-    template <typename T, typename Tag>
-    base_color<T, Tag> &
-    base_color<T, Tag>::operator/=(T scalar)
-    {
-        _value /= scalar;
-        return *this;
-    }
-
-    template <typename T, typename Tag>
-    base_color<T, Tag> &
-    base_color<T, Tag>::operator++()
-    {
-        ++_value;
-        return *this;
-    }
-
-    template <typename T, typename Tag>
-    base_color<T, Tag> &
-    base_color<T, Tag>::operator--()
-    {
-        --_value;
-        return *this;
-    }
-
-    template <typename T, typename Tag>
-    bool
-    base_color<T, Tag>::operator==(base_color<T, Tag> const & other) const
-    {
-        return _value == other._value;
-    }
-
-    template <typename T, typename Tag>
-    bool
-    base_color<T, Tag>::operator<(base_color<T, Tag> const & other) const
-    {
-        return _value < other._value;
-    }
-
-    template <typename T, typename Tag>
-    base_color<T, Tag>::
-    operator T() const
-    {
-        return _value;
-    }
-
-    template <typename T, typename Tag>
-    template <class To>
-        requires(!std::is_same_v<T, To> && std::is_convertible_v<T, To>)
-    base_color<T, Tag>::
-    operator To() const
-    {
-        return static_cast<To>(_value);
-    }
 
     template <typename T>
     using red = base_color<T, struct red_tag>;
@@ -254,38 +188,32 @@ namespace sdl3
     using r10 = red<clamped_uint10_t>;
     using r32f = red<clamped_unorm_float>;
 
-    inline auto
-    operator""_r3(unsigned long long value)
+    inline auto operator""_r3(unsigned long long value)
     {
         return r3(value);
     };
 
-    inline auto
-    operator""_r4(unsigned long long value)
+    inline auto operator""_r4(unsigned long long value)
     {
         return r4(value);
     };
 
-    inline auto
-    operator""_r5(unsigned long long value)
+    inline auto operator""_r5(unsigned long long value)
     {
         return r5(value);
     };
 
-    inline auto
-    operator""_r8(unsigned long long value)
+    inline auto operator""_r8(unsigned long long value)
     {
         return r8(value);
     };
 
-    inline auto
-    operator""_r10(unsigned long long value)
+    inline auto operator""_r10(unsigned long long value)
     {
         return r10(value);
     };
 
-    inline auto
-    operator""_r32f(long double value)
+    inline auto operator""_r32f(long double value)
     {
         return r32f(value);
     };
@@ -301,44 +229,37 @@ namespace sdl3
     using g10 = green<clamped_uint10_t>;
     using g32f = green<clamped_unorm_float>;
 
-    inline auto
-    operator""_g3(unsigned long long value)
+    inline auto operator""_g3(unsigned long long value)
     {
         return g3(value);
     };
 
-    inline auto
-    operator""_g4(unsigned long long value)
+    inline auto operator""_g4(unsigned long long value)
     {
         return g4(value);
     };
 
-    inline auto
-    operator""_g5(unsigned long long value)
+    inline auto operator""_g5(unsigned long long value)
     {
         return g5(value);
     };
 
-    inline auto
-    operator""_g6(unsigned long long value)
+    inline auto operator""_g6(unsigned long long value)
     {
         return g6(value);
     };
 
-    inline auto
-    operator""_g8(unsigned long long value)
+    inline auto operator""_g8(unsigned long long value)
     {
         return g8(value);
     };
 
-    inline auto
-    operator""_g10(unsigned long long value)
+    inline auto operator""_g10(unsigned long long value)
     {
         return g10(value);
     };
 
-    inline auto
-    operator""_g32f(long double value)
+    inline auto operator""_g32f(long double value)
     {
         return g32f(value);
     };
@@ -353,38 +274,32 @@ namespace sdl3
     using b10 = blue<clamped_uint10_t>;
     using b32f = blue<clamped_unorm_float>;
 
-    inline auto
-    operator""_b2(unsigned long long value)
+    inline auto operator""_b2(unsigned long long value)
     {
         return b2(value);
     };
 
-    inline auto
-    operator""_b4(unsigned long long value)
+    inline auto operator""_b4(unsigned long long value)
     {
         return b4(value);
     };
 
-    inline auto
-    operator""_b5(unsigned long long value)
+    inline auto operator""_b5(unsigned long long value)
     {
         return b5(value);
     };
 
-    inline auto
-    operator""_b8(unsigned long long value)
+    inline auto operator""_b8(unsigned long long value)
     {
         return b8(value);
     };
 
-    inline auto
-    operator""_b10(unsigned long long value)
+    inline auto operator""_b10(unsigned long long value)
     {
         return b10(value);
     };
 
-    inline auto
-    operator""_b32f(long double value)
+    inline auto operator""_b32f(long double value)
     {
         return b32f(value);
     };
@@ -398,32 +313,27 @@ namespace sdl3
     using a8 = alpha<clamped_uint8_t>;
     using a32f = alpha<clamped_unorm_float>;
 
-    inline auto
-    operator""_a1(unsigned long long value)
+    inline auto operator""_a1(unsigned long long value)
     {
         return a1(value);
     };
 
-    inline auto
-    operator""_a2(unsigned long long value)
+    inline auto operator""_a2(unsigned long long value)
     {
         return a2(value);
     };
 
-    inline auto
-    operator""_a4(unsigned long long value)
+    inline auto operator""_a4(unsigned long long value)
     {
         return a4(value);
     };
 
-    inline auto
-    operator""_a8(unsigned long long value)
+    inline auto operator""_a8(unsigned long long value)
     {
         return a8(value);
     };
 
-    inline auto
-    operator""_a32f(long double value)
+    inline auto operator""_a32f(long double value)
     {
         return a32f(value);
     };

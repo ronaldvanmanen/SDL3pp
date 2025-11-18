@@ -41,8 +41,7 @@ public:
     { }
 
 private:
-    void
-    report_test_unit(boost::unit_test::test_unit const & test_unit)
+    void report_test_unit(boost::unit_test::test_unit const & test_unit)
     {
         for (auto test_suite : m_test_suites)
         {
@@ -57,14 +56,12 @@ private:
         m_os << std::endl;
     }
 
-    void
-    visit(boost::unit_test::test_case const & test_case) override
+    void visit(boost::unit_test::test_case const & test_case) override
     {
         report_test_unit(test_case);
     }
 
-    bool
-    test_suite_start(boost::unit_test::test_suite const & test_suite) override
+    bool test_suite_start(boost::unit_test::test_suite const & test_suite) override
     {
         if (&test_suite != &boost::unit_test::framework::master_test_suite())
         {
@@ -73,8 +70,7 @@ private:
         return true;
     }
 
-    void
-    test_suite_finish(boost::unit_test::test_suite const & test_suite) override
+    void test_suite_finish(boost::unit_test::test_suite const & test_suite) override
     {
         if (&test_suite != &boost::unit_test::framework::master_test_suite())
         {
@@ -87,14 +83,12 @@ private:
     std::vector<std::string> m_test_suites;
 };
 
-bool
-initialize_unit_tests()
+bool initialize_unit_tests()
 {
     return true;
 }
 
-int
-main(int argc, char * argv[])
+int main(int argc, char * argv[])
 {
     if (argc == 2 && argv[1] == std::string("--list_test_cases"))
     {

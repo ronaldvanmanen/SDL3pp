@@ -28,8 +28,7 @@
 namespace sdl3
 {
     template <typename T, typename R, R RMin, R RMax>
-    R
-    clamped_cast(T value)
+    R clamped_cast(T value)
     {
         if (value < static_cast<T>(RMin))
         {
@@ -53,54 +52,115 @@ namespace sdl3
     // clang-format on
     {
     public:
-        clamped_numeric();
+        clamped_numeric()
+        : _value()
+        { }
 
-        /* explicit */ clamped_numeric(T value);
+        clamped_numeric(T value)
+        : _value(value)
+        { }
 
-        template <class From>
+        template <typename From>
             requires(!std::is_same_v<From, T> && std::is_convertible_v<From, T>)
-        /* explicit */ clamped_numeric(From value);
+        clamped_numeric(From value)
+        : _value(value)
+        { }
 
-        clamped_numeric(clamped_numeric<T, Min, Max> const & other);
+        clamped_numeric(clamped_numeric<T, Min, Max> const & other)
+        : _value(other._value)
+        { }
 
-        clamped_numeric<T, Min, Max> & operator=(clamped_numeric<T, Min, Max> const & other);
+        clamped_numeric<T, Min, Max> & operator=(clamped_numeric<T, Min, Max> const & other)
+        {
+            if (*this != other)
+            {
+                _value = other._value;
+            }
+            return *this;
+        }
 
-        clamped_numeric<T, Min, Max> & operator*=(clamped_numeric<T, Min, Max> const & other);
+        clamped_numeric<T, Min, Max> & operator*=(clamped_numeric<T, Min, Max> const & other)
+        {
+            auto const value = _value * other._value;
+            _value = clamped_cast<decltype(value), T, Min, Max>(value);
+            return *this;
+        }
 
-        clamped_numeric<T, Min, Max> & operator/=(clamped_numeric<T, Min, Max> const & other);
+        clamped_numeric<T, Min, Max> & operator/=(clamped_numeric<T, Min, Max> const & other)
+        {
+            auto const value = _value / other._value;
+            _value = clamped_cast<decltype(value), T, Min, Max>(value);
+            return *this;
+        }
 
-        clamped_numeric<T, Min, Max> & operator+=(clamped_numeric<T, Min, Max> const & other);
+        clamped_numeric<T, Min, Max> & operator+=(clamped_numeric<T, Min, Max> const & other)
+        {
+            auto const value = _value + other._value;
+            _value = clamped_cast<decltype(value), T, Min, Max>(value);
+            return *this;
+        }
 
-        clamped_numeric<T, Min, Max> & operator-=(clamped_numeric<T, Min, Max> const & other);
+        clamped_numeric<T, Min, Max> & operator-=(clamped_numeric<T, Min, Max> const & other)
+        {
+            auto const value = _value - other._value;
+            _value = clamped_cast<decltype(value), T, Min, Max>(value);
+            return *this;
+        }
 
-        clamped_numeric<T, Min, Max> & operator++();
+        clamped_numeric<T, Min, Max> & operator++()
+        {
+            auto const value = _value + 1;
+            _value = clamped_cast<decltype(value), T, Min, Max>(value);
+            return *this;
+        }
 
-        clamped_numeric<T, Min, Max> & operator--();
+        clamped_numeric<T, Min, Max> & operator--()
+        {
+            auto const value = _value - 1;
+            _value = clamped_cast<decltype(value), T, Min, Max>(value);
+            return *this;
+        }
 
-        bool operator==(clamped_numeric<T, Min, Max> const & other) const;
+        bool operator==(clamped_numeric<T, Min, Max> const & other) const
+        {
+            return _value == other._value;
+        }
 
-        bool operator<(clamped_numeric<T, Min, Max> const & other) const;
+        bool operator<(clamped_numeric<T, Min, Max> const & other) const
+        {
+            return _value < other._value;
+        }
 
-        operator T() const;
+        operator T() const
+        {
+            return _value;
+        }
 
         template <class To>
             requires(!std::is_same_v<T, To> && std::is_convertible_v<T, To>)
-        operator To() const;
+        operator To() const
+        {
+            return static_cast<To>(_value);
+        }
 
     private:
         T _value;
     };
 
     template <typename T, T Min, T Max, typename CharT, typename Traits>
-    std::basic_ostream<CharT, Traits> &
-    operator<<(std::basic_ostream<CharT, Traits> & stream, clamped_numeric<T, Min, Max> const & value)
+    std::basic_ostream<CharT, Traits> & operator<<(
+        std::basic_ostream<CharT, Traits> & stream,
+        clamped_numeric<T, Min, Max> const & value
+    )
     {
         return stream << static_cast<T>(value);
     }
 
     template <std::uint8_t Min, std::uint8_t Max, typename CharT, typename Traits>
-    std::basic_ostream<CharT, Traits> &
-    operator<<(std::basic_ostream<CharT, Traits> & stream, clamped_numeric<std::uint8_t, Min, Max> const & value)
+    std::basic_ostream<CharT, Traits> & operator<<(
+        std::basic_ostream<CharT, Traits> & stream,
+        clamped_numeric<std::uint8_t, Min, Max> const & value
+    )
     {
         return stream << static_cast<std::uint32_t>(value);
     }
@@ -150,123 +210,6 @@ namespace sdl3
     template <class T>
     constexpr bool is_clamped_floating_point_v = is_clamped_floating_point<T>::value;
 
-    template <typename T, T Min, T Max>
-    clamped_numeric<T, Min, Max>::clamped_numeric()
-    : _value()
-    { }
-
-    template <typename T, T Min, T Max>
-    clamped_numeric<T, Min, Max>::clamped_numeric(T value)
-    : _value(value)
-    { }
-
-    template <typename T, T Min, T Max>
-    template <typename From>
-        requires(!std::is_same_v<From, T> && std::is_convertible_v<From, T>)
-    clamped_numeric<T, Min, Max>::clamped_numeric(From value)
-    : _value(value)
-    { }
-
-    template <typename T, T Min, T Max>
-    clamped_numeric<T, Min, Max>::clamped_numeric(clamped_numeric<T, Min, Max> const & other)
-    : _value(other._value)
-    { }
-
-    template <typename T, T Min, T Max>
-    clamped_numeric<T, Min, Max> &
-    clamped_numeric<T, Min, Max>::operator=(clamped_numeric<T, Min, Max> const & other)
-    {
-        if (*this != other)
-        {
-            _value = other._value;
-        }
-        return *this;
-    }
-
-    template <typename T, T Min, T Max>
-    clamped_numeric<T, Min, Max> &
-    clamped_numeric<T, Min, Max>::operator*=(clamped_numeric<T, Min, Max> const & other)
-    {
-        auto const value = _value * other._value;
-        _value = clamped_cast<decltype(value), T, Min, Max>(value);
-        return *this;
-    }
-
-    template <typename T, T Min, T Max>
-    clamped_numeric<T, Min, Max> &
-    clamped_numeric<T, Min, Max>::operator/=(clamped_numeric<T, Min, Max> const & other)
-    {
-        auto const value = _value / other._value;
-        _value = clamped_cast<decltype(value), T, Min, Max>(value);
-        return *this;
-    }
-
-    template <typename T, T Min, T Max>
-    clamped_numeric<T, Min, Max> &
-    clamped_numeric<T, Min, Max>::operator+=(clamped_numeric<T, Min, Max> const & other)
-    {
-        auto const value = _value + other._value;
-        _value = clamped_cast<decltype(value), T, Min, Max>(value);
-        return *this;
-    }
-
-    template <typename T, T Min, T Max>
-    clamped_numeric<T, Min, Max> &
-    clamped_numeric<T, Min, Max>::operator-=(clamped_numeric<T, Min, Max> const & other)
-    {
-        auto const value = _value - other._value;
-        _value = clamped_cast<decltype(value), T, Min, Max>(value);
-        return *this;
-    }
-
-    template <typename T, T Min, T Max>
-    clamped_numeric<T, Min, Max> &
-    clamped_numeric<T, Min, Max>::operator++()
-    {
-        auto const value = _value + 1;
-        _value = clamped_cast<decltype(value), T, Min, Max>(value);
-        return *this;
-    }
-
-    template <typename T, T Min, T Max>
-    clamped_numeric<T, Min, Max> &
-    clamped_numeric<T, Min, Max>::operator--()
-    {
-        auto const value = _value - 1;
-        _value = clamped_cast<decltype(value), T, Min, Max>(value);
-        return *this;
-    }
-
-    template <typename T, T Min, T Max>
-    bool
-    clamped_numeric<T, Min, Max>::operator==(clamped_numeric<T, Min, Max> const & other) const
-    {
-        return _value == other._value;
-    }
-
-    template <typename T, T Min, T Max>
-    bool
-    clamped_numeric<T, Min, Max>::operator<(clamped_numeric<T, Min, Max> const & other) const
-    {
-        return _value < other._value;
-    }
-
-    template <typename T, T Min, T Max>
-    clamped_numeric<T, Min, Max>::
-    operator T() const
-    {
-        return _value;
-    }
-
-    template <typename T, T Min, T Max>
-    template <class To>
-        requires(!std::is_same_v<T, To> && std::is_convertible_v<T, To>)
-    clamped_numeric<T, Min, Max>::
-    operator To() const
-    {
-        return static_cast<To>(_value);
-    }
-
     template <typename T>
     struct base_type
     {
@@ -295,29 +238,73 @@ namespace sdl3
     class tagged_numeric : boost::operators<tagged_numeric<T, Tag>>
     {
     public:
-        tagged_numeric(T value);
+        tagged_numeric(T value)
+        : _value(value)
+        { }
 
-        tagged_numeric(tagged_numeric<T, Tag> const & other);
+        tagged_numeric(tagged_numeric<T, Tag> const & other)
+        : _value(other._value)
+        { }
 
-        tagged_numeric<T, Tag> & operator=(tagged_numeric<T, Tag> const & other);
+        tagged_numeric<T, Tag> & operator=(tagged_numeric<T, Tag> const & other)
+        {
+            if (*this != other)
+            {
+                _value = other._value;
+            }
+            return *this;
+        }
 
-        tagged_numeric<T, Tag> & operator*=(tagged_numeric<T, Tag> const & other);
+        tagged_numeric<T, Tag> & operator*=(tagged_numeric<T, Tag> const & other)
+        {
+            _value *= other._value;
+            return *this;
+        }
 
-        tagged_numeric<T, Tag> & operator/=(tagged_numeric<T, Tag> const & other);
+        tagged_numeric<T, Tag> & operator/=(tagged_numeric<T, Tag> const & other)
+        {
+            _value /= other._value;
+            return *this;
+        }
 
-        tagged_numeric<T, Tag> & operator+=(tagged_numeric<T, Tag> const & other);
+        tagged_numeric<T, Tag> & operator+=(tagged_numeric<T, Tag> const & other)
+        {
+            _value += other._value;
+            return *this;
+        }
 
-        tagged_numeric<T, Tag> & operator-=(tagged_numeric<T, Tag> const & other);
+        tagged_numeric<T, Tag> & operator-=(tagged_numeric<T, Tag> const & other)
+        {
+            _value -= other._value;
+            return *this;
+        }
 
-        tagged_numeric<T, Tag> & operator++();
+        tagged_numeric<T, Tag> & operator++()
+        {
+            ++_value;
+            return *this;
+        }
 
-        tagged_numeric<T, Tag> & operator--();
+        tagged_numeric<T, Tag> & operator--()
+        {
+            --_value;
+            return *this;
+        }
 
-        bool operator==(tagged_numeric<T, Tag> const & other) const;
+        bool operator==(tagged_numeric<T, Tag> const & other) const
+        {
+            return _value == other._value;
+        }
 
-        bool operator<(tagged_numeric<T, Tag> const & other) const;
+        bool operator<(tagged_numeric<T, Tag> const & other) const
+        {
+            return _value < other._value;
+        }
 
-        operator T() const;
+        operator T() const
+        {
+            return _value;
+        }
 
     private:
         T _value;
@@ -338,95 +325,6 @@ namespace sdl3
     template <class T>
     constexpr bool is_tagged_numeric_v = is_tagged_numeric<T>::value;
 
-    template <typename T, typename Tag>
-    tagged_numeric<T, Tag>::tagged_numeric(T value)
-    : _value(value)
-    { }
-
-    template <typename T, typename Tag>
-    tagged_numeric<T, Tag>::tagged_numeric(tagged_numeric<T, Tag> const & other)
-    : _value(other._value)
-    { }
-
-    template <typename T, typename Tag>
-    tagged_numeric<T, Tag> &
-    tagged_numeric<T, Tag>::operator=(tagged_numeric<T, Tag> const & other)
-    {
-        if (*this != other)
-        {
-            _value = other._value;
-        }
-        return *this;
-    }
-
-    template <typename T, typename Tag>
-    tagged_numeric<T, Tag> &
-    tagged_numeric<T, Tag>::operator*=(tagged_numeric<T, Tag> const & other)
-    {
-        _value *= other._value;
-        return *this;
-    }
-
-    template <typename T, typename Tag>
-    tagged_numeric<T, Tag> &
-    tagged_numeric<T, Tag>::operator/=(tagged_numeric<T, Tag> const & other)
-    {
-        _value /= other._value;
-        return *this;
-    }
-
-    template <typename T, typename Tag>
-    tagged_numeric<T, Tag> &
-    tagged_numeric<T, Tag>::operator+=(tagged_numeric<T, Tag> const & other)
-    {
-        _value += other._value;
-        return *this;
-    }
-
-    template <typename T, typename Tag>
-    tagged_numeric<T, Tag> &
-    tagged_numeric<T, Tag>::operator-=(tagged_numeric<T, Tag> const & other)
-    {
-        _value -= other._value;
-        return *this;
-    }
-
-    template <typename T, typename Tag>
-    tagged_numeric<T, Tag> &
-    tagged_numeric<T, Tag>::operator++()
-    {
-        ++_value;
-        return *this;
-    }
-
-    template <typename T, typename Tag>
-    tagged_numeric<T, Tag> &
-    tagged_numeric<T, Tag>::operator--()
-    {
-        --_value;
-        return *this;
-    }
-
-    template <typename T, typename Tag>
-    bool
-    tagged_numeric<T, Tag>::operator==(tagged_numeric<T, Tag> const & other) const
-    {
-        return _value == other._value;
-    }
-
-    template <typename T, typename Tag>
-    bool
-    tagged_numeric<T, Tag>::operator<(tagged_numeric<T, Tag> const & other) const
-    {
-        return _value < other._value;
-    }
-
-    template <typename T, typename Tag>
-    tagged_numeric<T, Tag>::
-    operator T() const
-    {
-        return _value;
-    }
 }  // namespace sdl3
 
 namespace std
@@ -484,44 +382,37 @@ namespace std
             return sdl3::clamped_numeric<T, Min, Max>(Max);
         }
 
-        static constexpr sdl3::clamped_numeric<T, Min, Max>
-        lowest() noexcept
+        static constexpr sdl3::clamped_numeric<T, Min, Max> lowest() noexcept
         {
             return sdl3::clamped_numeric<T, Min, Max>(numeric_limits<T>::lowest());
         }
 
-        static constexpr sdl3::clamped_numeric<T, Min, Max>
-        epsilon() noexcept
+        static constexpr sdl3::clamped_numeric<T, Min, Max> epsilon() noexcept
         {
             return sdl3::clamped_numeric<T, Min, Max>(numeric_limits<T>::epsilon());
         }
 
-        static constexpr sdl3::clamped_numeric<T, Min, Max>
-        round_error() noexcept
+        static constexpr sdl3::clamped_numeric<T, Min, Max> round_error() noexcept
         {
             return sdl3::clamped_numeric<T, Min, Max>(numeric_limits<T>::round_error());
         }
 
-        static constexpr sdl3::clamped_numeric<T, Min, Max>
-        denorm_min() noexcept
+        static constexpr sdl3::clamped_numeric<T, Min, Max> denorm_min() noexcept
         {
             return sdl3::clamped_numeric<T, Min, Max>(numeric_limits<T>::denorm_min());
         }
 
-        static constexpr sdl3::clamped_numeric<T, Min, Max>
-        infinity() noexcept
+        static constexpr sdl3::clamped_numeric<T, Min, Max> infinity() noexcept
         {
             return sdl3::clamped_numeric<T, Min, Max>(numeric_limits<T>::infinity());
         }
 
-        static constexpr sdl3::clamped_numeric<T, Min, Max>
-        quiet_NaN() noexcept
+        static constexpr sdl3::clamped_numeric<T, Min, Max> quiet_NaN() noexcept
         {
             return sdl3::clamped_numeric<T, Min, Max>(numeric_limits<T>::quiet_NaN());
         }
 
-        static constexpr sdl3::clamped_numeric<T, Min, Max>
-        signaling_NaN() noexcept
+        static constexpr sdl3::clamped_numeric<T, Min, Max> signaling_NaN() noexcept
         {
             return sdl3::clamped_numeric<T, Min, Max>(numeric_limits<T>::signaling_NaN());
         }
@@ -583,44 +474,37 @@ namespace std
             return sdl3::tagged_numeric<T, Tag>(numeric_limits<T>::max());
         }
 
-        static constexpr sdl3::tagged_numeric<T, Tag>
-        lowest() noexcept
+        static constexpr sdl3::tagged_numeric<T, Tag> lowest() noexcept
         {
             return sdl3::tagged_numeric<T, Tag>(numeric_limits<T>::lowest());
         }
 
-        static constexpr sdl3::tagged_numeric<T, Tag>
-        epsilon() noexcept
+        static constexpr sdl3::tagged_numeric<T, Tag> epsilon() noexcept
         {
             return sdl3::tagged_numeric<T, Tag>(numeric_limits<T>::epsilon());
         }
 
-        static constexpr sdl3::tagged_numeric<T, Tag>
-        round_error() noexcept
+        static constexpr sdl3::tagged_numeric<T, Tag> round_error() noexcept
         {
             return sdl3::tagged_numeric<T, Tag>(numeric_limits<T>::round_error());
         }
 
-        static constexpr sdl3::tagged_numeric<T, Tag>
-        denorm_min() noexcept
+        static constexpr sdl3::tagged_numeric<T, Tag> denorm_min() noexcept
         {
             return sdl3::tagged_numeric<T, Tag>(numeric_limits<T>::denorm_min());
         }
 
-        static constexpr sdl3::tagged_numeric<T, Tag>
-        infinity() noexcept
+        static constexpr sdl3::tagged_numeric<T, Tag> infinity() noexcept
         {
             return sdl3::tagged_numeric<T, Tag>(numeric_limits<T>::infinity());
         }
 
-        static constexpr sdl3::tagged_numeric<T, Tag>
-        quiet_NaN() noexcept
+        static constexpr sdl3::tagged_numeric<T, Tag> quiet_NaN() noexcept
         {
             return sdl3::tagged_numeric<T, Tag>(numeric_limits<T>::quiet_NaN());
         }
 
-        static constexpr sdl3::tagged_numeric<T, Tag>
-        signaling_NaN() noexcept
+        static constexpr sdl3::tagged_numeric<T, Tag> signaling_NaN() noexcept
         {
             return sdl3::tagged_numeric<T, Tag>(numeric_limits<T>::signaling_NaN());
         }

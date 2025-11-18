@@ -25,8 +25,7 @@
 
 using namespace std;
 
-int
-main()
+int main()
 {
     vector<SDL_PixelFormat> formats = {
         SDL_PIXELFORMAT_UNKNOWN,

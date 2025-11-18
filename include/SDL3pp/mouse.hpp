@@ -30,26 +30,21 @@ namespace sdl3
         float y;
         std::uint32_t buttons;
 
-        bool pressed(std::uint32_t which) const;
+        bool pressed(std::uint32_t which) const
+        {
+            return ((this->buttons & which) == which);
+        }
     };
 
     class mouse
     {
     public:
-        static mouse_state relative_state();
+        static mouse_state relative_state()
+        {
+            float x, y;
+            std::uint32_t buttons = SDL_GetRelativeMouseState(&x, &y);
+            return mouse_state{x, y, buttons};
+        }
     };
 
-    bool
-    mouse_state::pressed(std::uint32_t which) const
-    {
-        return ((this->buttons & which) == which);
-    }
-
-    inline mouse_state
-    mouse::relative_state()
-    {
-        float x, y;
-        std::uint32_t buttons = SDL_GetRelativeMouseState(&x, &y);
-        return mouse_state{x, y, buttons};
-    }
 }  // namespace sdl3

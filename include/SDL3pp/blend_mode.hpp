@@ -38,8 +38,7 @@ namespace sdl3
     };
 
     template <class CharT, class Traits>
-    std::basic_ostream<CharT, Traits> &
-    operator<<(std::basic_ostream<CharT, Traits> & stream, blend_mode const & value)
+    std::basic_ostream<CharT, Traits> & operator<<(std::basic_ostream<CharT, Traits> & stream, blend_mode const & value)
     {
         switch (value)
         {

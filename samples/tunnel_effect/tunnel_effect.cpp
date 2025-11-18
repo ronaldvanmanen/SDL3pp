@@ -97,32 +97,32 @@ displacement_table::~displacement_table()
     delete[] _pixels;
 }
 
-sdl3::length<std::int32_t>
-displacement_table::width() const
+sdl3::length<std::int32_t> displacement_table::width() const
 {
     return _width;
 }
 
-sdl3::length<std::int32_t>
-displacement_table::height() const
+sdl3::length<std::int32_t> displacement_table::height() const
 {
     return _height;
 }
 
-displacement &
-displacement_table::operator()(sdl3::offset<std::int32_t> x, sdl3::offset<std::int32_t> y)
+displacement & displacement_table::operator()(sdl3::offset<std::int32_t> x, sdl3::offset<std::int32_t> y)
 {
     return _pixels[boost::units::quantity_cast<std::size_t>(y * _height / px + x)];
 }
 
-displacement const &
-displacement_table::operator()(sdl3::offset<std::int32_t> x, sdl3::offset<std::int32_t> y) const
+displacement const & displacement_table::operator()(sdl3::offset<std::int32_t> x, sdl3::offset<std::int32_t> y) const
 {
     return _pixels[boost::units::quantity_cast<std::size_t>(y * _height / px + x)];
 }
 
-sdl3::length<double>
-calc_distance(sdl3::length<double> width, sdl3::length<double> height, sdl3::offset<double> x, sdl3::offset<double> y)
+sdl3::length<double> calc_distance(
+    sdl3::length<double> width,
+    sdl3::length<double> height,
+    sdl3::offset<double> x,
+    sdl3::offset<double> y
+)
 {
     // distance = int(ratio * texHeight / sqrt((x - w / 2.0) * (x - w / 2.0) + (y - h / 2.0) * (y - h / 2.0))) % texHeight;
     const double ratio = 32;
@@ -133,8 +133,12 @@ calc_distance(sdl3::length<double> width, sdl3::length<double> height, sdl3::off
     ));
 }
 
-sdl3::length<double>
-calc_angle(sdl3::length<double> width, sdl3::length<double> height, sdl3::offset<double> x, sdl3::offset<double> y)
+sdl3::length<double> calc_angle(
+    sdl3::length<double> width,
+    sdl3::length<double> height,
+    sdl3::offset<double> x,
+    sdl3::offset<double> y
+)
 {
     // angle = (unsigned int)(0.5 * texWidth * atan2(y - h / 2.0, x - w / 2.0) / 3.1416);
     return sdl3::length<double>::from_value(
@@ -144,8 +148,7 @@ calc_angle(sdl3::length<double> width, sdl3::length<double> height, sdl3::offset
     );
 }
 
-displacement_table
-generate_displacement_image(sdl3::length<std::int32_t> square_size)
+displacement_table generate_displacement_image(sdl3::length<std::int32_t> square_size)
 {
     auto const actual_size = next_power_of_two(square_size);
 
@@ -164,20 +167,19 @@ generate_displacement_image(sdl3::length<std::int32_t> square_size)
     return displacement_image;
 }
 
-displacement_table
-generate_displacement_image(sdl3::length<std::int32_t> width, sdl3::length<std::int32_t> height)
+displacement_table generate_displacement_image(sdl3::length<std::int32_t> width, sdl3::length<std::int32_t> height)
 {
     return generate_displacement_image(std::max(width, height));
 }
 
-displacement_table
-generate_displacement_table(sdl3::size_2d<std::int32_t> size)
+displacement_table generate_displacement_table(sdl3::size_2d<std::int32_t> size)
 {
     return generate_displacement_image(size.width, size.height);
 }
 
-sdl3::surface<sdl3::pixel_format::xrgb8888, sdl3::color_space::srgb>
-generate_xor_image(sdl3::length<std::int32_t> square_size)
+sdl3::surface<sdl3::pixel_format::xrgb8888, sdl3::color_space::srgb> generate_xor_image(
+    sdl3::length<std::int32_t> square_size
+)
 {
     sdl3::length<std::int32_t> actual_size = next_power_of_two(square_size);
 
@@ -198,28 +200,29 @@ generate_xor_image(sdl3::length<std::int32_t> square_size)
     return xor_image;
 }
 
-sdl3::surface<sdl3::pixel_format::xrgb8888, sdl3::color_space::srgb>
-generate_xor_image(sdl3::length<std::int32_t> width, sdl3::length<std::int32_t> height)
+sdl3::surface<sdl3::pixel_format::xrgb8888, sdl3::color_space::srgb> generate_xor_image(
+    sdl3::length<std::int32_t> width,
+    sdl3::length<std::int32_t> height
+)
 {
     return generate_xor_image(std::max(width, height));
 }
 
-sdl3::surface<sdl3::pixel_format::xrgb8888, sdl3::color_space::srgb>
-generate_xor_image(sdl3::size_2d<std::int32_t> const & size)
+sdl3::surface<sdl3::pixel_format::xrgb8888, sdl3::color_space::srgb> generate_xor_image(
+    sdl3::size_2d<std::int32_t> const & size
+)
 {
     return generate_xor_image(size.width, size.height);
 }
 
-sdl3::length<std::int32_t>
-power_of_two_mod(sdl3::length<std::int32_t> x, sdl3::length<std::int32_t> y)
+sdl3::length<std::int32_t> power_of_two_mod(sdl3::length<std::int32_t> x, sdl3::length<std::int32_t> y)
 {
     const auto x_value = boost::units::quantity_cast<int32_t>(x);
     const auto y_value = boost::units::quantity_cast<int32_t>(y);
     return sdl3::length<std::int32_t>::from_value(x_value & (y_value - 1));
 }
 
-int
-main()
+int main()
 {
     auto window = sdl3::window("Tunnel Effect", 800 * px, 600 * px, sdl3::window_flags::resizable);
     auto renderer = sdl3::renderer(window);

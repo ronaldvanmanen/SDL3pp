@@ -163,8 +163,7 @@ namespace sdl3
     };
 
     template <class CharT, class Traits = std::char_traits<CharT>, class Allocator = std::allocator<CharT>>
-    std::basic_string<CharT, Traits, Allocator>
-    name(pixel_format const & value)
+    std::basic_string<CharT, Traits, Allocator> name(pixel_format const & value)
     {
         switch (value)
         {
@@ -241,8 +240,10 @@ namespace sdl3
     }
 
     template <class CharT, class Traits>
-    std::basic_ostream<CharT, Traits> &
-    operator<<(std::basic_ostream<CharT, Traits> & stream, pixel_format const & value)
+    std::basic_ostream<CharT, Traits> & operator<<(
+        std::basic_ostream<CharT, Traits> & stream,
+        pixel_format const & value
+    )
     {
         return stream << name<CharT, Traits>(value);
     }
@@ -270,8 +271,10 @@ namespace sdl3
     };
 
     template <class CharT, class Traits>
-    std::basic_ostream<CharT, Traits> &
-    operator<<(std::basic_ostream<CharT, Traits> & stream, color_space const & value)
+    std::basic_ostream<CharT, Traits> & operator<<(
+        std::basic_ostream<CharT, Traits> & stream,
+        color_space const & value
+    )
     {
         switch (value)
         {
@@ -309,92 +312,77 @@ namespace sdl3
         : _native_handle(other._native_handle)
         { }
 
-        std::uint8_t
-        bits_per_pixel() const
+        std::uint8_t bits_per_pixel() const
         {
             return _native_handle->bits_per_pixel;
         }
 
-        std::uint8_t
-        bytes_per_pixel() const
+        std::uint8_t bytes_per_pixel() const
         {
             return _native_handle->bytes_per_pixel;
         }
 
-        std::uint32_t
-        r_mask() const
+        std::uint32_t r_mask() const
         {
             return _native_handle->Rmask;
         }
 
-        std::uint32_t
-        g_mask() const
+        std::uint32_t g_mask() const
         {
             return _native_handle->Gmask;
         }
 
-        std::uint32_t
-        b_mask() const
+        std::uint32_t b_mask() const
         {
             return _native_handle->Bmask;
         }
 
-        std::uint32_t
-        a_mask() const
+        std::uint32_t a_mask() const
         {
             return _native_handle->Amask;
         }
 
-        std::uint8_t
-        g_bits() const
+        std::uint8_t g_bits() const
         {
             return _native_handle->Gbits;
         }
 
-        std::uint8_t
-        r_bits() const
+        std::uint8_t r_bits() const
         {
             return _native_handle->Rbits;
         }
 
-        std::uint8_t
-        b_bits() const
+        std::uint8_t b_bits() const
         {
             return _native_handle->Bbits;
         }
 
-        std::uint8_t
-        a_bits() const
+        std::uint8_t a_bits() const
         {
             return _native_handle->Abits;
         }
 
-        std::uint8_t
-        r_shift() const
+        std::uint8_t r_shift() const
         {
             return _native_handle->Rshift;
         }
 
-        std::uint8_t
-        g_shift() const
+        std::uint8_t g_shift() const
         {
             return _native_handle->Gshift;
         }
 
-        std::uint8_t
-        b_shift() const
+        std::uint8_t b_shift() const
         {
             return _native_handle->Bshift;
         }
 
-        std::uint8_t
-        a_shift() const
+        std::uint8_t a_shift() const
         {
             return _native_handle->Ashift;
         }
 
-        SDL_PixelFormatDetails const *
-        native_handle()
+        SDL_PixelFormatDetails const * native_handle()
         {
             return _native_handle;
         }
@@ -408,131 +396,113 @@ namespace sdl3
     using pixel_byte_depth = tagged_numeric<std::size_t, struct pixel_byte_depth_tag>;
 
     template <pixel_format P>
-    static constexpr pixel_type
-    get_pixel_type() noexcept
+    static constexpr pixel_type get_pixel_type() noexcept
     {
         return static_cast<pixel_type>(SDL_PIXELTYPE(static_cast<SDL_PixelFormat>(P)));
     }
 
     template <pixel_format P>
-    static constexpr pixel_bit_depth
-    bits_per_pixel() noexcept
+    static constexpr pixel_bit_depth bits_per_pixel() noexcept
     {
         return static_cast<pixel_bit_depth>(SDL_BITSPERPIXEL(static_cast<SDL_PixelFormat>(P)));
     }
 
     template <pixel_format P>
-    static constexpr pixel_byte_depth
-    bytes_per_pixel() noexcept
+    static constexpr pixel_byte_depth bytes_per_pixel() noexcept
     {
         return static_cast<pixel_byte_depth>(SDL_BYTESPERPIXEL(static_cast<SDL_PixelFormat>(P)));
     }
 
     template <pixel_format P>
-    static constexpr bool
-    is_indexed() noexcept
+    static constexpr bool is_indexed() noexcept
     {
         return SDL_ISPIXELFORMAT_INDEXED(static_cast<SDL_PixelFormat>(P));
     }
 
     template <pixel_format P>
-    static constexpr bool
-    is_packed() noexcept
+    static constexpr bool is_packed() noexcept
     {
         return SDL_ISPIXELFORMAT_PACKED(static_cast<SDL_PixelFormat>(P));
     }
 
     template <pixel_format P>
-    static constexpr bool
-    is_array() noexcept
+    static constexpr bool is_array() noexcept
     {
         return SDL_ISPIXELFORMAT_ARRAY(static_cast<SDL_PixelFormat>(P));
     }
 
     template <pixel_format P>
-    static constexpr bool
-    is_10bit() noexcept
+    static constexpr bool is_10bit() noexcept
     {
         return SDL_ISPIXELFORMAT_10BIT(static_cast<SDL_PixelFormat>(P));
     }
 
     template <pixel_format P>
-    static constexpr bool
-    is_float() noexcept
+    static constexpr bool is_float() noexcept
     {
         return SDL_ISPIXELFORMAT_FLOAT(static_cast<SDL_PixelFormat>(P));
     }
 
     template <pixel_format P>
-    static constexpr bool
-    has_alpha() noexcept
+    static constexpr bool has_alpha() noexcept
     {
         return SDL_ISPIXELFORMAT_ALPHA(static_cast<SDL_PixelFormat>(P));
     }
 
     template <pixel_format P>
-    static constexpr bool
-    is_four_cc() noexcept
+    static constexpr bool is_four_cc() noexcept
     {
         return SDL_ISPIXELFORMAT_FOURCC(static_cast<SDL_PixelFormat>(P));
     }
 
     template <pixel_format P>
-    static constexpr bitmap_order
-    pixel_order() noexcept
+    static constexpr bitmap_order pixel_order() noexcept
         requires(is_indexed<P>())
     {
         return static_cast<bitmap_order>(SDL_PIXELORDER(static_cast<SDL_PixelFormat>(P)));
     }
 
     template <pixel_format P>
-    static constexpr packed_order
-    pixel_order() noexcept
+    static constexpr packed_order pixel_order() noexcept
         requires(is_packed<P>())
     {
         return static_cast<packed_order>(SDL_PIXELORDER(static_cast<SDL_PixelFormat>(P)));
     }
 
     template <pixel_format P>
-    static constexpr array_order
-    pixel_order() noexcept
+    static constexpr array_order pixel_order() noexcept
         requires(is_array<P>())
     {
         return static_cast<array_order>(SDL_PIXELORDER(static_cast<SDL_PixelFormat>(P)));
     }
 
     template <pixel_format P>
-    static constexpr packed_layout
-    pixel_layout() noexcept
+    static constexpr packed_layout pixel_layout() noexcept
         requires(is_packed<P>())
     {
         return static_cast<packed_layout>(SDL_PIXELLAYOUT(static_cast<SDL_PixelFormat>(P)));
     }
 
     template <color_space C>
-    static constexpr color_type
-    color_space_type() noexcept
+    static constexpr color_type color_space_type() noexcept
     {
         return static_cast<color_type>(SDL_COLORSPACETYPE(static_cast<SDL_Colorspace>(C)));
     }
 
     template <color_space C>
-    static constexpr bool
-    is_rgb_color_space() noexcept
+    static constexpr bool is_rgb_color_space() noexcept
     {
         return color_type::rgb == color_space_type<C>();
     }
 
     template <pixel_format P, color_space C>
-    static constexpr bool
-    is_compatible_color_space() noexcept
+    static constexpr bool is_compatible_color_space() noexcept
     {
         return (is_array<P>() || is_indexed<P>() || is_packed<P>()) && is_rgb_color_space<C>();
     }
 
     template <pixel_format P>
-    static constexpr color_space
-    default_color_space() noexcept
+    static constexpr color_space default_color_space() noexcept
     {
         if (is_four_cc<P>())
         {

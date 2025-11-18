@@ -37,45 +37,31 @@ namespace sdl3
     class display_mode
     {
     public:
-        display_mode(SDL_DisplayMode const * native_handle);
+        display_mode(SDL_DisplayMode const * native_handle)
+        : _native_handle(native_handle)
+        { }
 
-        pixel_format format() const;
+        pixel_format format() const
+        {
+            return static_cast<pixel_format>(_native_handle->format);
+        }
 
-        length<std::int32_t> width() const;
+        length<std::int32_t> width() const
+        {
+            return _native_handle->w * px;
+        }
 
-        length<std::int32_t> height() const;
+        length<std::int32_t> height() const
+        {
+            return _native_handle->h * px;
+        }
 
-        display_rate refresh_rate() const;
+        display_rate refresh_rate() const
+        {
+            return _native_handle->refresh_rate * boost::units::si::hertz;
+        }
 
     private:
         SDL_DisplayMode const * _native_handle;
     };
-
-    inline display_mode::display_mode(SDL_DisplayMode const * native_handle)
-    : _native_handle(native_handle)
-    { }
-
-    inline pixel_format
-    display_mode::format() const
-    {
-        return static_cast<pixel_format>(_native_handle->format);
-    }
-
-    inline length<std::int32_t>
-    display_mode::width() const
-    {
-        return _native_handle->w * px;
-    }
-
-    inline length<std::int32_t>
-    display_mode::height() const
-    {
-        return _native_handle->h * px;
-    }
-
-    inline display_rate
-    display_mode::refresh_rate() const
-    {
-        return _native_handle->refresh_rate * boost::units::si::hertz;
-    }
 }  // namespace sdl3

@@ -94,32 +94,85 @@ namespace sdl3
         using b_type = typename rgb_packed_color_traits<P>::b_type;
 
     public:
-        rgb_packed_color();
+        rgb_packed_color()
+        : rgb_packed_color(
+              base_color_limits<r_type>::min(),
+              base_color_limits<g_type>::min(),
+              base_color_limits<b_type>::min()
+          )
+        { }
 
-        rgb_packed_color(r_type r, g_type g, b_type b);
+        rgb_packed_color(r_type r, g_type g, b_type b)
+        : _value(pack(r, g, b))
+        { }
 
-        rgb_packed_color(rgb_packed_color<P, C> const & other);
+        rgb_packed_color(rgb_packed_color<P, C> const & other)
+        : _value(other._value)
+        { }
 
-        rgb_packed_color<P, C> & operator=(rgb_packed_color<P, C> const & other);
+        rgb_packed_color<P, C> & operator=(rgb_packed_color<P, C> const & other)
+        {
+            if (this != &other)
+            {
+                _value = other._value;
+            }
+            return *this;
+        }
 
-        rgb_packed_color<P, C> & operator*=(rgb_packed_color<P, C> const & other);
+        bool operator==(rgb_packed_color<P, C> const & other) const
+        {
+            return _value == other._value;
+        }
 
-        rgb_packed_color<P, C> & operator/=(rgb_packed_color<P, C> const & other);
+        rgb_packed_color<P, C> & operator*=(rgb_packed_color<P, C> const & other)
+        {
+            _value = pack(r() * other.r(), g() * other.g(), b() * other.b());
+            return *this;
+        }
 
-        rgb_packed_color<P, C> & operator+=(rgb_packed_color<P, C> const & other);
+        rgb_packed_color<P, C> & operator/=(rgb_packed_color<P, C> const & other)
+        {
+            _value = pack(r() / other.r(), g() / other.g(), b() / other.b());
+            return *this;
+        }
 
-        rgb_packed_color<P, C> & operator-=(rgb_packed_color<P, C> const & other);
+        rgb_packed_color<P, C> & operator+=(rgb_packed_color<P, C> const & other)
+        {
+            _value = pack(r() + other.r(), g() + other.g(), b() + other.b());
+            return *this;
+        }
 
-        bool operator==(rgb_packed_color const & other) const;
+        rgb_packed_color<P, C> & operator-=(rgb_packed_color<P, C> const & other)
+        {
+            _value = pack(r() - other.r(), g() - other.g(), b() - other.b());
+            return *this;
+        }
 
-        r_type r() const;
+        r_type r() const
+        {
+            return r_type((_value & format_details->Rmask) >> format_details->Rshift);
+        }
 
-        g_type g() const;
+        g_type g() const
+        {
+            return g_type((_value & format_details->Gmask) >> format_details->Gshift);
+        }
 
-        b_type b() const;
+        b_type b() const
+        {
+            return b_type((_value & format_details->Bmask) >> format_details->Bshift);
+        }
 
     private:
-        static packed_type pack(r_type r, g_type g, b_type b);
+        static packed_type pack(r_type r, g_type g, b_type b)
+        {
+            return ((static_cast<packed_type>(r) << static_cast<packed_type>(format_details->Rshift)) &
+                    static_cast<packed_type>(format_details->Rmask)) |
+                   ((static_cast<packed_type>(g) << static_cast<packed_type>(format_details->Gshift)) &
+                    static_cast<packed_type>(format_details->Gmask)) |
+                   ((static_cast<packed_type>(b) << static_cast<packed_type>(format_details->Bshift)) &
+                    static_cast<packed_type>(format_details->Bmask));
+        }
 
     private:
         packed_type _value;
@@ -148,124 +201,11 @@ namespace sdl3
         base_color_limits<b_type>::max()
     );
 
-    template <pixel_format P, color_space C>
-        requires(is_packed<P>() && !has_alpha<P>() && is_rgb_color_space<C>())
-    rgb_packed_color<P, C>::rgb_packed_color()
-    : rgb_packed_color(
-          base_color_limits<r_type>::min(),
-          base_color_limits<g_type>::min(),
-          base_color_limits<b_type>::min()
-      )
-    { }
-
-    template <pixel_format P, color_space C>
-        requires(is_packed<P>() && !has_alpha<P>() && is_rgb_color_space<C>())
-    rgb_packed_color<P, C>::rgb_packed_color(r_type r, g_type g, b_type b)
-    : _value(pack(r, g, b))
-    { }
-
-    template <pixel_format P, color_space C>
-        requires(is_packed<P>() && !has_alpha<P>() && is_rgb_color_space<C>())
-    rgb_packed_color<P, C>::rgb_packed_color(rgb_packed_color<P, C> const & other)
-    : _value(other._value)
-    { }
-
-    template <pixel_format P, color_space C>
-        requires(is_packed<P>() && !has_alpha<P>() && is_rgb_color_space<C>())
-    rgb_packed_color<P, C> &
-    rgb_packed_color<P, C>::operator=(rgb_packed_color<P, C> const & other)
-    {
-        if (this != &other)
-        {
-            _value = other._value;
-        }
-        return *this;
-    }
-
-    template <pixel_format P, color_space C>
-        requires(is_packed<P>() && !has_alpha<P>() && is_rgb_color_space<C>())
-    bool
-    rgb_packed_color<P, C>::operator==(rgb_packed_color<P, C> const & other) const
-    {
-        return _value == other._value;
-    }
-
-    template <pixel_format P, color_space C>
-        requires(is_packed<P>() && !has_alpha<P>() && is_rgb_color_space<C>())
-    rgb_packed_color<P, C> &
-    rgb_packed_color<P, C>::operator*=(rgb_packed_color<P, C> const & other)
-    {
-        _value = pack(r() * other.r(), g() * other.g(), b() * other.b());
-        return *this;
-    }
-
-    template <pixel_format P, color_space C>
-        requires(is_packed<P>() && !has_alpha<P>() && is_rgb_color_space<C>())
-    rgb_packed_color<P, C> &
-    rgb_packed_color<P, C>::operator/=(rgb_packed_color<P, C> const & other)
-    {
-        _value = pack(r() / other.r(), g() / other.g(), b() / other.b());
-        return *this;
-    }
-
-    template <pixel_format P, color_space C>
-        requires(is_packed<P>() && !has_alpha<P>() && is_rgb_color_space<C>())
-    rgb_packed_color<P, C> &
-    rgb_packed_color<P, C>::operator+=(rgb_packed_color<P, C> const & other)
-    {
-        _value = pack(r() + other.r(), g() + other.g(), b() + other.b());
-        return *this;
-    }
-
-    template <pixel_format P, color_space C>
-        requires(is_packed<P>() && !has_alpha<P>() && is_rgb_color_space<C>())
-    rgb_packed_color<P, C> &
-    rgb_packed_color<P, C>::operator-=(rgb_packed_color<P, C> const & other)
-    {
-        _value = pack(r() - other.r(), g() - other.g(), b() - other.b());
-        return *this;
-    }
-
-    template <pixel_format P, color_space C>
-        requires(is_packed<P>() && !has_alpha<P>() && is_rgb_color_space<C>())
-    typename rgb_packed_color<P, C>::r_type
-    rgb_packed_color<P, C>::r() const
-    {
-        return r_type((_value & format_details->Rmask) >> format_details->Rshift);
-    }
-
-    template <pixel_format P, color_space C>
-        requires(is_packed<P>() && !has_alpha<P>() && is_rgb_color_space<C>())
-    typename rgb_packed_color<P, C>::g_type
-    rgb_packed_color<P, C>::g() const
-    {
-        return g_type((_value & format_details->Gmask) >> format_details->Gshift);
-    }
-
-    template <pixel_format P, color_space C>
-        requires(is_packed<P>() && !has_alpha<P>() && is_rgb_color_space<C>())
-    typename rgb_packed_color<P, C>::b_type
-    rgb_packed_color<P, C>::b() const
-    {
-        return b_type((_value & format_details->Bmask) >> format_details->Bshift);
-    }
-
-    template <pixel_format P, color_space C>
-        requires(is_packed<P>() && !has_alpha<P>() && is_rgb_color_space<C>())
-    typename rgb_packed_color<P, C>::packed_type
-    rgb_packed_color<P, C>::pack(r_type r, g_type g, b_type b)
-    {
-        return ((static_cast<packed_type>(r) << static_cast<packed_type>(format_details->Rshift)) &
-                static_cast<packed_type>(format_details->Rmask)) |
-               ((static_cast<packed_type>(g) << static_cast<packed_type>(format_details->Gshift)) &
-                static_cast<packed_type>(format_details->Gmask)) |
-               ((static_cast<packed_type>(b) << static_cast<packed_type>(format_details->Bshift)) &
-                static_cast<packed_type>(format_details->Bmask));
-    }
-
     template <class CharT, class Traits, pixel_format P, color_space C>
-    std::basic_ostream<CharT, Traits> &
-    operator<<(std::basic_ostream<CharT, Traits> & stream, rgb_packed_color<P, C> const & value)
+    std::basic_ostream<CharT, Traits> & operator<<(
+        std::basic_ostream<CharT, Traits> & stream,
+        rgb_packed_color<P, C> const & value
+    )
     {
         return stream << value.r() << ',' << value.g() << ',' << value.b();
     }
@@ -347,34 +287,93 @@ namespace sdl3
         using a_type = typename rgba_packed_color_traits<P>::a_type;
 
     public:
-        rgba_packed_color();
+        rgba_packed_color()
+        : rgba_packed_color(
+              base_color_limits<r_type>::min(),
+              base_color_limits<g_type>::min(),
+              base_color_limits<b_type>::min(),
+              base_color_limits<a_type>::min()
+          )
+        { }
 
-        rgba_packed_color(r_type r, g_type g, b_type b, a_type a);
+        rgba_packed_color(r_type r, g_type g, b_type b, a_type a)
+        : _value(pack(r, g, b, a))
+        { }
 
-        rgba_packed_color(rgba_packed_color<P, C> const & other);
+        rgba_packed_color(rgba_packed_color<P, C> const & other)
+        : _value(other._value)
+        { }
 
-        rgba_packed_color<P, C> & operator=(rgba_packed_color<P, C> const & other);
+        rgba_packed_color<P, C> & operator=(rgba_packed_color<P, C> const & other)
+        {
+            if (this != &other)
+            {
+                _value = other._value;
+            }
+            return *this;
+        }
 
-        rgba_packed_color<P, C> & operator*=(rgba_packed_color<P, C> const & other);
+        bool operator==(rgba_packed_color<P, C> const & other) const
+        {
+            return _value == other._value;
+        }
 
-        rgba_packed_color<P, C> & operator/=(rgba_packed_color<P, C> const & other);
+        rgba_packed_color<P, C> & operator*=(rgba_packed_color<P, C> const & other)
+        {
+            _value = pack(r() * other.r(), g() * other.g(), b() * other.b(), a() * other.a());
+            return *this;
+        }
 
-        rgba_packed_color<P, C> & operator+=(rgba_packed_color<P, C> const & other);
+        rgba_packed_color<P, C> & operator/=(rgba_packed_color<P, C> const & other)
+        {
+            _value = pack(r() / other.r(), g() / other.g(), b() / other.b(), a() / other.a());
+            return *this;
+        }
 
-        rgba_packed_color<P, C> & operator-=(rgba_packed_color<P, C> const & other);
+        rgba_packed_color<P, C> & operator+=(rgba_packed_color<P, C> const & other)
+        {
+            _value = pack(r() + other.r(), g() + other.g(), b() + other.b(), a() + other.a());
+            return *this;
+        }
 
-        bool operator==(rgba_packed_color const & other) const;
+        rgba_packed_color<P, C> & operator-=(rgba_packed_color<P, C> const & other)
+        {
+            _value = pack(r() - other.r(), g() - other.g(), b() - other.b(), a() - other.a());
+            return *this;
+        }
 
-        r_type r() const;
+        r_type r() const
+        {
+            return r_type((_value & format_details->Rmask) >> format_details->Rshift);
+        }
 
-        g_type g() const;
+        g_type g() const
+        {
+            return g_type((_value & format_details->Gmask) >> format_details->Gshift);
+        }
 
-        b_type b() const;
+        b_type b() const
+        {
+            return b_type((_value & format_details->Bmask) >> format_details->Bshift);
+        }
 
-        a_type a() const;
+        a_type a() const
+        {
+            return a_type((_value & format_details->Amask) >> format_details->Ashift);
+        }
 
     private:
-        static packed_type pack(r_type r, g_type g, b_type b, a_type a);
+        static packed_type pack(r_type r, g_type g, b_type b, a_type a)
+        {
+            return ((static_cast<packed_type>(r) << static_cast<packed_type>(format_details->Rshift)) &
+                    static_cast<packed_type>(format_details->Rmask)) |
+                   ((static_cast<packed_type>(g) << static_cast<packed_type>(format_details->Gshift)) &
+                    static_cast<packed_type>(format_details->Gmask)) |
+                   ((static_cast<packed_type>(b) << static_cast<packed_type>(format_details->Bshift)) &
+                    static_cast<packed_type>(format_details->Bmask)) |
+                   ((static_cast<packed_type>(a) << static_cast<packed_type>(format_details->Ashift)) &
+                    static_cast<packed_type>(format_details->Amask));
+        }
 
     private:
         packed_type _value;
@@ -405,136 +404,12 @@ namespace sdl3
         base_color_limits<a_type>::max()
     );
 
-    template <pixel_format P, color_space C>
-        requires(is_packed<P>() && has_alpha<P>() && is_rgb_color_space<C>())
-    rgba_packed_color<P, C>::rgba_packed_color()
-    : rgba_packed_color(
-          base_color_limits<r_type>::min(),
-          base_color_limits<g_type>::min(),
-          base_color_limits<b_type>::min(),
-          base_color_limits<a_type>::min()
-      )
-    { }
-
-    template <pixel_format P, color_space C>
-        requires(is_packed<P>() && has_alpha<P>() && is_rgb_color_space<C>())
-    rgba_packed_color<P, C>::rgba_packed_color(r_type r, g_type g, b_type b, a_type a)
-    : _value(pack(r, g, b, a))
-    { }
-
-    template <pixel_format P, color_space C>
-        requires(is_packed<P>() && has_alpha<P>() && is_rgb_color_space<C>())
-    rgba_packed_color<P, C>::rgba_packed_color(rgba_packed_color<P, C> const & other)
-    : _value(other._value)
-    { }
-
-    template <pixel_format P, color_space C>
-        requires(is_packed<P>() && has_alpha<P>() && is_rgb_color_space<C>())
-    rgba_packed_color<P, C> &
-    rgba_packed_color<P, C>::operator=(rgba_packed_color<P, C> const & other)
-    {
-        if (this != &other)
-        {
-            _value = other._value;
-        }
-        return *this;
-    }
-
-    template <pixel_format P, color_space C>
-        requires(is_packed<P>() && has_alpha<P>() && is_rgb_color_space<C>())
-    bool
-    rgba_packed_color<P, C>::operator==(rgba_packed_color<P, C> const & other) const
-    {
-        return _value == other._value;
-    }
-
-    template <pixel_format P, color_space C>
-        requires(is_packed<P>() && has_alpha<P>() && is_rgb_color_space<C>())
-    rgba_packed_color<P, C> &
-    rgba_packed_color<P, C>::operator*=(rgba_packed_color<P, C> const & other)
-    {
-        _value = pack(r() * other.r(), g() * other.g(), b() * other.b(), a() * other.a());
-        return *this;
-    }
-
-    template <pixel_format P, color_space C>
-        requires(is_packed<P>() && has_alpha<P>() && is_rgb_color_space<C>())
-    rgba_packed_color<P, C> &
-    rgba_packed_color<P, C>::operator/=(rgba_packed_color<P, C> const & other)
-    {
-        _value = pack(r() / other.r(), g() / other.g(), b() / other.b(), a() / other.a());
-        return *this;
-    }
-
-    template <pixel_format P, color_space C>
-        requires(is_packed<P>() && has_alpha<P>() && is_rgb_color_space<C>())
-    rgba_packed_color<P, C> &
-    rgba_packed_color<P, C>::operator+=(rgba_packed_color<P, C> const & other)
-    {
-        _value = pack(r() + other.r(), g() + other.g(), b() + other.b(), a() + other.a());
-        return *this;
-    }
-
-    template <pixel_format P, color_space C>
-        requires(is_packed<P>() && has_alpha<P>() && is_rgb_color_space<C>())
-    rgba_packed_color<P, C> &
-    rgba_packed_color<P, C>::operator-=(rgba_packed_color<P, C> const & other)
-    {
-        _value = pack(r() - other.r(), g() - other.g(), b() - other.b(), a() - other.a());
-        return *this;
-    }
-
-    template <pixel_format P, color_space C>
-        requires(is_packed<P>() && has_alpha<P>() && is_rgb_color_space<C>())
-    typename rgba_packed_color<P, C>::r_type
-    rgba_packed_color<P, C>::r() const
-    {
-        return r_type((_value & format_details->Rmask) >> format_details->Rshift);
-    }
-
-    template <pixel_format P, color_space C>
-        requires(is_packed<P>() && has_alpha<P>() && is_rgb_color_space<C>())
-    typename rgba_packed_color<P, C>::g_type
-    rgba_packed_color<P, C>::g() const
-    {
-        return g_type((_value & format_details->Gmask) >> format_details->Gshift);
-    }
-
-    template <pixel_format P, color_space C>
-        requires(is_packed<P>() && has_alpha<P>() && is_rgb_color_space<C>())
-    typename rgba_packed_color<P, C>::b_type
-    rgba_packed_color<P, C>::b() const
-    {
-        return b_type((_value & format_details->Bmask) >> format_details->Bshift);
-    }
-
-    template <pixel_format P, color_space C>
-        requires(is_packed<P>() && has_alpha<P>() && is_rgb_color_space<C>())
-    typename rgba_packed_color<P, C>::a_type
-    rgba_packed_color<P, C>::a() const
-    {
-        return a_type((_value & format_details->Amask) >> format_details->Ashift);
-    }
-
-    template <pixel_format P, color_space C>
-        requires(is_packed<P>() && has_alpha<P>() && is_rgb_color_space<C>())
-    typename rgba_packed_color<P, C>::packed_type
-    rgba_packed_color<P, C>::pack(r_type r, g_type g, b_type b, a_type a)
-    {
-        return ((static_cast<packed_type>(r) << static_cast<packed_type>(format_details->Rshift)) &
-                static_cast<packed_type>(format_details->Rmask)) |
-               ((static_cast<packed_type>(g) << static_cast<packed_type>(format_details->Gshift)) &
-                static_cast<packed_type>(format_details->Gmask)) |
-               ((static_cast<packed_type>(b) << static_cast<packed_type>(format_details->Bshift)) &
-                static_cast<packed_type>(format_details->Bmask)) |
-               ((static_cast<packed_type>(a) << static_cast<packed_type>(format_details->Ashift)) &
-                static_cast<packed_type>(format_details->Amask));
-    }
-
     template <class CharT, class Traits, pixel_format P, color_space C>
         requires(is_packed<P>() && has_alpha<P>() && is_rgb_color_space<C>())
-    std::basic_ostream<CharT, Traits> &
-    operator<<(std::basic_ostream<CharT, Traits> & stream, rgba_packed_color<P, C> const & value)
+    std::basic_ostream<CharT, Traits> & operator<<(
+        std::basic_ostream<CharT, Traits> & stream,
+        rgba_packed_color<P, C> const & value
+    )
     {
         return stream << value.r() << ',' << value.g() << ',' << value.b() << ',' << value.a();
     }

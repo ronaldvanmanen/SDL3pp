@@ -49,41 +49,9 @@ namespace sdl3
         target_access = SDL_TEXTUREACCESS_TARGET
     };
 
-    class texture_base
-    {
-    protected:
-        texture_base(
-            renderer & owner,
-            pixel_format format,
-            texture_access access,
-            length<int32_t> width,
-            length<int32_t> height
-        );
-
-        texture_base(renderer & owner, property_group & properties);
-
-        texture_base(renderer & owner, property_group && properties);
-
-        texture_base(texture_base const & other) = delete;
-
-        texture_base(texture_base && other);
-
-        ~texture_base();
-
-        texture_base & operator=(texture_base const & other) = delete;
-
-    public:
-        property_group properties() const;
-
-        SDL_Texture * native_handle();
-
-    protected:
-        SDL_Texture * _native_handle;
-    };
-
     template <pixel_format P, texture_access A, color_space C = default_color_space<P>()>
         requires(is_compatible_color_space<P, C>())
-    class texture : public texture_base
+    class texture
     {
     public:
         static const pixel_format format = P;
@@ -95,20 +63,90 @@ namespace sdl3
         using pixel_type = typename pixel_color<P, C>::type;
 
     public:
-        texture(renderer & owner, length<std::int32_t> width, length<std::int32_t> height);
+        texture(renderer & owner, length<std::int32_t> width, length<std::int32_t> height)
+        : _native_handle(nullptr)
+        {
+            property_group properties;
+            properties.set(SDL_PROP_TEXTURE_CREATE_FORMAT_NUMBER, static_cast<SDL_PixelFormat>(format));
+            properties.set(SDL_PROP_TEXTURE_CREATE_COLORSPACE_NUMBER, static_cast<SDL_Colorspace>(color_space));
+            properties.set(SDL_PROP_TEXTURE_CREATE_ACCESS_NUMBER, static_cast<SDL_TextureAccess>(access));
+            properties.set(SDL_PROP_TEXTURE_CREATE_WIDTH_NUMBER, quantity_cast<std::int32_t>(width));
+            properties.set(SDL_PROP_TEXTURE_CREATE_HEIGHT_NUMBER, quantity_cast<std::int32_t>(height));
+            _native_handle = check_pointer(
+                SDL_CreateTextureWithProperties(owner.native_handle(), properties.native_handle())
+            );
+        }
 
-        texture(renderer & owner, size_2d<std::int32_t> const & size);
+        texture(renderer & owner, size_2d<std::int32_t> const & size)
+        : _native_handle(nullptr)
+        {
+            property_group properties;
+            properties.set(SDL_PROP_TEXTURE_CREATE_FORMAT_NUMBER, static_cast<SDL_PixelFormat>(format));
+            properties.set(SDL_PROP_TEXTURE_CREATE_COLORSPACE_NUMBER, static_cast<SDL_Colorspace>(color_space));
+            properties.set(SDL_PROP_TEXTURE_CREATE_ACCESS_NUMBER, static_cast<SDL_TextureAccess>(access));
+            properties.set(SDL_PROP_TEXTURE_CREATE_WIDTH_NUMBER, quantity_cast<std::int32_t>(size.width));
+            properties.set(SDL_PROP_TEXTURE_CREATE_HEIGHT_NUMBER, quantity_cast<std::int32_t>(size.height));
+            _native_handle = check_pointer(
+                SDL_CreateTextureWithProperties(owner.native_handle(), properties.native_handle())
+            );
+        }
 
-        texture(texture<P, A, C> const & other) = delete;
+    private:
+        texture(renderer & owner, property_group & properties)
+        : _native_handle(
+              check_pointer(SDL_CreateTextureWithProperties(owner.native_handle(), properties.native_handle()))
+          )
+        { }
 
-        texture(texture<P, A, C> && other);
+    public:
+        texture(texture<P, A, C> && other)
+        : _native_handle(std::exchange(other._native_handle, nullptr))
+        { }
 
         texture<P, A, C> & operator=(texture<P, A, C> const & other) = delete;
 
-        void update(surface<P, C> const & pixels);
+        ~texture()
+        {
+            if (_native_handle != nullptr)
+            {
+                SDL_DestroyTexture(_native_handle);
+            }
+        }
+
+        void update(surface<P, C> const & pixels)
+        {
+            check_result(SDL_UpdateTexture(_native_handle, nullptr, pixels.pixels(), pixels.pitch()));
+        }
 
         template <typename CallbackFunction>
-        void with_lock(CallbackFunction callback);
+        void with_lock(CallbackFunction callback)
+        {
+            using pixel_type = surface<P, C>::type;
+
+            void * pixels;
+            std::int32_t pitch;
+            check_result(SDL_LockTexture(_native_handle, nullptr, &pixels, &pitch));
+
+            surface<P, C>
+                surface(_native_handle->w * px, _native_handle->h * px, static_cast<pixel_type *>(pixels), pitch);
+
+            callback(surface);
+
+            SDL_UnlockTexture(_native_handle);
+        }
+
+        property_group properties() const
+        {
+            return property_group(SDL_GetTextureProperties(_native_handle));
+        }
+
+        SDL_Texture * native_handle()
+        {
+            return _native_handle;
+        }
+
+    private:
+        SDL_Texture * _native_handle;
     };
 
     template <pixel_format P, color_space C = default_color_space<P>()>
@@ -120,5 +158,3 @@ namespace sdl3
     template <pixel_format P, color_space C = default_color_space<P>()>
     using target_texture = texture<P, texture_access::target_access, C>;
 }  // namespace sdl3
-
-#include "texture.ipp"

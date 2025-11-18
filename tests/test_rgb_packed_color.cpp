@@ -36,8 +36,7 @@ namespace sdl3::unit_test::tools
     template <sdl3::pixel_format P>
     struct test_type_name_generator<pixel_format_constant<P>>
     {
-        static std::string
-        value()
+        static std::string value()
         {
             return name<char>(P);
         }
