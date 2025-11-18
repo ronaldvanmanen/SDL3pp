@@ -121,16 +121,19 @@ namespace sdl3
             return *this;
         }
 
+        [[nodiscard]]
         bool operator==(clamped_numeric<T, Min, Max> const & other) const
         {
             return _value == other._value;
         }
 
+        [[nodiscard]]
         bool operator<(clamped_numeric<T, Min, Max> const & other) const
         {
             return _value < other._value;
         }
 
+        [[nodiscard]]
         operator T() const
         {
             return _value;
@@ -138,6 +141,7 @@ namespace sdl3
 
         template <class To>
             requires(!std::is_same_v<T, To> && std::is_convertible_v<T, To>)
+        [[nodiscard]]
         operator To() const
         {
             return static_cast<To>(_value);
@@ -291,16 +295,19 @@ namespace sdl3
             return *this;
         }
 
+        [[nodiscard]]
         bool operator==(tagged_numeric<T, Tag> const & other) const
         {
             return _value == other._value;
         }
 
+        [[nodiscard]]
         bool operator<(tagged_numeric<T, Tag> const & other) const
         {
             return _value < other._value;
         }
 
+        [[nodiscard]]
         operator T() const
         {
             return _value;

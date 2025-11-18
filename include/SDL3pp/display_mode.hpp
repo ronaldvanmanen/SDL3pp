@@ -41,21 +41,25 @@ namespace sdl3
         : _native_handle(native_handle)
         { }
 
+        [[nodiscard]]
         pixel_format format() const
         {
             return static_cast<pixel_format>(_native_handle->format);
         }
 
+        [[nodiscard]]
         length<std::int32_t> width() const
         {
             return _native_handle->w * px;
         }
 
+        [[nodiscard]]
         length<std::int32_t> height() const
         {
             return _native_handle->h * px;
         }
 
+        [[nodiscard]]
         display_rate refresh_rate() const
         {
             return _native_handle->refresh_rate * boost::units::si::hertz;

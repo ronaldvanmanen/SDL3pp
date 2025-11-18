@@ -65,6 +65,7 @@ namespace sdl3
             }
         }
 
+        [[nodiscard]]
         std::string name() const
         {
             char const * retval = SDL_GetRendererName(_native_handle);
@@ -72,11 +73,13 @@ namespace sdl3
             return std::string(retval);
         }
 
+        [[nodiscard]]
         property_group properties() const
         {
             return property_group(SDL_GetRendererProperties(_native_handle));
         }
 
+        [[nodiscard]]
         size_2d<std::int32_t> output_size() const
         {
             int width, height;
@@ -84,6 +87,7 @@ namespace sdl3
             return size_2d<std::int32_t>(width * px, height * px);
         }
 
+        [[nodiscard]]
         color draw_color() const
         {
             std::uint8_t r, g, b, a;
@@ -98,6 +102,7 @@ namespace sdl3
             );
         }
 
+        [[nodiscard]]
         blend_mode draw_blend_mode() const
         {
             SDL_BlendMode mode;
@@ -126,6 +131,7 @@ namespace sdl3
             SDL_RenderPresent(_native_handle);
         }
 
+        [[nodiscard]]
         SDL_Renderer * native_handle()
         {
             return _native_handle;

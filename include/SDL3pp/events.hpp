@@ -46,41 +46,49 @@ namespace sdl3
         keyboard_event & operator=(keyboard_event const &) = delete;
 
     public:
+        [[nodiscard]]
         std::uint64_t timestamp() const
         {
             return _native_handle.key.timestamp;
         }
 
+        [[nodiscard]]
         std::uint32_t window_id() const
         {
             return _native_handle.key.windowID;
         }
 
+        [[nodiscard]]
         bool released() const
         {
             return !pressed();
         }
 
+        [[nodiscard]]
         bool pressed() const
         {
             return _native_handle.key.down;
         }
 
+        [[nodiscard]]
         bool repeated() const
         {
             return _native_handle.key.repeat;
         }
 
+        [[nodiscard]]
         scan_code scan_code() const
         {
             return static_cast<::sdl3::scan_code>(_native_handle.key.scancode);
         }
 
+        [[nodiscard]]
         key_code key_code() const
         {
             return static_cast<::sdl3::key_code>(_native_handle.key.key);
         }
 
+        [[nodiscard]]
         key_modifier_set key_modifiers() const
         {
             return key_modifier_set(static_cast<key_modifier>(_native_handle.key.mod));
@@ -131,41 +139,49 @@ namespace sdl3
 
         mouse_wheel_event & operator=(mouse_wheel_event const &) = delete;
 
+        [[nodiscard]]
         std::uint64_t timestamp() const
         {
             return _native_handle.wheel.timestamp;
         }
 
+        [[nodiscard]]
         std::uint32_t window_id() const
         {
             return _native_handle.wheel.windowID;
         }
 
+        [[nodiscard]]
         std::uint32_t which() const
         {
             return _native_handle.wheel.which;
         }
 
+        [[nodiscard]]
         float x() const
         {
             return _native_handle.wheel.x;
         }
 
+        [[nodiscard]]
         float y() const
         {
             return _native_handle.wheel.y;
         }
 
+        [[nodiscard]]
         std::uint32_t direction() const
         {
             return _native_handle.wheel.direction;
         }
 
+        [[nodiscard]]
         float mouse_x() const
         {
             return _native_handle.wheel.mouse_x;
         }
 
+        [[nodiscard]]
         float mouse_y() const
         {
             return _native_handle.wheel.mouse_y;
@@ -205,6 +221,7 @@ namespace sdl3
             }
         }
 
+        [[nodiscard]]
         SDL_Event * native_handle()
         {
             return &_native_handle;
@@ -227,11 +244,13 @@ namespace sdl3
             SDL_QuitSubSystem(SDL_INIT_EVENTS);
         }
 
+        [[nodiscard]]
         bool poll(event & event)
         {
             return 1 == SDL_PollEvent(event.native_handle());
         }
 
+        [[nodiscard]]
         bool pending() const
         {
             return 1 == SDL_PollEvent(nullptr);

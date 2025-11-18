@@ -31,23 +31,37 @@ namespace sdl3
     {
     public:
         explicit size_2d(length<Y> width_and_height)
-        : width(width_and_height)
-        , height(width_and_height)
+        : _width(width_and_height)
+        , _height(width_and_height)
         { }
 
         size_2d(length<Y> width, length<Y> height)
-        : width(width)
-        , height(height)
+        : _width(width)
+        , _height(height)
         { }
 
+        [[nodiscard]]
         bool operator==(size_2d<Y> const & other) const
         {
-            return width == other.width && height == other.height;
+            return _width == other._width && _height == other._height;
         }
 
-        length<Y> width;
+        [[nodiscard]]
+        length<Y> width() const
+        {
+            return _width;
+        }
 
-        length<Y> height;
+        [[nodiscard]]
+        length<Y> height() const
+        {
+            return _height;
+        }
+
+    private:
+        length<Y> _width;
+
+        length<Y> _height;
     };
 
 }  // namespace sdl3

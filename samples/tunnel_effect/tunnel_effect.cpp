@@ -82,7 +82,7 @@ private:
 };
 
 displacement_table::displacement_table(sdl3::size_2d<std::int32_t> size)
-: displacement_table(size.width, size.height)
+: displacement_table(size.width(), size.height())
 { }
 
 displacement_table::displacement_table(sdl3::length<std::int32_t> width, sdl3::length<std::int32_t> height)
@@ -174,7 +174,7 @@ displacement_table generate_displacement_image(sdl3::length<std::int32_t> width,
 
 displacement_table generate_displacement_table(sdl3::size_2d<std::int32_t> size)
 {
-    return generate_displacement_image(size.width, size.height);
+    return generate_displacement_image(size.width(), size.height());
 }
 
 sdl3::surface<sdl3::pixel_format::xrgb8888, sdl3::color_space::srgb> generate_xor_image(
@@ -212,7 +212,7 @@ sdl3::surface<sdl3::pixel_format::xrgb8888, sdl3::color_space::srgb> generate_xo
     sdl3::size_2d<std::int32_t> const & size
 )
 {
-    return generate_xor_image(size.width, size.height);
+    return generate_xor_image(size.width(), size.height());
 }
 
 sdl3::length<std::int32_t> power_of_two_mod(sdl3::length<std::int32_t> x, sdl3::length<std::int32_t> y)

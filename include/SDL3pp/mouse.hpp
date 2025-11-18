@@ -30,6 +30,7 @@ namespace sdl3
         float y;
         std::uint32_t buttons;
 
+        [[nodiscard]]
         bool pressed(std::uint32_t which) const
         {
             return ((this->buttons & which) == which);
@@ -39,6 +40,7 @@ namespace sdl3
     class mouse
     {
     public:
+        [[nodiscard]]
         static mouse_state relative_state()
         {
             float x, y;

@@ -142,16 +142,19 @@ namespace sdl3
             return *this;
         }
 
+        [[nodiscard]]
         bool operator==(base_color<T, Tag> const & other) const
         {
             return _value == other._value;
         }
 
+        [[nodiscard]]
         bool operator<(base_color<T, Tag> const & other) const
         {
             return _value < other._value;
         }
 
+        [[nodiscard]]
         operator T() const
         {
             return _value;
@@ -159,6 +162,7 @@ namespace sdl3
 
         template <class To>
             requires(!std::is_same_v<T, To> && std::is_convertible_v<T, To>)
+        [[nodiscard]]
         operator To() const
         {
             return static_cast<To>(_value);
@@ -188,31 +192,37 @@ namespace sdl3
     using r10 = red<clamped_uint10_t>;
     using r32f = red<clamped_unorm_float>;
 
+    [[nodiscard]]
     inline auto operator""_r3(unsigned long long value)
     {
         return r3(value);
     };
 
+    [[nodiscard]]
     inline auto operator""_r4(unsigned long long value)
     {
         return r4(value);
     };
 
+    [[nodiscard]]
     inline auto operator""_r5(unsigned long long value)
     {
         return r5(value);
     };
 
+    [[nodiscard]]
     inline auto operator""_r8(unsigned long long value)
     {
         return r8(value);
     };
 
+    [[nodiscard]]
     inline auto operator""_r10(unsigned long long value)
     {
         return r10(value);
     };
 
+    [[nodiscard]]
     inline auto operator""_r32f(long double value)
     {
         return r32f(value);
@@ -229,36 +239,43 @@ namespace sdl3
     using g10 = green<clamped_uint10_t>;
     using g32f = green<clamped_unorm_float>;
 
+    [[nodiscard]]
     inline auto operator""_g3(unsigned long long value)
     {
         return g3(value);
     };
 
+    [[nodiscard]]
     inline auto operator""_g4(unsigned long long value)
     {
         return g4(value);
     };
 
+    [[nodiscard]]
     inline auto operator""_g5(unsigned long long value)
     {
         return g5(value);
     };
 
+    [[nodiscard]]
     inline auto operator""_g6(unsigned long long value)
     {
         return g6(value);
     };
 
+    [[nodiscard]]
     inline auto operator""_g8(unsigned long long value)
     {
         return g8(value);
     };
 
+    [[nodiscard]]
     inline auto operator""_g10(unsigned long long value)
     {
         return g10(value);
     };
 
+    [[nodiscard]]
     inline auto operator""_g32f(long double value)
     {
         return g32f(value);
@@ -274,31 +291,37 @@ namespace sdl3
     using b10 = blue<clamped_uint10_t>;
     using b32f = blue<clamped_unorm_float>;
 
+    [[nodiscard]]
     inline auto operator""_b2(unsigned long long value)
     {
         return b2(value);
     };
 
+    [[nodiscard]]
     inline auto operator""_b4(unsigned long long value)
     {
         return b4(value);
     };
 
+    [[nodiscard]]
     inline auto operator""_b5(unsigned long long value)
     {
         return b5(value);
     };
 
+    [[nodiscard]]
     inline auto operator""_b8(unsigned long long value)
     {
         return b8(value);
     };
 
+    [[nodiscard]]
     inline auto operator""_b10(unsigned long long value)
     {
         return b10(value);
     };
 
+    [[nodiscard]]
     inline auto operator""_b32f(long double value)
     {
         return b32f(value);
@@ -313,26 +336,31 @@ namespace sdl3
     using a8 = alpha<clamped_uint8_t>;
     using a32f = alpha<clamped_unorm_float>;
 
+    [[nodiscard]]
     inline auto operator""_a1(unsigned long long value)
     {
         return a1(value);
     };
 
+    [[nodiscard]]
     inline auto operator""_a2(unsigned long long value)
     {
         return a2(value);
     };
 
+    [[nodiscard]]
     inline auto operator""_a4(unsigned long long value)
     {
         return a4(value);
     };
 
+    [[nodiscard]]
     inline auto operator""_a8(unsigned long long value)
     {
         return a8(value);
     };
 
+    [[nodiscard]]
     inline auto operator""_a32f(long double value)
     {
         return a32f(value);

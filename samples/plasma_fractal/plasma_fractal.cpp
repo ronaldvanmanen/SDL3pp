@@ -216,7 +216,7 @@ sdl3::surface<sdl3::pixel_format::index8, sdl3::color_space::srgb> generate_diam
     sdl3::size_2d<std::int32_t> size
 )
 {
-    return generate_diamond_square_image(random_number_engine, size.width, size.height);
+    return generate_diamond_square_image(random_number_engine, size.width(), size.height());
 }
 
 void rotate_left(std::vector<sdl3::color> & palette)

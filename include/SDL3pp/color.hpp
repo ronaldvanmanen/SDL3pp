@@ -139,6 +139,7 @@ namespace sdl3
             return *this;
         }
 
+        [[nodiscard]]
         bool operator==(color const & other) const
         {
             return r == other.r && g == other.g && b == other.b && a == other.a;

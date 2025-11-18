@@ -43,8 +43,8 @@ BOOST_AUTO_TEST_SUITE(renderer)
         sdl3::window test_window("test_renderer_constructors", 640 * px, 480 * px, sdl3::window_flags::hidden);
         sdl3::renderer test_renderer(test_window);
         sdl3::size_2d test_renderer_output_size = test_renderer.output_size();
-        BOOST_TEST(test_renderer_output_size.width == 640 * px);
-        BOOST_TEST(test_renderer_output_size.height == 480 * px);
+        BOOST_TEST(test_renderer_output_size.width() == 640 * px);
+        BOOST_TEST(test_renderer_output_size.height() == 480 * px);
     }
 
     BOOST_AUTO_TEST_CASE(test_renderer_draw_color)

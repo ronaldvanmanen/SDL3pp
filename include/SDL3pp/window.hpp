@@ -103,11 +103,13 @@ namespace sdl3
             check_result(SDL_SetWindowRelativeMouseMode(_native_handle, enabled));
         }
 
+        [[nodiscard]]
         bool relative_mouse_mode() const
         {
             return SDL_GetWindowRelativeMouseMode(_native_handle);
         }
 
+        [[nodiscard]]
         std::optional<display_mode> fullscreen_mode() const
         {
             auto native_handle = SDL_GetWindowFullscreenMode(_native_handle);
@@ -118,6 +120,7 @@ namespace sdl3
             return display_mode(native_handle);
         }
 
+        [[nodiscard]]
         size_2d<std::int32_t> size() const
         {
             int width, height;
@@ -130,12 +133,14 @@ namespace sdl3
             check_result(SDL_RaiseWindow(_native_handle));
         }
 
+        [[nodiscard]]
         bool has_surface() const
         {
             return SDL_WindowHasSurface(_native_handle);
         }
 
         template <pixel_format P, color_space C = default_color_space<P>()>
+        [[nodiscard]]
         surface<P, C> get_surface()
         {
             return surface<P, C>(check_pointer(SDL_GetWindowSurface(_native_handle)), false);
@@ -146,6 +151,7 @@ namespace sdl3
             check_result(SDL_UpdateWindowSurface(_native_handle));
         }
 
+        [[nodiscard]]
         SDL_Window * native_handle()
         {
             return _native_handle;

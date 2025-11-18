@@ -54,12 +54,7 @@ namespace sdl3
         { }
 
         surface(size_2d<std::int32_t> const & size)
-        : _native_handle(check_pointer(SDL_CreateSurface(
-              boost::units::quantity_cast<std::int32_t>(size.width),
-              boost::units::quantity_cast<std::int32_t>(size.height),
-              static_cast<SDL_PixelFormat>(format)
-          )))
-        , _free_handle(true)
+        : surface(size.width(), size.height())
         { }
 
         surface(
@@ -102,11 +97,13 @@ namespace sdl3
 
         surface<P, C> & operator=(surface<P, C> const & other) = delete;
 
+        [[nodiscard]]
         length<std::int32_t> width() const
         {
             return _native_handle->w * px;
         }
 
+        [[nodiscard]]
         length<std::int32_t> height() const
         {
             return _native_handle->h * px;
@@ -117,6 +114,7 @@ namespace sdl3
             SDL_SetSurfaceColorspace(_native_handle, static_cast<SDL_Colorspace>(value));
         }
 
+        [[nodiscard]]
         sdl3::color_space color_space() const
         {
             return static_cast<sdl3::color_space>(SDL_GetSurfaceColorspace(_native_handle));
@@ -132,16 +130,19 @@ namespace sdl3
             check_result(SDL_BlitSurface(source_handle, &source_rect, target_handle, &target_rect));
         }
 
+        [[nodiscard]]
         std::int32_t pitch() const
         {
             return _native_handle->pitch;
         }
 
+        [[nodiscard]]
         pixel_type const * pixels() const
         {
             return reinterpret_cast<pixel_type const *>(_native_handle->pixels);
         }
 
+        [[nodiscard]]
         pixel_type & operator()(offset<int32_t> x, offset<int32_t> y)
         {
             auto * pixels = reinterpret_cast<pixel_type *>(_native_handle->pixels);
@@ -151,6 +152,7 @@ namespace sdl3
             return pixels[sy * pitch + sx];
         }
 
+        [[nodiscard]]
         pixel_type const & operator()(offset<int32_t> x, offset<int32_t> y) const
         {
             auto const * pixels = reinterpret_cast<pixel_type const *>(_native_handle->pixels);
@@ -178,6 +180,7 @@ namespace sdl3
             }
         }
 
+        [[nodiscard]]
         SDL_Surface * native_handle()
         {
             return _native_handle;

@@ -182,6 +182,7 @@ namespace sdl3
             return *this;
         }
 
+        [[nodiscard]]
         bool operator==(rgb_array_color<P, C> const & other) const
         {
             for (size_t i = 0; i < size; ++i)
@@ -194,16 +195,19 @@ namespace sdl3
             return true;
         }
 
+        [[nodiscard]]
         r_type r() const
         {
             return static_cast<r_type>(_components[r_index]);
         }
 
+        [[nodiscard]]
         g_type g() const
         {
             return static_cast<g_type>(_components[g_index]);
         }
 
+        [[nodiscard]]
         b_type b() const
         {
             return static_cast<b_type>(_components[b_index]);
@@ -411,6 +415,7 @@ namespace sdl3
             return *this;
         }
 
+        [[nodiscard]]
         bool operator==(rgba_array_color<P, C> const & other) const
         {
             for (size_t i = 0; i < size; ++i)
@@ -423,21 +428,25 @@ namespace sdl3
             return true;
         }
 
+        [[nodiscard]]
         r_type r() const
         {
             return static_cast<r_type>(_components[r_index]);
         }
 
+        [[nodiscard]]
         g_type g() const
         {
             return static_cast<g_type>(_components[g_index]);
         }
 
+        [[nodiscard]]
         b_type b() const
         {
             return static_cast<b_type>(_components[b_index]);
         }
 
+        [[nodiscard]]
         a_type a() const
         {
             return static_cast<a_type>(_components[a_index]);

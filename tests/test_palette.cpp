@@ -18,6 +18,7 @@
 //    misrepresented as being the original software.
 // 3. This notice may not be removed or altered from any source distribution.
 
+#include <boost/core/ignore_unused.hpp>
 #include <boost/test/unit_test.hpp>
 
 #include "SDL3pp/palette.hpp"
@@ -47,7 +48,7 @@ BOOST_AUTO_TEST_SUITE(palette)
         test_palette[0] = sdl3::color::white;
         test_palette[1] = sdl3::color::black;
 
-        BOOST_REQUIRE_THROW(test_palette[2], std::out_of_range);
+        BOOST_REQUIRE_THROW(boost::ignore_unused(test_palette[2]), std::out_of_range);
 
         BOOST_TEST(test_palette[0] == sdl3::color::white);
         BOOST_TEST(test_palette[1] == sdl3::color::black);

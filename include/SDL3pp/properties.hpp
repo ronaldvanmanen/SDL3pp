@@ -70,17 +70,20 @@ namespace sdl3
         }
 
         template <typename T>
+        [[nodiscard]]
         T * get(const char * name, T * default_value) const
         {
             return static_cast<T *>(SDL_GetPointerProperty(_native_handle, name, static_cast<void *>(default_value)));
         }
 
+        [[nodiscard]]
         const char * get(const char * name, const char * default_value) const
         {
             return SDL_GetStringProperty(_native_handle, name, default_value);
         }
 
         template <typename T>
+        [[nodiscard]]
         T get(const char * name, T default_value) const
         {
             return static_cast<T>(
@@ -88,16 +91,19 @@ namespace sdl3
             );
         }
 
+        [[nodiscard]]
         float get(const char * name, float default_value) const
         {
             return SDL_GetFloatProperty(_native_handle, name, default_value);
         }
 
+        [[nodiscard]]
         bool get(const char * name, bool default_value) const
         {
             return SDL_GetBooleanProperty(_native_handle, name, default_value);
         }
 
+        [[nodiscard]]
         bool has(const char * name) const
         {
             return SDL_HasProperty(_native_handle, name);
@@ -108,6 +114,7 @@ namespace sdl3
             SDL_ClearProperty(_native_handle, name);
         }
 
+        [[nodiscard]]
         SDL_PropertiesID native_handle()
         {
             return _native_handle;

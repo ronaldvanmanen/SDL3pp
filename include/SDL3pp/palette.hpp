@@ -73,21 +73,25 @@ namespace sdl3
                 return *this;
             }
 
+            [[nodiscard]]
             bool operator==(palette::indexed_color const & other)
             {
                 return _owner == other._owner && _index == other._index;
             }
 
+            [[nodiscard]]
             bool operator==(color const & other)
             {
                 return get() == other;
             }
 
+            [[nodiscard]]
             color const & get() const
             {
                 return reinterpret_cast<color const &>(_owner->_native_handle->colors[_index]);
             }
 
+            [[nodiscard]]
             operator color const &() const
             {
                 return get();
@@ -117,21 +121,25 @@ namespace sdl3
             , _index(other._index)
             { }
 
+            [[nodiscard]]
             bool operator==(palette::const_indexed_color const & other)
             {
                 return _owner == other._owner && _index == other._index;
             }
 
+            [[nodiscard]]
             bool operator==(color const & other)
             {
                 return get() == other;
             }
 
+            [[nodiscard]]
             color const & get() const
             {
                 return reinterpret_cast<color const &>(_owner->_native_handle->colors[_index]);
             }
 
+            [[nodiscard]]
             operator color const &() const
             {
                 return get();
@@ -222,6 +230,7 @@ namespace sdl3
             return *this;
         }
 
+        [[nodiscard]]
         indexed_color operator[](std::size_t index)
         {
             if (index >= size())
@@ -231,6 +240,7 @@ namespace sdl3
             return indexed_color(this, index);
         }
 
+        [[nodiscard]]
         const_indexed_color operator[](std::size_t index) const
         {
             if (index >= size())
@@ -240,11 +250,13 @@ namespace sdl3
             return const_indexed_color(this, index);
         }
 
+        [[nodiscard]]
         std::size_t size() const
         {
             return _native_handle->ncolors;
         }
 
+        [[nodiscard]]
         SDL_Palette * native_handle()
         {
             return _native_handle;
@@ -257,6 +269,7 @@ namespace sdl3
     };
 
     template <pixel_format P, color_space C = default_color_space<P>()>
+    [[nodiscard]]
     palette create_palette(surface<P, C> & owner)
         requires(is_indexed<P>())
     {
@@ -266,6 +279,7 @@ namespace sdl3
     }
 
     template <pixel_format P, color_space C = default_color_space<P>()>
+    [[nodiscard]]
     std::optional<palette> get_palette(surface<P, C> & owner)
         requires(is_indexed<P>())
     {

@@ -33,11 +33,13 @@ namespace sdl3
         , _key_count(key_count)
         { }
 
+        [[nodiscard]]
         bool pressed(scan_code key) const
         {
             return _key_states[static_cast<int>(key)];
         }
 
+        [[nodiscard]]
         bool released(scan_code key) const
         {
             return _key_states[static_cast<int>(key)];
@@ -52,6 +54,7 @@ namespace sdl3
     class keyboard
     {
     public:
+        [[nodiscard]]
         static keyboard_state state()
         {
             int key_count;
@@ -59,6 +62,7 @@ namespace sdl3
             return sdl3::keyboard_state(key_states, key_count);
         }
 
+        [[nodiscard]]
         static key_modifier_set modifier_state()
         {
             return key_modifier_set(static_cast<sdl3::key_modifier>(SDL_GetModState()));

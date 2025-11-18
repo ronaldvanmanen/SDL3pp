@@ -47,6 +47,7 @@ namespace sdl3
 
     template <typename T>
         requires(is_flags_enum_v<T>)
+    [[nodiscard]]
     constexpr T operator~(T value)
     {
         using underlying_type = std::underlying_type_t<T>;
@@ -55,6 +56,7 @@ namespace sdl3
 
     template <typename T>
         requires(is_flags_enum_v<T>)
+    [[nodiscard]]
     constexpr T operator&(T left, T right)
     {
         using underlying_type = std::underlying_type_t<T>;
@@ -63,6 +65,7 @@ namespace sdl3
 
     template <typename T>
         requires(is_flags_enum_v<T>)
+    [[nodiscard]]
     constexpr T operator|(T left, T right)
     {
         using underlying_type = std::underlying_type_t<T>;
@@ -71,6 +74,7 @@ namespace sdl3
 
     template <typename T>
         requires(is_flags_enum_v<T>)
+    [[nodiscard]]
     constexpr T operator^(T left, T right)
     {
         using underlying_type = std::underlying_type_t<T>;

@@ -86,16 +86,19 @@ namespace sdl3
             return *this;
         }
 
+        [[nodiscard]]
         bool operator==(index8 const & other) const
         {
             return _value == other._value;
         }
 
+        [[nodiscard]]
         bool operator<(index8 const & other) const
         {
             return _value < other._value;
         }
 
+        [[nodiscard]]
         operator std::uint8_t() const
         {
             return _value;
