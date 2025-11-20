@@ -35,7 +35,7 @@
 
 namespace sdl3
 {
-    enum class window_flags : std::uint32_t
+    enum class window_flags : SDL_WindowFlags
     {
         none = 0,
         fullscreen = SDL_WINDOW_FULLSCREEN,
@@ -65,6 +65,8 @@ namespace sdl3
         static const bool value = true;
     };
 
+    typedef flag_set<window_flags> window_flags_set;
+
     class window
     {
     public:
@@ -73,16 +75,21 @@ namespace sdl3
               title.c_str(),
               quantity_cast<std::int32_t>(width),
               quantity_cast<std::int32_t>(height),
-              static_cast<std::uint32_t>(window_flags::none)
+              static_cast<SDL_WindowFlags>(window_flags::none)
           )))
         { }
 
-        window(std::string const & title, length<std::int32_t> width, length<std::int32_t> height, window_flags flags)
+        window(
+            std::string const & title,
+            length<std::int32_t> width,
+            length<std::int32_t> height,
+            window_flags_set flags
+        )
         : _native_handle(check_pointer(SDL_CreateWindow(
               title.c_str(),
               quantity_cast<std::int32_t>(width),
               quantity_cast<std::int32_t>(height),
-              static_cast<std::uint32_t>(flags)
+              static_cast<SDL_WindowFlags>(flags)
           )))
         { }
 

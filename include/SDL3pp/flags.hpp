@@ -45,63 +45,143 @@ namespace sdl3
         requires(std::is_enum_v<T>)
     constexpr bool is_flags_enum_v = is_flags_enum<T>::value;
 
-    template <typename T>
+    template <class T>
+        requires(is_flags_enum_v<T>)
+    class flag_set
+    // clang-format off
+    : boost::equality_comparable<flag_set<T>
+    , boost::equality_comparable<flag_set<T>, T
+    , boost::bitwise<flag_set<T>
+    , boost::bitwise<flag_set<T>, T
+    , boost::bitwise<T, T
+    > > > > >
+    // clang-format on
+    {
+    public:
+        using underlying_type = std::underlying_type_t<T>;
+
+    public:
+        flag_set()
+        : _values()
+        { }
+
+        flag_set(T value)
+        : _values(static_cast<underlying_type>(value))
+        { }
+
+        flag_set(underlying_type values)
+        : _values(values)
+        { }
+
+        flag_set & operator|=(flag_set const & other)
+        {
+            _values |= other._values;
+            return *this;
+        }
+
+        flag_set & operator&=(flag_set const & other)
+        {
+            _values &= other._values;
+            return *this;
+        }
+
+        flag_set & operator^=(flag_set const & other)
+        {
+            _values ^= other._values;
+            return *this;
+        }
+
+        flag_set & operator|=(T const & value)
+        {
+            _values |= static_cast<underlying_type>(value);
+            return *this;
+        }
+
+        flag_set & operator&=(T const & value)
+        {
+            _values &= static_cast<underlying_type>(value);
+            return *this;
+        }
+
+        flag_set & operator^=(T const & value)
+        {
+            _values ^= static_cast<underlying_type>(value);
+            return *this;
+        }
+
+        flag_set operator~() const
+        {
+            return flag_set(~_values);
+        }
+
+        bool operator==(flag_set const & other) const
+        {
+            return _values == other._values;
+        }
+
+        bool operator==(T const & value) const
+        {
+            return _values == static_cast<underlying_type>(value);
+        }
+
+        bool test(T value) const
+        {
+            return _values & static_cast<underlying_type>(value);
+        }
+
+        operator underlying_type()
+        {
+            return _values;
+        }
+
+    private:
+        underlying_type _values;
+
+    private:
+        friend flag_set<T> operator|(T left, T right);
+
+        friend flag_set<T> operator&(T left, T right);
+
+        friend flag_set<T> operator^(T left, T right);
+
+        friend flag_set<T> operator~(T value);
+    };
+
+    template <class T>
         requires(is_flags_enum_v<T>)
     [[nodiscard]]
-    constexpr T operator~(T value)
+    inline flag_set<T> operator|(T left, T right)
     {
-        using underlying_type = std::underlying_type_t<T>;
-        return static_cast<T>(static_cast<underlying_type>(value));
+        return flag_set<T>(
+            static_cast<flag_set<T>::underlying_type>(left) | static_cast<flag_set<T>::underlying_type>(right)
+        );
     }
 
-    template <typename T>
+    template <class T>
         requires(is_flags_enum_v<T>)
     [[nodiscard]]
-    constexpr T operator&(T left, T right)
+    inline flag_set<T> operator&(T left, T right)
     {
-        using underlying_type = std::underlying_type_t<T>;
-        return static_cast<T>(static_cast<underlying_type>(left) & static_cast<underlying_type>(right));
+        return flag_set<T>(
+            static_cast<flag_set<T>::underlying_type>(left) & static_cast<flag_set<T>::underlying_type>(right)
+        );
     }
 
-    template <typename T>
+    template <class T>
         requires(is_flags_enum_v<T>)
     [[nodiscard]]
-    constexpr T operator|(T left, T right)
+    inline flag_set<T> operator^(T left, T right)
     {
-        using underlying_type = std::underlying_type_t<T>;
-        return static_cast<T>(static_cast<underlying_type>(left) | static_cast<underlying_type>(right));
+        return flag_set<T>(
+            static_cast<flag_set<T>::underlying_type>(left) ^ static_cast<flag_set<T>::underlying_type>(right)
+        );
     }
 
-    template <typename T>
+    template <class T>
         requires(is_flags_enum_v<T>)
     [[nodiscard]]
-    constexpr T operator^(T left, T right)
+    inline flag_set<T> operator~(T value)
     {
-        using underlying_type = std::underlying_type_t<T>;
-        return static_cast<T>(static_cast<underlying_type>(left) & static_cast<underlying_type>(right));
-    }
-
-    template <typename T>
-        requires(is_flags_enum_v<T>)
-    constexpr T & operator&=(T & self, T other)
-    {
-        self = self & other;
-        return self;
-    }
-
-    template <typename T>
-        requires(is_flags_enum_v<T>)
-    constexpr T & operator|=(T & self, T other)
-    {
-        self = self | other;
-        return self;
-    }
-
-    template <typename T>
-        requires(is_flags_enum_v<T>)
-    constexpr T & operator^=(T & self, T other)
-    {
-        self = self ^ other;
-        return self;
+        return flag_set<T>(~static_cast<flag_set<T>::underlying_type>(value));
     }
 }  // namespace sdl3

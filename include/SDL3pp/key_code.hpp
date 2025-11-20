@@ -27,6 +27,8 @@
 #include <SDL3/SDL_events.h>
 #include <SDL3/SDL_keycode.h>
 
+#include "flags.hpp"
+
 namespace sdl3
 {
     enum class key_code : std::uint32_t
@@ -314,116 +316,11 @@ namespace sdl3
         gui = SDL_KMOD_GUI
     };
 
-    class key_modifier_set
-    // clang-format off
-    : boost::equality_comparable<key_modifier_set
-    , boost::equality_comparable<key_modifier_set, key_modifier
-    , boost::bitwise<key_modifier_set
-    , boost::bitwise<key_modifier_set, key_modifier
-    , boost::bitwise<key_modifier, key_modifier
-    > > > > >
-    // clang-format on
+    template <>
+    struct is_flags_enum<key_modifier>
     {
-    private:
-        key_modifier_set(std::uint16_t values)
-        : _values(values)
-        { }
-
-    public:
-        key_modifier_set()
-        : key_modifier_set(static_cast<std::uint16_t>(key_modifier::none))
-        { }
-
-        key_modifier_set(key_modifier value)
-        : _values(static_cast<std::uint16_t>(value))
-        { }
-
-        key_modifier_set & operator|=(key_modifier_set const & other)
-        {
-            _values |= other._values;
-            return *this;
-        }
-
-        key_modifier_set & operator&=(key_modifier_set const & other)
-        {
-            _values &= other._values;
-            return *this;
-        }
-
-        key_modifier_set & operator^=(key_modifier_set const & other)
-        {
-            _values ^= other._values;
-            return *this;
-        }
-
-        key_modifier_set & operator|=(key_modifier const & value)
-        {
-            _values |= static_cast<std::uint16_t>(value);
-            return *this;
-        }
-
-        key_modifier_set & operator&=(key_modifier const & value)
-        {
-            _values &= static_cast<std::uint16_t>(value);
-            return *this;
-        }
-
-        key_modifier_set & operator^=(key_modifier const & value)
-        {
-            _values ^= static_cast<std::uint16_t>(value);
-            return *this;
-        }
-
-        key_modifier_set operator~() const
-        {
-            return key_modifier_set(~_values);
-        }
-
-        bool operator==(key_modifier_set const & other) const
-        {
-            return _values == other._values;
-        }
-
-        bool operator==(key_modifier const & value) const
-        {
-            return _values == static_cast<std::uint16_t>(value);
-        }
-
-        bool test(key_modifier value) const
-        {
-            return _values & static_cast<std::uint16_t>(value);
-        }
-
-    private:
-        uint16_t _values;
-
-    private:
-        friend key_modifier_set operator|(key_modifier left, key_modifier right);
-
-        friend key_modifier_set operator&(key_modifier left, key_modifier right);
-
-        friend key_modifier_set operator^(key_modifier left, key_modifier right);
-
-        friend key_modifier_set operator~(key_modifier value);
+        static const bool value = true;
     };
 
-    inline key_modifier_set operator|(key_modifier left, key_modifier right)
-    {
-        return key_modifier_set(static_cast<std::uint16_t>(left) | static_cast<std::uint16_t>(right));
-    }
-
-    inline key_modifier_set operator&(key_modifier left, key_modifier right)
-    {
-        return key_modifier_set(static_cast<std::uint16_t>(left) & static_cast<std::uint16_t>(right));
-    }
-
-    inline key_modifier_set operator^(key_modifier left, key_modifier right)
-    {
-        return key_modifier_set(static_cast<std::uint16_t>(left) ^ static_cast<std::uint16_t>(right));
-    }
-
-    inline key_modifier_set operator~(key_modifier value)
-    {
-        return sdl3::key_modifier_set(~static_cast<uint16_t>(value));
-    }
+    using key_modifier_set = flag_set<key_modifier>;
 }  // namespace sdl3
